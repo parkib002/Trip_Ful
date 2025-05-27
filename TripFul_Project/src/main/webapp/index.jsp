@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Tripful - 관광지 정보</title>
+    <link rel="stylesheet" href="css/boardListStyle.css">
+    <link rel="stylesheet" href="css/noticeStyle.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -17,6 +19,12 @@
     String mainPage = "page/TripFul_main.jsp";
     if (request.getParameter("main") != null) {
         mainPage = request.getParameter("main");
+    }
+    
+ 	// sub 파라미터가 있으면 request attribute로 넘김
+    String sub = request.getParameter("sub");
+    if (sub != null && !sub.isEmpty()) {
+        request.setAttribute("sub", sub);
     }
 %>
 
