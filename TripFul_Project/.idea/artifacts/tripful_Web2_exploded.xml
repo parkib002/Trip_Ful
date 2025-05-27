@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="tripful:Web2 exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/tripful_Web2_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="tripful/web/Web2" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="tripful" />
+        </element>
+      </element>
+      <element id="dir-copy" path="$PROJECT_DIR$/../../sist0217/pro1/TripFul_Project/TripFul/src/main/webapp" />
+    </root>
+  </artifact>
+</component>

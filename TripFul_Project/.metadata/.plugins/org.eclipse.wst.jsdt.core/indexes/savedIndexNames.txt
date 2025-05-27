@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+C:\sist0217\pro1\tripful\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+3485590300.index
+1805499548.index
+4136272304.index
+311340265.index
+1052614556.index
+3505579066.index
