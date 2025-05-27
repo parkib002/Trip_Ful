@@ -22,6 +22,7 @@ function chkSignIn(){
 	}
 }
 
+
 $("#id").keyup(function() {
 	//ajax를 통한 비동기 방식으로 중복 처리
 	var inputId = $("#id");
