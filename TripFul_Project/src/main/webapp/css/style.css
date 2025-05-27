@@ -1,0 +1,75 @@
+body {
+    background-color: white;
+    color: black;
+}
+
+.navbar-toggler:focus {
+     outline: none;
+    box-shadow: none;
+ }
+
+.navbar {
+    background-color: #f5f5f5; /* 밝은 회색 */
+    height: 5vh;
+}
+
+.navbar-nav .nav-link {
+    color: black; /* 기본 텍스트 색을 검정으로 변경 */
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #fdd835; /* 호버 시 강조색 유지 가능 */
+}
+
+#auth-button {
+    background-color: #fdd835;
+    color: black;
+    border: none;
+}
+
+#auth-button:hover {
+    background-color: #e6c200;
+}
+
+
+
+.hero {
+    background-image: url('../image/1.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: black;
+
+}
+
+
+
+
+.hero h1 {
+    font-size: 3.5rem;
+    color: #d4af37;
+    font-style: italic;
+
+}
+
+.hero h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.btn-yellow {
+    background-color: #fdd835;
+    color: black;
+    border: none;
+}
+
+.btn-yellow:hover {
+    background-color: #e6c200;
+}
