@@ -1,2 +1,2 @@
-# Trip_Ful
-SIST Semi Project
+# tripful
+TripFul
