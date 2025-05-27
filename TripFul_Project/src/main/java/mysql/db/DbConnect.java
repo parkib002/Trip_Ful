@@ -10,7 +10,7 @@ import java.sql.Statement;
 public class DbConnect {
 		
 		static final String URL = "jdbc:mysql://localhost:3306/coffee";
-		static final String USERNAME = "kch0101";
+		static final String USERNAME = "taelim0619";
 		static final String PW = "a1234";
 		static final String MySqlDriver="com.mysql.cj.jdbc.Driver";
 		Connection conn = null;
