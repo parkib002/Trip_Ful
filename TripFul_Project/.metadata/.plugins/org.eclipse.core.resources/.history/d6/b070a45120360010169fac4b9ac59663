@@ -1,0 +1,109 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+// pages/AdminTourDetail.jsx
+import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+const mockData = [
+  {
+    id: 1,
+    country: "프랑스",
+    name: "에펠탑",
+    description: "프랑스를 대표하는 관광명소",
+    image: "eiffel.jpg",
+    createdAt: "2024-05-01",
+  },
+  {
+    id: 2,
+    country: "일본",
+    name: "후지산",
+    description: "일본의 상징적인 산",
+    image: "fuji.jpg",
+    createdAt: "2024-05-02",
+  },
+];
+
+export default function AdminTourDetail() {
+  const [search, setSearch] = useState("");
+
+  const filteredData = mockData.filter(tour =>
+    tour.name.includes(search)
+  );
+
+  return (
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar */}
+      <div className="w-64 bg-white p-4 shadow-md">
+        <h2 className="text-xl font-bold mb-6">관리자 페이지</h2>
+        <ul className="space-y-4 text-gray-700">
+          <li className="hover:font-semibold cursor-pointer">관리자 홈</li>
+          <li className="hover:font-semibold cursor-pointer">회원관리</li>
+          <li className="hover:font-semibold cursor-pointer">리뷰관리</li>
+          <li className="hover:font-semibold cursor-pointer">게시판 관리</li>
+          <li className="font-bold text-blue-600">관광지 관리</li>
+          <li className="hover:font-semibold cursor-pointer">나라 관리</li>
+        </ul>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 p-6">
+        <h1 className="text-2xl font-semibold mb-4">관광지 상세정보</h1>
+
+        {/* Search Bar */}
+        <div className="flex items-center space-x-2 mb-4">
+          <Input
+            placeholder="이름으로 검색"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-1/3"
+          />
+          <Button>검색</Button>
+        </div>
+
+        {/* Table */}
+        <ScrollArea className="rounded-lg border h-[500px]">
+          <Card>
+            <CardContent className="overflow-x-auto p-0">
+              <table className="min-w-full text-sm text-left table-auto">
+                <thead className="bg-gray-200">
+                  <tr>
+                    <th className="px-4 py-2">번호</th>
+                    <th className="px-4 py-2">국가</th>
+                    <th className="px-4 py-2">이름</th>
+                    <th className="px-4 py-2">상세정보</th>
+                    <th className="px-4 py-2">이미지</th>
+                    <th className="px-4 py-2">등록일</th>
+                    <th className="px-4 py-2">수정</th>
+                    <th className="px-4 py-2">삭제</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredData.map((tour, index) => (
+                    <tr key={tour.id} className="border-b">
+                      <td className="px-4 py-2">{index + 1}</td>
+                      <td className="px-4 py-2">{tour.country}</td>
+                      <td className="px-4 py-2">{tour.name}</td>
+                      <td className="px-4 py-2">{tour.description}</td>
+                      <td className="px-4 py-2">
+                        <img src={tour.image} alt="관광지" className="w-16 h-16 object-cover" />
+                      </td>
+                      <td className="px-4 py-2">{tour.createdAt}</td>
+                      <td className="px-4 py-2">
+                        <Button variant="outline" size="sm">수정</Button>
+                      </td>
+                      <td className="px-4 py-2">
+                        <Button variant="destructive" size="sm">삭제</Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+        </ScrollArea>
+      </div>
+    </div>
+  );
+}
