@@ -18,7 +18,7 @@ BoardEventDao dao=new BoardEventDao();
 //페이징처리
 //전체갯수
 int totalCount=1;//dao.getTotalCount();
-int perPage=3; //한페이지에 보여질 글의 갯수
+int perPage=5; //한페이지에 보여질 글의 갯수
 int perBlock=5; //한블럭당 보여질 페이지의 갯수
 int startNum; //db에서 가져올 글의 시작번호(mysql:0 오라클:1번)
 int startPage; //각블럭당 보여질 시작페이지

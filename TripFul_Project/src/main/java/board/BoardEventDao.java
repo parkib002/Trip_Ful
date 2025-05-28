@@ -19,7 +19,7 @@ public class BoardEventDao {
 		Connection conn=db.getConnection();
 		PreparedStatement pstmt=null;
 		
-		String sql="insert into tripfull_event values(null,?,?,?,?,?,now())";
+		String sql="insert into tripful_event values(null,?,?,?,?,?,now())";
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
@@ -45,7 +45,7 @@ public class BoardEventDao {
 			Connection conn=db.getConnection();
 			PreparedStatement pstmt=null;
 			ResultSet rs=null;
-			String sql="select count(*) from tripfull_event";
+			String sql="select count(*) from tripful_event";
 			
 			try {
 				pstmt=conn.prepareStatement(sql);
@@ -69,7 +69,7 @@ public class BoardEventDao {
 			public List<BoardEventDto> getList(int start,int perpage)
 			{
 				List<BoardEventDto> list=new ArrayList<BoardEventDto>();
-				String sql="select * from tripfull_event order by num desc limit ?,?";
+				String sql="select * from tripful_event order by num desc limit ?,?";
 				Connection conn=db.getConnection();
 				PreparedStatement pstmt=null;
 				ResultSet rs=null;
