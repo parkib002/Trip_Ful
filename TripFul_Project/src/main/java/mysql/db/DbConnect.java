@@ -9,9 +9,11 @@ import java.sql.Statement;
 
 public class DbConnect {
 		
+
 		static final String URL = "jdbc:mysql://tripful.cfke6268yfep.ap-northeast-2.rds.amazonaws.com:3306/TripFul";
 		static final String USERNAME = "adminroot";
 		static final String PW = "Tkddyd2025!";
+
 		static final String MySqlDriver="com.mysql.cj.jdbc.Driver";
 		Connection conn = null;
 		Statement stmt = null;

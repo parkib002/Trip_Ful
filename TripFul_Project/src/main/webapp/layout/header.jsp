@@ -28,9 +28,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="index.jsp?main=place/selectPlace.jsp">지역별 관광지</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="index.jsp?main=board/event.jsp">이벤트</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">공지사항</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">QnA 게시판</a></li>
+            <li class="nav-item"><a class="nav-link" href="index.jsp?main=board/boardList.jsp&sub=event.jsp">이벤트</a></li>
+            <li class="nav-item"><a class="nav-link" href="index.jsp?main=board/boardList.jsp&sub=notice.jsp">공지사항</a></li>
+            <li class="nav-item"><a class="nav-link" href="index.jsp?main=board/boardList.jsp&sub=support.jsp">QnA 게시판</a></li>
         </ul>
     </div>
 </nav>

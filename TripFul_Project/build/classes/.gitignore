@@ -1,6 +1,12 @@
 /board/
 <<<<<<< HEAD
+<<<<<<< HEAD
 /place/
+=======
+/login/
+/mysql/
+/BoardSupportDao.class
+>>>>>>> 98fa389fbcdc1609c92e4efc71934a0b207c5072
 =======
 /mysql/
 /login/
