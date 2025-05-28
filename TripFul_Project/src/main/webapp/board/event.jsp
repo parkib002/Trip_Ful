@@ -70,11 +70,11 @@ no=totalCount-(currentPage-1)*perPage;
 	<table class="table table-hover notice-table" style="width: 1400px;">
 		<thead>
 			<tr>
-				<th scope="col">번호</th>
-				<th scope="col">제목</th>
-				<th scope="col">작성자</th>
-				<th scope="col">작성일</th>
-				<th scope="col">조회수</th>
+				<th scope="col" style="width: 8%;">번호</th>
+            	<th scope="col" style="width: 47%;">제목</th>
+            	<th scope="col" style="width: 15%;">작성자</th>
+           		<th scope="col" style="width: 20%;">작성일</th>
+            	<th scope="col" style="width: 10%;">조회수</th>
 			</tr>
 		</thead>
 		<tbody>
