@@ -9,9 +9,15 @@ import java.sql.Statement;
 
 public class DbConnect {
 		
+<<<<<<< HEAD
 		static final String URL = "jdbc:mysql://localhost:3306/coffee";
 		static final String USERNAME = "taelim0619";
 		static final String PW = "a1234";
+=======
+		static final String URL = "jdbc:mysql://tripful.cfke6268yfep.ap-northeast-2.rds.amazonaws.com:3306/TripFul";
+		static final String USERNAME = "adminroot";
+		static final String PW = "Tkddyd2025!";
+>>>>>>> a7fb1cb7f14c9902a928f454077c8632071b0b6d
 		static final String MySqlDriver="com.mysql.cj.jdbc.Driver";
 		Connection conn = null;
 		Statement stmt = null;
