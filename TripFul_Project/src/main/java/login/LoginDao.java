@@ -15,7 +15,7 @@ public class LoginDao {
 		Connection conn = db.getConnection();
 		PreparedStatement pstmt = null;
 
-		String sql = "insert into tourful_member(id, pw, name, email, birth, joindate) values(?,?,?,?,?,now())";
+		String sql = "insert into tripful_member(id, pw, name, email, birth, joindate) values(?,?,?,?,?,now())";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -57,7 +57,7 @@ public class LoginDao {
 			return flag;
 		}
 
-		String sql = "select id from tourful_member where id = ?";
+		String sql = "select id from tripful_member where id = ?";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -85,7 +85,7 @@ public class LoginDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		String sql = "select id from tourful_member where name=? and email=?";
+		String sql = "select id from tripful_member where name=? and email=?";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -114,7 +114,7 @@ public class LoginDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		String sql = "select pw from tourful_member where name=? and email=? and id = ?";
+		String sql = "select pw from tripful_member where name=? and email=? and id = ?";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -145,7 +145,7 @@ public class LoginDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		String sql = "Select admin from tourful_member where id=? and pw = ?";
+		String sql = "select admin from tripful_member where id=? and pw = ?";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -178,7 +178,7 @@ public class LoginDao {
 		Connection conn = db.getConnection();
 		PreparedStatement pstmt = null;
 
-		String sql = "update into tourful_member set pw=? where id=?";
+		String sql = "update tripful_member set pw=? where id=?";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -193,6 +193,36 @@ public class LoginDao {
 		} finally {
 			db.dbClose(pstmt, conn);
 		}
+	}
+	
+	public LoginDto getOneMember(String id) {
+		LoginDto dto = new LoginDto();
+		
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs= null;
+		
+		String sql = "select * from tripful_member where id = ?";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				dto.setId(id);
+				dto.setEmail(rs.getString("email"));
+				dto.setBirth(rs.getString("birth"));
+				dto.setName(rs.getString("name"));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return dto;
 	}
 
 }

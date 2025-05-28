@@ -1,4 +1,7 @@
-/login/
-/mysql/
 /board/
+<<<<<<< HEAD
 /place/
+=======
+/mysql/
+/login/
+>>>>>>> a7fb1cb7f14c9902a928f454077c8632071b0b6d
