@@ -42,7 +42,7 @@
 		if(chk!=null){
 			session.setAttribute("rememberId", "ok");
 		}
-		response.sendRedirect("./updateMember.jsp");
+		response.sendRedirect("../page/TripFul_main.jsp");
 	}
 	else if (flag == 2) {
 		System.out.println("어드민");
@@ -51,7 +51,7 @@
 		if(chk!=null){
 			session.setAttribute("rememberId", "ok");
 		}
-		response.sendRedirect("./updateMember.jsp");
+		response.sendRedirect("../page/TripFul_main.jsp");
 	}
 %>
 

@@ -31,6 +31,8 @@
 	
 	dao.insertMember(dto);
 	
+	response.sendRedirect("./login.jsp");
+	
 %>
 
 </head>
