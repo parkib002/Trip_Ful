@@ -5,26 +5,39 @@
 	var modal = $("#myModal");
 	var closeBtn = $("#closeBtn");
 	var save = $(".save");
-
+	
 	// 모달제어
 	function toggleModal() {
 		modal.toggleClass("show");
 	}
 
-	// events
-	modalBtn.click(function() {
+	// events	
+	modalBtn.click(function(){
 		toggleModal();
-	});
+	})
 	closeBtn.click(function() {
 		toggleModal();
 	});
-	save.click(function() {
+	save.click(function(e) {		
+		
+		e.preventDefault(); // 폼 제출 막기
+		var frm=document.querySelector(".modalfrm");
+		
+		var formData = new FormData(frm);
+		console.log(formData);
 		$.ajax({
-			type:"get",
+			type:"post",
 			dataType:"html",
-			
+			url:"reviewAddAction.jsp",
+			data:formData,
+			processData: false, // 필수
+			contentType: false, // 필수
+			success:function(){
+				
+			}
 			
 		})
+		toggleModal();
 	});
 
 	$(window).on("click", function(event) {
