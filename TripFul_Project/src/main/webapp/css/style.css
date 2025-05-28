@@ -1,39 +1,40 @@
+/* 기본 바디와 글자 색상 */
 body {
     background-color: white;
     color: black;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
+/* 네비게이션 바 */
 .navbar-toggler:focus {
-     outline: none;
+    outline: none;
     box-shadow: none;
- }
+}
 
 .navbar {
-    background-color: #f5f5f5; /* 밝은 회색 */
-    height: 5vh;
+    background-color: #ffffff;
 }
 
 .navbar-nav .nav-link {
-    color: black; /* 기본 텍스트 색을 검정으로 변경 */
-    transition: color 0.3s ease;
+    color: #212121; /* 짙은 회색 글자 */
 }
 
 .navbar-nav .nav-link:hover {
-    color: #fdd835; /* 호버 시 강조색 유지 가능 */
+    color: #fb8c00; /* 고급스러운 골드 느낌 */
 }
 
-#auth-button {
-    background-color: #fdd835;
+/* 노란색 버튼 */
+.btn-yellow {
+    background-color: #ffffff;
     color: black;
     border: none;
 }
 
-#auth-button:hover {
-    background-color: #e6c200;
+.btn-yellow:hover {
+    background-color: #fdd835;
 }
 
-
-
+/* 히어로 섹션 배경 */
 .hero {
     background-image: url('../image/1.jpg');
     background-size: cover;
@@ -46,17 +47,12 @@ body {
     align-items: center;
     text-align: center;
     color: black;
-
 }
-
-
-
 
 .hero h1 {
     font-size: 3.5rem;
-    color: #d4af37;
+    color: #ffffff;
     font-style: italic;
-
 }
 
 .hero h2 {
@@ -64,12 +60,129 @@ body {
     font-weight: bold;
 }
 
-.btn-yellow {
-    background-color: #fdd835;
-    color: black;
+/* 캐러셀 전체 컨테이너 */
+#spotReviewCarousel {
+    max-width: 900px;   /* 최대 너비 */
+    height: 700px;      /* 높이 고정 */
+    margin: 0 auto 50px;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    background-color: white;
+}
+
+/* 캐러셀 내부 높이 */
+#spotReviewCarousel .carousel-inner,
+#spotReviewCarousel .carousel-item {
+    height: 100%;
+}
+
+/* 캐러셀 이미지 */
+#spotReviewCarousel .carousel-item img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 20px 20px 0 0;
+    transition: transform 0.5s ease;
+}
+
+#spotReviewCarousel .carousel-item:hover img {
+    transform: scale(1.05);
+}
+
+/* 카드 호버시 확대 */
+.card:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* 캐러셀 슬라이드 전환 애니메이션 */
+.carousel-item {
+    transition: transform 1s ease, opacity 1s ease;
+}
+
+/* 카드 그림자와 둥근 모서리 */
+.carousel-item .card {
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* 카드 본문 스타일 */
+.card-body h5 {
+    color: #4e54c8;
+    font-weight: 700;
+}
+
+.card-body p {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* 자세히 보기 버튼 */
+.btn-outline-warning {
+    border-radius: 30px;
+    font-weight: 600;
+    padding: 8px 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffc107;
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.5);
+}
+
+/* 리뷰 박스 */
+.border-start.border-warning {
+    border-left-width: 6px !important;
+}
+
+.carousel-item .bg-light {
+    font-style: italic;
+    color: #444;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-radius: 20px;
+}
+
+/* 캐러셀 인디케이터 */
+.carousel-indicators button {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #ffc107 !important; /* 밝은 노란색 */
+    opacity: 0.8;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
     border: none;
 }
 
-.btn-yellow:hover {
-    background-color: #e6c200;
+.carousel-indicators .active {
+    opacity: 1;
+    background-color: #fd7e14 !important; /* 진한 주황색 */
+}
+
+/* 인디케이터 버튼 포커스 제거 (선택적) */
+.carousel-indicators button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    #spotReviewCarousel {
+        max-width: 100%;
+        height: auto;
+        margin: 0 10px 40px;
+    }
+    .carousel-item .row {
+        flex-direction: column !important;
+    }
+    .carousel-item .col-md-6 {
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+    .card-body p {
+        font-size: 0.9rem;
+    }
 }
