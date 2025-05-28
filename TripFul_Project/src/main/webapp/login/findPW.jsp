@@ -1,3 +1,4 @@
+<%@page import="login.LoginDto"%>
 <%@page import="login.LoginDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -18,13 +19,23 @@
 <title>Insert title here</title>
 <%
 request.setCharacterEncoding("utf-8");
-String name = request.getParameter("name");
-String email = request.getParameter("email");
-String id = request.getParameter("id");
 
 LoginDao dao = new LoginDao();
+String name, email, id, pw;
 
-String pw = dao.findPW(name, email, id);
+if(session.getAttribute("loginok")==null){
+	name = request.getParameter("name");
+	email = request.getParameter("email");
+	id = request.getParameter("id");
+	pw = dao.findPW(name, email, id);
+}
+else{
+	id = (String)session.getAttribute("id");
+	LoginDto dto = dao.getOneMember(id);
+	pw = dao.findPW(dto.getName(), dto.getEmail(), id);
+}
+
+
 %>
 </head>
 <body>
@@ -36,7 +47,7 @@ String pw = dao.findPW(name, email, id);
 			<span>일치하는 유저의 정보를 찾을 수 없습니다.</span>
 			<%
 			} else {
-			%><form>
+			%><form action="./changePW.jsp" method="post" id="npw">
 			<input type="hidden" value=<%=id %> name="id">
 			<input type="hidden" value=<%=pw %> id="pw">
 				<table class="table table-border">
