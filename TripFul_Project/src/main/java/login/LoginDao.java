@@ -15,7 +15,7 @@ public class LoginDao {
 		Connection conn = db.getConnection();
 		PreparedStatement pstmt = null;
 
-		String sql = "insert into tourful_member(id, pw, name, email, birth, joindate) values(?,?,?,?,?,now())";
+		String sql = "insert into tripful_member(id, pw, name, email, birth, joindate) values(?,?,?,?,?,now())";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -57,7 +57,7 @@ public class LoginDao {
 			return flag;
 		}
 
-		String sql = "select id from tourful_member where id = ?";
+		String sql = "select id from tripful_member where id = ?";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -85,7 +85,7 @@ public class LoginDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		String sql = "select id from tourful_member where name=? and email=?";
+		String sql = "select id from tripful_member where name=? and email=?";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -114,7 +114,7 @@ public class LoginDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		String sql = "select pw from tourful_member where name=? and email=? and id = ?";
+		String sql = "select pw from tripful_member where name=? and email=? and id = ?";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -145,7 +145,7 @@ public class LoginDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		String sql = "select admin from tourful_member where id=? and pw = ?";
+		String sql = "select admin from tripful_member where id=? and pw = ?";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -178,7 +178,7 @@ public class LoginDao {
 		Connection conn = db.getConnection();
 		PreparedStatement pstmt = null;
 
-		String sql = "update tourful_member set pw=? where id=?";
+		String sql = "update tripful_member set pw=? where id=?";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -202,7 +202,7 @@ public class LoginDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs= null;
 		
-		String sql = "select * from tourful_member where id = ?";
+		String sql = "select * from tripful_member where id = ?";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
