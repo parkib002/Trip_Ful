@@ -19,7 +19,12 @@
 		toggleModal();
 	});
 	save.click(function() {
-
+		$.ajax({
+			type:"get",
+			dataType:"html",
+			
+			
+		})
 	});
 
 	$(window).on("click", function(event) {

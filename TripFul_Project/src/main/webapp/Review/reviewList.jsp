@@ -24,7 +24,9 @@
 </head>
 
 <body>
-
+<%
+	
+%>
 	<!-- 모달 버튼 -->
 	<button id="modalBtn">리뷰 작성</button>
 
