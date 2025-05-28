@@ -18,7 +18,7 @@
         <!-- 우측 로그인 영역 -->
         <div class="d-flex align-items-center">
             <span id="welcome-text" class="me-3">로그인을 해주세요</span>
-            <button id="auth-button" class="btn btn-yellow">Login</button>
+            <button id="auth-button" class="btn btn-yellow" onclick="location.href='index.jsp?main=login/login.jsp'">Login</button>
         </div>
     </div>
 
@@ -26,7 +26,7 @@
     <div class="collapse" id="mainMenu">
         <ul class="navbar-nav px-4 py-3 bg-light">
             <li class="nav-item">
-                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#regionModal">지역별 관광지</a>
+                <a class="nav-link" href="index.jsp?main=/place/selectPlace.jsp" >지역별 관광지</a>
             </li>
             <li class="nav-item"><a class="nav-link" href="#">이벤트</a></li>
             <li class="nav-item"><a class="nav-link" href="#">공지사항</a></li>
@@ -34,13 +34,6 @@
         </ul>
     </div>
 </nav>
-
-
-
-<header class="hero">
-    <h1>Welcome To Our Tripful</h1>
-    <h2>IT'S Travel review site</h2>
-</header>
 
 
 <script>

@@ -7,6 +7,11 @@
 </head>
 <body>
 
+<header class="hero">
+    <h1>Welcome To Our Tripful</h1>
+    <h2>IT'S Travel review site</h2>
+</header>
+
 <div class="container py-5">
     <h2 class="text-center fw-bold mb-4">추천 관광지 & 리뷰</h2>
 
