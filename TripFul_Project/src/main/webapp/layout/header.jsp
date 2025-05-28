@@ -11,7 +11,7 @@
         <!-- 중앙 로고 -->
         <div class="position-absolute top-50 start-50 translate-middle">
             <a class="navbar-brand" href="index.jsp">
-                <img src="../image/tripful_logo.png" alt="Tripful Logo" height="120">
+                <img src="./image/tripful_logo.png" alt="Tripful Logo" height="120">
             </a>
         </div>
 
@@ -26,9 +26,9 @@
     <div class="collapse" id="mainMenu">
         <ul class="navbar-nav px-4 py-3 bg-light">
             <li class="nav-item">
-                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#regionModal">지역별 관광지</a>
+                <a class="nav-link" href="index.jsp?main=place/selectPlace.jsp">지역별 관광지</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">이벤트</a></li>
+            <li class="nav-item"><a class="nav-link" href="index.jsp?main=board/event.jsp">이벤트</a></li>
             <li class="nav-item"><a class="nav-link" href="#">공지사항</a></li>
             <li class="nav-item"><a class="nav-link" href="#">QnA 게시판</a></li>
         </ul>
