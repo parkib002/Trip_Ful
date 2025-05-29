@@ -21,11 +21,12 @@
       height: 300,             // 에디터 높이
       placeholder: '내용을 입력하세요...',
       toolbar: [
-        ['style', ['bold', 'italic', 'underline', 'clear']],
-        ['font', ['strikethrough', 'superscript', 'subscript']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['insert', ['link', 'picture']],
-        ['view', ['fullscreen', 'codeview']]
+    	  ['style', ['bold', 'italic', 'underline', 'clear']],
+    	    ['font', ['strikethrough', 'superscript', 'subscript']],
+    	    ['color', ['color']],  // ✅ 색상 도구 추가
+    	    ['para', ['ul', 'ol', 'paragraph']],
+    	    ['insert', ['link', 'picture']],
+    	    ['view', ['fullscreen', 'codeview']]
       ]
     });
   });

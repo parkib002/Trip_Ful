@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
+import board.MainPlaceDto;
 import mysql.db.DbConnect;
 
 public class PlaceDao {
@@ -206,4 +207,6 @@ public class PlaceDao {
 			db.dbClose(pstmt, conn);
 		}
 	}
+	
+
 }

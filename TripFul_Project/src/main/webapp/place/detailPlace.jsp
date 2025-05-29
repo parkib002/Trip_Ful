@@ -15,6 +15,8 @@
 	PlaceDao dao=new PlaceDao();
 	
 	PlaceDto dto=dao.getPlaceData(num);
+	
+	String [] img=dto.getPlace_img().split(",");
 %>
 <style type="text/css">
 body {
@@ -156,23 +158,23 @@ body {
 <div id="demo" class="carousel slide" data-bs-ride="carousel">
 
   <!-- Indicators/dots -->
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
-    <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
-    <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
-  </div>
+<div class="carousel-indicators">
+  <% for (int i = 0; i < img.length; i++) { %>
+    <button type="button" data-bs-target="#demo" data-bs-slide-to="<%=i%>" class="<%= (i == 0 ? "active" : "") %>"></button>
+  <% } %>
+</div>
   
   <!-- The slideshow/carousel -->
   <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="./save/<%=dto.getPlace_img() %>" alt="Los Angeles" class="d-block" style="width:500px;">
+  <%
+  	for(int i=0;i<img.length;i++){
+  %>
+    <div class="carousel-item <%= (i == 0 ? "active" : "") %>">
+      <img src="./<%=img[i] %>" alt="Los Angeles" class="d-block" style="width:500px;">
     </div>
-    <div class="carousel-item">
-      <img src="./image/places/성산일출봉.jpg" alt="Chicago" class="d-block" style="width:500px;">
-    </div>
-    <div class="carousel-item">
-      <img src="./image/places/해운대.jpg" alt="New York" class="d-block" style="width:500px;">
-    </div>
+   
+    <%} 
+    %>
   </div>
   
   <!-- Left and right controls/icons -->

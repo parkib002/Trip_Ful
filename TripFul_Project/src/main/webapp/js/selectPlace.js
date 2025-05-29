@@ -133,26 +133,23 @@ function showPlaces(title, places) {
   $.each(places, function (_, place) {
     const $card = $('<div class="place-card">').css('cursor', 'pointer');
 
-    const fileName = place.place_img;
+    const fileName = place.place_img ? place.place_img.split(',')[0] : null;
     const imgPath = fileName
-      ? './image/places/' + fileName
+      ? './' + fileName
       : 'https://via.placeholder.com/200x150?text=No+Image';
 
+    const $imgWrapper = $('<div class="image-wrapper">');
     const $img = $('<img>')
       .attr('alt', place.place_name)
-      .attr('src', imgPath)
-      .css({
-        width: '200px',
-        height: '150px',
-        objectFit: 'cover'
-      });
+      .attr('src', imgPath);
+    $imgWrapper.append($img);
 
-    $card.append($img);
+    $card.append($imgWrapper);
     $('<div class="caption">').text(place.place_name).appendTo($card);
 
     $card.click(() => {
       const targetUrl = 'index.jsp?main=place/detailPlace.jsp' +
-                        '&place_num=' + place.place_num;
+        '&place_num=' + place.place_num;
       location.href = targetUrl;
     });
 
@@ -165,17 +162,19 @@ function appendPlaces(places) {
 
   $.each(places, function (_, place) {
     const $card = $('<div class="place-card">').css('cursor', 'pointer');
-
-    const fileName = place.place_img;
-    const imgPath = fileName
-      ? './image/places/' + fileName
-      : 'https://via.placeholder.com/200x150?text=No+Image';
+	const $imgWrapper = $('<div class="image-wrapper">');
+	
+	const fileName = place.place_img ? place.place_img.split(',')[0] : null;
+	 const imgPath = fileName
+	   ? './' + fileName
+	   : 'https://via.placeholder.com/200x150?text=No+Image';
 
     const $img = $('<img>')
       .attr('alt', place.place_name)
       .attr('src', imgPath);
 
-    $card.append($img);
+    $imgWrapper.append($img);
+	$card.append($imgWrapper);
     $('<div class="caption">').text(place.place_name).appendTo($card);
 
     $card.click(() => {
