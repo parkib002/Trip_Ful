@@ -8,9 +8,22 @@ import mysql.db.DbConnect;
 
 public class LoginDto {
 	
-	private String id, pw, name, email, birth;
+	private String id, pw, name, email, birth, hash_pw, salt;
 	private int admin;
 	private Timestamp joindate;
+		
+	public String getHash_pw() {
+		return hash_pw;
+	}
+	public void setHash_pw(String hash_pw) {
+		this.hash_pw = hash_pw;
+	}
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 	public String getId() {
 		return id;
 	}
