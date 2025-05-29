@@ -41,7 +41,7 @@
     // 답글은 보통 관리자만 작성 가능하므로, "admin" 체크 또는 특정 권한 체크 필요
     // 예시: 관리자가 아니면 접근 불가 (또는 로그인 페이지로)
     if (loginok_reply == null || userId_reply == null /* || !"admin".equals(userId_reply) */ ) { // 관리자 ID가 "admin"이라고 가정
-        response.sendRedirect(request.getContextPath() + "/index.jsp?main=login/loginForm.jsp&errMsg=admin_only");
+        response.sendRedirect(request.getContextPath() + "/index.jsp?main=login/login.jsp&errMsg=admin_only");
         return;
     }
 

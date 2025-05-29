@@ -33,7 +33,7 @@
 	//System.out.println(flag);
 	
 	if(flag==0){
-		response.sendRedirect("./login.jsp?login=1");
+		response.sendRedirect("../index.jsp?main=login/login.jsp&login=1");
 	}
 	else if (flag==1){
 		System.out.println("유저");

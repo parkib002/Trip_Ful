@@ -11,9 +11,16 @@ public class PlaceDto {
 	private String place_name;
 	private int place_count;
 	private String continent_name;
+	private String place_addr;
 	
 	public String getPlace_name() {
 		return place_name;
+	}
+	public String getPlace_addr() {
+		return place_addr;
+	}
+	public void setPlace_addr(String place_addr) {
+		this.place_addr = place_addr;
 	}
 	public void setPlace_name(String place_name) {
 		this.place_name = place_name;
