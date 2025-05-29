@@ -19,15 +19,16 @@ public class BoardEventDao {
 		Connection conn=db.getConnection();
 		PreparedStatement pstmt=null;
 		
-		String sql="insert into 테이블명 values(null,?,?,?,?,?,now())";
+		String sql="insert into tripful_event values(null,?,?,?,?,now(),?)";
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getEvent_title());
 			pstmt.setString(2, dto.getEvent_content());
 			pstmt.setString(3, dto.getEvent_img());
-			pstmt.setInt(4, dto.getEvent_readcount());
-			pstmt.setString(5, dto.getEvent_writer());
+			pstmt.setString(4, dto.getEvent_writer());
+			pstmt.setInt(5, dto.getEvent_readcount());
+
 			pstmt.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -45,7 +46,7 @@ public class BoardEventDao {
 			Connection conn=db.getConnection();
 			PreparedStatement pstmt=null;
 			ResultSet rs=null;
-			String sql="select count(*) from 테이블명";
+			String sql="select count(*) from tripful_event";
 			
 			try {
 				pstmt=conn.prepareStatement(sql);
@@ -69,7 +70,7 @@ public class BoardEventDao {
 			public List<BoardEventDto> getList(int start,int perpage)
 			{
 				List<BoardEventDto> list=new ArrayList<BoardEventDto>();
-				String sql="select * from 테이블명 order by num desc limit ?,?";
+				String sql="select * from tripful_event order by num desc limit ?,?";
 				Connection conn=db.getConnection();
 				PreparedStatement pstmt=null;
 				ResultSet rs=null;

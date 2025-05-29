@@ -14,11 +14,12 @@
 </head>
 <%
 BoardEventDao dao=new BoardEventDao();
+String loginok=(String)session.getAttribute("loginok");
 
 //페이징처리
 //전체갯수
 int totalCount=1;//dao.getTotalCount();
-int perPage=3; //한페이지에 보여질 글의 갯수
+int perPage=5; //한페이지에 보여질 글의 갯수
 int perBlock=5; //한블럭당 보여질 페이지의 갯수
 int startNum; //db에서 가져올 글의 시작번호(mysql:0 오라클:1번)
 int startPage; //각블럭당 보여질 시작페이지
@@ -64,6 +65,15 @@ no=totalCount-(currentPage-1)*perPage;
 <div class="notice-wrapper">
 	<div class="notice-header">
 		<h3><i class="bi bi-x-diamond-fill">  </i><b>이벤트</b></h3>
+		<%
+			if(loginok!=null && loginok.equals("admin"))
+			{%>
+					<a style="float: right; text-decoration: none; color: black;" 
+					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=eventInsertForm.jsp">
+						<i class="bi bi-plus-square"></i>&nbsp;추가
+					</a>				
+			<%}
+		%>
 		<hr>
 	</div>
 	<br>

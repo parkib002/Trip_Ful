@@ -33,7 +33,7 @@
 	//System.out.println(flag);
 	
 	if(flag==0){
-		response.sendRedirect("./login.jsp?login=1");
+		response.sendRedirect("../index.jsp?main=login/login.jsp&login=1");
 	}
 	else if (flag==1){
 		System.out.println("유저");
@@ -42,7 +42,8 @@
 		if(chk!=null){
 			session.setAttribute("rememberId", "ok");
 		}
-		response.sendRedirect("../page/TripFul_main.jsp");
+		response.sendRedirect("../index.jsp");
+
 	}
 	else if (flag == 2) {
 		System.out.println("어드민");
@@ -51,7 +52,8 @@
 		if(chk!=null){
 			session.setAttribute("rememberId", "ok");
 		}
-		response.sendRedirect("../page/TripFul_main.jsp");
+		response.sendRedirect("../index.jsp");
+
 	}
 %>
 

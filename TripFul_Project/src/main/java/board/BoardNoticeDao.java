@@ -20,7 +20,7 @@ public class BoardNoticeDao {
 		Connection conn=db.getConnection();
 		PreparedStatement pstmt=null;
 		
-		String sql="insert into guest values(null,?,?,?,now())";
+		String sql="insert into tripful_notice values(null,?,?,?,now())";
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
@@ -44,7 +44,7 @@ public class BoardNoticeDao {
 			Connection conn=db.getConnection();
 			PreparedStatement pstmt=null;
 			ResultSet rs=null;
-			String sql="select count(*) from 테이블명";
+			String sql="select count(*) from tripful_notice";
 			
 			try {
 				pstmt=conn.prepareStatement(sql);
@@ -68,7 +68,7 @@ public class BoardNoticeDao {
 		public List<BoardNoticeDto> getList(int startNum,int perPage)
 		{
 			List<BoardNoticeDto> list=new ArrayList<BoardNoticeDto>();
-			String sql="select * from 테이블명 order by num desc limit ?,?";
+			String sql="select * from tripful_notice order by notice_idx desc limit ?,?";
 			Connection conn=db.getConnection();
 			PreparedStatement pstmt=null;
 			ResultSet rs=null;
