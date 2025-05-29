@@ -59,25 +59,33 @@
       overflow: hidden;
     }
     .place-card img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-    }
+  	width: 100%;
+  	height: 150px;
+  	object-fit: cover;
+ 	 transition: transform 0.3s ease;
+	}
     .place-card .caption {
-      padding: 0.75rem;
-      text-align: center;
+    padding: 0.75rem;
+    text-align: center;
     }
     
-    .place-card img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  transition: transform 0.3s ease; /* 부드러운 애니메이션 */
-}
+   .place-card img {
+ 	width: 100%;
+    height: 150px;
+    object-fit: cover;
+    transition: transform 0.3s ease; /* 부드러운 애니메이션 */
+	}
+	.top-button-row, .continent-row {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 1rem;
+   justify-content: center;
+   margin-bottom: 1rem;
+   }
 
-.place-card:hover img {
-  transform: scale(0.95); /* 95% 크기로 축소 */
-}
+   .place-card:hover img {
+   transform: scale(0.95); /* 95% 크기로 축소 */
+   }
   </style>
 </head>
 <body>
@@ -85,11 +93,11 @@
     <h1>관광지 선택</h1>
   </header>
 
-  <div class="container">
-    <div class="selection-buttons" id="selection-area" style="position: relative; z-index: 10;"></div>
-    <div class="places" id="placeContainer"></div>
-  </div>
-
+ <div class="container">
+  <div class="selection-buttons" id="global-controls"></div> <!-- ✅ 추가된 부분 -->
+  <div class="selection-buttons" id="selection-area" style="position: relative; z-index: 10;"></div>
+  <div class="places" id="placeContainer"></div>
+</div>
  
 </body>
 </html>

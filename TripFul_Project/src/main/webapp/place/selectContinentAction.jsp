@@ -15,6 +15,7 @@
   Map<String, JSONArray> map = new HashMap<>();
   for (PlaceDto dto : list) {
     JSONObject obj = new JSONObject();
+    obj.put("place_num", dto.getPlace_num()); 
     obj.put("place_name", dto.getPlace_name());
     obj.put("place_img", dto.getPlace_img());
 

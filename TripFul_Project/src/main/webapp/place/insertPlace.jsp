@@ -75,7 +75,7 @@
   주소: <input type="text" id="output-address" name="place_address"><br>
   Place ID: <input type="text" id="output-placeid" name="place_id"><br>
   나라: <input type="text" name="country_name"><br>
-  대륙(영어): <input type="text" name="continent_name">
+  대륙(영어): <input type="text" name="continent_name"><br>
   카테고리: <input type="text" name="place_tag">
   <textarea id="summernote" name="place_content"></textarea>
   <button type="submit">제출</button>

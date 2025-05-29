@@ -1,3 +1,5 @@
+<%@page import="place.PlaceDto"%>
+<%@page import="place.PlaceDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -7,6 +9,13 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <title>Insert title here</title>
+<%
+	String num=request.getParameter("place_num");
+
+	PlaceDao dao=new PlaceDao();
+	
+	PlaceDto dto=dao.getPlaceData(num);
+%>
 <style type="text/css">
 body {
     font-family: 'Arial', sans-serif;
@@ -95,6 +104,11 @@ body {
     font-size: 12px;
     color: #999;
 }
+
+.category-views {
+    font-size: 14px;
+    color: #666;
+}
 </style>
 </head>
 <script>
@@ -104,7 +118,7 @@ body {
       center: { lat: 37.5665, lng: 126.9780 }, // 초기값 (서울)
     });
 
-    const placeId = "ChIJod7tSseifDUR9hXHLFNGMIs"; // 예시 Place ID
+    const placeId = "<%=dto.getPlace_code()%>"; // 예시 Place ID
 
     const request = {
       placeId: placeId,
@@ -132,9 +146,11 @@ body {
   async defer></script>
 <body>
 <div class="container">
-        <h1 class="place-title" align="center">경복궁</h1>
-                <p class="category">카테고리: #궁#문화재</p>
-        
+        <h1 class="place-title" align="center"><%=dto.getPlace_name() %></h1>
+        <div class="category-views d-flex justify-content-between align-items-center mb-2">
+    	<p class="category m-0">카테고리: <%=dto.getPlace_tag() %></p>
+   	 	<p class="views m-0">조회수: <%=dto.getPlace_count() %></p>
+		</div>
         <div class="main-section">
            <!-- Carousel -->
 <div id="demo" class="carousel slide" data-bs-ride="carousel">
@@ -149,7 +165,7 @@ body {
   <!-- The slideshow/carousel -->
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="./image/places/경복궁.jpg" alt="Los Angeles" class="d-block" style="width:500px;">
+      <img src="./save/<%=dto.getPlace_img() %>" alt="Los Angeles" class="d-block" style="width:500px;">
     </div>
     <div class="carousel-item">
       <img src="./image/places/성산일출봉.jpg" alt="Chicago" class="d-block" style="width:500px;">
@@ -171,9 +187,14 @@ body {
                 <p class="description"></p>
                 <p class="location">위치: </p>
                 <div id="map" style="width: 100%; height: 400px;"></div>
+                <p class="address">주소:<%=dto.getPlace_addr() %>
             </div>
         </div>
 
+		<div>
+				<%=dto.getPlace_content() %>
+		</div>
+		
         <div class="review-section">
             <h2>방문자 리뷰</h2>
              
