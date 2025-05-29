@@ -23,16 +23,6 @@ body {
     color: #fb8c00; /* 고급스러운 골드 느낌 */
 }
 
-/* 노란색 버튼 */
-.btn-yellow {
-    background-color: #ffffff;
-    color: black;
-    border: none;
-}
-
-.btn-yellow:hover {
-    background-color: #fdd835;
-}
 
 /* 히어로 섹션 배경 */
 .hero {
@@ -120,19 +110,6 @@ body {
     line-height: 1.5;
 }
 
-/* 자세히 보기 버튼 */
-.btn-outline-warning {
-    border-radius: 30px;
-    font-weight: 600;
-    padding: 8px 20px;
-    transition: all 0.3s ease;
-}
-
-.btn-outline-warning:hover {
-    background-color: #ffc107;
-    color: white;
-    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.5);
-}
 
 /* 리뷰 박스 */
 .border-start.border-warning {

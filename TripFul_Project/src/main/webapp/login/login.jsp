@@ -10,25 +10,26 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Dongle&family=Nanum+Brush+Script&family=Nanum+Myeongjo&family=Nanum+Pen+Script&display=swap"
 	rel="stylesheet">
-	<link href="./loginStyle.css" rel="stylesheet">
+	<link href="./login/loginStyle.css" rel="stylesheet">
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
 <title>Insert title here</title>
 <%
-	String login = request.getParameter("login");
+    String login = request.getParameter("login");
 %>
-</head>
-<script>
-	$(function() {
-		
-		if(<%=login%>!=null){
-			alert("아이디 비밀번호를 다시 확인해주세요");
-		}
+	<script>
+		$(function() {
+			// JSP에서 받은 login 값 자바스크립트 변수에 저장
+			const loginFail = "<%=login%>";
 
-	})
-</script>
+			// 실패 값이 "1"이면 알림 출력
+			if (loginFail === "1") {
+				alert("아이디 또는 비밀번호를 다시 확인해주세요");
+			}
+		});
+	</script>
 <body>
 	<div class="login-wrap">
 		<div class="login-html">
@@ -40,7 +41,7 @@
 				
 				<%//로그인 페이지 %>
 				<div class="sign-in-htm">
-					<form action="loginAction.jsp" method="post" onsubmit="return chkSignIn()">
+					<form action="./login/loginAction.jsp" method="post" onsubmit="return chkSignIn()">
 						<div class="group">
 							<label for="user" class="label">아이디</label> <input id="user"
 								type="text" class="input" name="user">
@@ -58,14 +59,14 @@
 						</div>
 						<div class="hr"></div>
 						<div class="foot-lnk">
-							<a href="./forgotPw.jsp">Forgot Password?</a>
+							<a href="index.jsp?main=./login/forgotPw.jsp">Forgot Password?</a>
 						</div>
 					</form>
 				</div>
 				
 				<%//회원가입 페이지 %>
 				<div class="sign-up-htm">
-					<form action="./signupAction.jsp" method="post"
+					<form action="index.jsp?main=./login/signupAction.jsp" method="post"
 						onsubmit="return chkSignUp()">
 						<div class="group">
 							<label for="user" class="label">이름</label> <input name="name"
@@ -99,5 +100,5 @@
 		</div>
 	</div>
 </body>
-<script src="./JavaScript/signupJS.js"></script>
+<script src="./login/JavaScript/signupJS.js"></script>
 </html>
