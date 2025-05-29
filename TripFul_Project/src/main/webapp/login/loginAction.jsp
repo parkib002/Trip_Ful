@@ -51,7 +51,7 @@
 		if(chk!=null){
 			session.setAttribute("rememberId", "ok");
 		}
-		response.sendRedirect("./updateMember.jsp");
+		response.sendRedirect("../index.jsp");
 	}
 %>
 

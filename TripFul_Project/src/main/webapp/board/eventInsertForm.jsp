@@ -13,7 +13,7 @@
 <body>
 <div class="container">
     <h2>글 작성하기</h2>
-    <form method="post" action="submit.jsp" enctype="multipart/form-data">
+    <form method="post" action="<%= request.getContextPath() %>/board/eventInsertAction.jsp" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">제목</label>
             <input type="text" class="form-control" id="title" name="title">
@@ -61,7 +61,8 @@
             data.append("file", file);
 
             $.ajax({
-                url: 'imageUpload.jsp',  // COS 기반 업로드 처리 JSP
+            	// COS 기반 업로드 처리 JSP
+                url: '<%= request.getContextPath() %>/board/imageUpload.jsp',
                 type: 'POST',
                 data: data,
                 processData: false,

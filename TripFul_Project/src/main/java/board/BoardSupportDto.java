@@ -12,9 +12,9 @@ public class BoardSupportDto {
 	private String qna_writer;
 	private String qna_private;
 	private String qna_category;
-	private int group;
-	private int step;
-	private int level;
+	private int regroup;
+	private int restep;
+	private int relevel;
 	
 	public String getQna_idx() {
 		return qna_idx;
@@ -70,24 +70,25 @@ public class BoardSupportDto {
 	public void setQna_category(String qna_category) {
 		this.qna_category = qna_category;
 	}
-	public int getGroup() {
-		return group;
+	public int getRegroup() {
+		return regroup;
 	}
-	public void setGroup(int group) {
-		this.group = group;
+	public void setRegroup(int regroup) {
+		this.regroup = regroup;
 	}
-	public int getStep() {
-		return step;
+	public int getRestep() {
+		return restep;
 	}
-	public void setStep(int step) {
-		this.step = step;
+	public void setRestep(int restep) {
+		this.restep = restep;
 	}
-	public int getLevel() {
-		return level;
+	public int getRelevel() {
+		return relevel;
 	}
-	public void setLevel(int level) {
-		this.level = level;
+	public void setRelevel(int relevel) {
+		this.relevel = relevel;
 	}
+	
 	
 	
 	
