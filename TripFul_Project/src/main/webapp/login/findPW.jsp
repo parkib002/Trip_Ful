@@ -21,7 +21,8 @@
 request.setCharacterEncoding("utf-8");
 
 LoginDao dao = new LoginDao();
-String name, email, id, pw;
+String name, email, id;
+String[] pw;
 
 if(session.getAttribute("loginok")==null){
 	name = request.getParameter("name");
@@ -42,14 +43,14 @@ else{
 	<div>
 		<div>
 			<%
-			if (pw.equals("")) {
+			if (pw == null) {
 			%>
 			<span>일치하는 유저의 정보를 찾을 수 없습니다.</span>
 			<%
 			} else {
 			%><form action="./changePW.jsp" method="post" id="npw">
 			<input type="hidden" value=<%=id %> name="id">
-			<input type="hidden" value=<%=pw %> id="pw">
+			<input type="hidden" value=<%=pw[0] %> id="pw">
 				<table class="table table-border">
 					<tr>
 					
@@ -73,4 +74,7 @@ else{
 	</div>
 </body>
 <script src="./JavaScript/forgotJS.js"></script>
+<script>
+
+</script>
 </html>

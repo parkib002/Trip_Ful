@@ -43,6 +43,7 @@
 			session.setAttribute("rememberId", "ok");
 		}
 		response.sendRedirect("../index.jsp");
+
 	}
 	else if (flag == 2) {
 		System.out.println("어드민");
@@ -52,6 +53,7 @@
 			session.setAttribute("rememberId", "ok");
 		}
 		response.sendRedirect("../index.jsp");
+
 	}
 %>
 
