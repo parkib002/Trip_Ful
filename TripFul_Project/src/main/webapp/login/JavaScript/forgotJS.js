@@ -40,25 +40,7 @@ function changePass(){
 	}
 }
 
-$("#n_pw").keyup(function(){
-	if($("#pw").val()==$(this).val()){
-		$(this).addClass("error");
-	}
-	
-	else if(!(/[!@#$%^&]/.test($(this).val()))){
-		$(this).addClass("eerror");
-	}
-	
-	else if($(this).val().length<8||$(this).val().length>16){
-		$(this).addClass("errorr");
-	}
-	
-	else{
-		$(this).removeClass("error");
-		$(this).removeClass("eerror");
-		$(this).removeClass("errorr");
-	}
-})
+
 $("#r_pw").keyup(function(){
 	if($("#n_pw").val()!=$(this).val()){
 		$(this).addClass("error");
