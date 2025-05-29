@@ -38,7 +38,7 @@ public class ReviewDao {
 		
 	}
 	//관광지 이름 가져오기
-	public String getPlaceName(String Place_num)
+	public String getPlaceName(String place_num)
 	{
 		String Place_name="";
 		Connection conn=db.getConnection();
@@ -47,7 +47,7 @@ public class ReviewDao {
 		String sql="select Place_name from tripful_place where place_num=?";
 		try {
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, Place_num);
+			pstmt.setString(1, place_num);
 			rs=pstmt.executeQuery();
 			if(rs.next())
 			{
@@ -64,7 +64,7 @@ public class ReviewDao {
 	}
 	
 	//관광지 아이디
-	public String getPlaceCode(String Place_num)
+	public String getPlaceCode(String place_num)
 	{
 		String Place_code="";
 		Connection conn=db.getConnection();
@@ -73,7 +73,7 @@ public class ReviewDao {
 		String sql="select Place_code from tripful_place where place_num=?";
 		try {
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, Place_num);
+			pstmt.setString(1, place_num);
 			rs=pstmt.executeQuery();
 			if(rs.next())
 			{
