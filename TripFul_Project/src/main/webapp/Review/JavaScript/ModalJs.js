@@ -93,4 +93,6 @@
 		 e.stopPropagation(); // <- 이 줄이 핵심!
 		    $(".img-wrapper").hide();
 		    $(".btn-upload").show();
-		  });
+		  });		  
+	
+	

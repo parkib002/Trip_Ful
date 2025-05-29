@@ -101,7 +101,7 @@
 	margin-bottom: 10px;
 }
 
-.star_rating .star {
+.star_rating .star, .rating {
 	width: 25px;
 	height: 25px;
 	margin-right: 10px;
@@ -112,7 +112,7 @@
 	box-sizing: border-box;
 }
 
-.star_rating .star.on {
+.on {
 	width: 25px;
 	height: 25px;
 	margin-right: 10px;
@@ -203,5 +203,18 @@
 }
 .review_writeday{
 	
+	right:20%;
 	color: #ccc;
+}
+i.category{
+	
+	right: 15%;
+}
+i.category:hover {
+	border-radius: 80px;
+	background: #ccc;
+	color: white;
+	cursor: pointer;
+	
+	
 }

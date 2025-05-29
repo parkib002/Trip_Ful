@@ -19,7 +19,7 @@
 	//DB리스트
 	List<HashMap<String,String>> DBlist=dao.getPlaceList(place_name);
 	
-    String apiKey = ""; // 여기에 본인의 API 키 입력
+    String apiKey = "AIzaSyCKGdGbCxXFTXVCUSrJ5ktk_jpgeBdon6A"; // 여기에 본인의 API 키 입력
     
    String placeId = "ChIJod7tSseifDUR9hXHLFNGMIs"; // 예시: Sydney의 Google place ID
     
@@ -76,6 +76,7 @@
         review.put("rating", map.get("review_star"));
         review.put("text", map.get("review_content"));
         review.put("date", map.get("review_writeday"));
+        review.put("photo", map.get("review_img"));
         merged.add(review);
     } 	
  	
@@ -98,7 +99,7 @@
 
     JSONObject result = new JSONObject();
     result.put("reviews", jsonArr);
-   System.out.println(result.toString());
+    System.out.println(result.toString());
     
 %>
 <%=result.toString() %>

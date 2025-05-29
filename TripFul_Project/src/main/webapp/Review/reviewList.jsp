@@ -43,17 +43,17 @@
 %>
 <script type="text/javascript">
 $(function() {
-	<%-- $("#modalBtn").click(function() {
+	  $("#modalBtn").click(function() {
 		if(<%=loginok!=null%>){
 			toggleModal();
 		}else{
 			var a=confirm("로그인 후 이용 가능합니다\n로그인 페이지로 이동 하시겠습니까?");
 			if(a)
 			{
-				location.href="../login/login.jsp";
+				location.href="../index.jsp?main=login/login.jsp";
 			}
 		}
-	}); --%>	
+	}); 
 $("#apitest").click(function() {
 	var place_num=$("input[name='place_num']").val();
 	console.log(place_num);
@@ -63,22 +63,33 @@ $("#apitest").click(function() {
 		url:"insertApi.jsp",
 		data:{"place_num":place_num},
 		success:function(res){
-			alert("1234");
+			//alert("1234");
 			var s="";
-			 res.reviews.forEach(function(r) {
-				 s+="<tr>";				
-				 s+="<th>"+r.author+"</th><br>";
-				 s+="<td><span>"+r.date+"</span></td>";
-				 s+="</tr>";
+			var a="";
+			 res.reviews.forEach(function(r) {		
+				s+="<tr><td><div class='review-header d-flex justify-content-between align-items-center'>";
+				s+="<b>"+r.author+"</b>";							
+				s+="<div><span class='review_writeday'>"+r.date+"</span>&nbsp;&nbsp;"; 
+				s+="<i class='bi bi-three-dots-vertical category'></i><br></div></td></tr></div>";
+				s+="<tr><td class='input-group'>";				
+				s+="<input	type='hidden' name='review_star' id='review_star' value='"+r.rating+"'>";				 
+			 	s+="<div class='review_star'><br>";	
+			 	s+="<span>"+r.rating+"</span>&nbsp;&nbsp;";			 	
+			 	a="<span class='on'></span>".repeat(Number(r.rating));
+			 	a+="<span class='rating'></span>".repeat(5-Number(r.rating));			 	
+			 	s+=a;
+				s+="<br><br></div></td></tr>";
+				s+=""
+				s+="<tr><td>";
+				s+="<span>"+r.text.replaceAll("\n", "<br>")+"</span><br><hr></td></tr>";
+				
 	           // console.log(r.author, r.rating, r.text, r.date);
 	        });
 			 $("#reviewList").html(s);
 	    }	    
 	});
-});
-	
-	
-	
+});	
+
 });
 </script>
 </head>
@@ -89,26 +100,16 @@ $("#apitest").click(function() {
 	<div>
 		<button id="modalBtn">리뷰 작성</button>
 		<button id="apitest">테스트</button>
-	<div>
+	<div class="container mt-3">
 		<form action="">
 			<table id="reviewList">
-				<tr><th>이름</th></tr>
-				<tr>
-					<td class="input-group">				
-						 <input	type="hidden" name="review_star" id="review_star" value="r.rating">					 
-							<div class="star_rating">
-							<span>5</span>&nbsp;
-							​​<span class="star" value="1"></span> ​​ 
-							<span class="star" value="2"> </span> ​​
-							<span class="star" value="3"> </span> ​​
-							<span class="star" value="4"> </span> ​​ 
-							<span class="star" value="5"> </span>				
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td><span class="review_writeday">2025.05.29</span></td>
-				</tr>			
+					<tr>
+						<th style="">
+						<b >aaa</b><span >22</span>
+						
+						</th>
+					</tr>
+					
 			</table>
 		</form>
 	</div>
@@ -146,7 +147,7 @@ $("#apitest").click(function() {
 						<td class="input-group"><span>별점</span> &nbsp; <input
 							type="hidden" name="review_star" id="review_star" value="0">
 							<div class="star_rating">
-								​​<span class="star" value="1"></span> ​​ 
+								​​<span class="star" value="1"></span> 
 								<span class="star" value="2"> </span> ​​
 								<span class="star" value="3"> </span> ​​
 								<span class="star" value="4"> </span> ​​ 
