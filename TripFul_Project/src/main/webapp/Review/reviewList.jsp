@@ -1,3 +1,8 @@
+<%@page import="review.ReviewDto"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.List"%>
+<%@page import="review.ReviewDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -20,27 +25,122 @@
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <title>Insert title here</title>
-
+<%
+	//place_num 얻기
+	String place_num=request.getParameter("place_num");	
+	ReviewDao rdao=new ReviewDao();
+	ReviewDto rdto=new ReviewDto();
+	
+	//아이디, 로그인상태 세션값 받기
+	String review_id=(String)session.getAttribute("id");
+	String loginok=(String)session.getAttribute("loginok");
+	
+	//관광지 이름 얻기
+	String place_name=rdao.getPlaceName(review_id);	
+	
+	//관광지 이름에 해당하는 리뷰리스트
+	List<HashMap<String,String>> list=rdao.getPlaceList(place_name);
+%>
+<script type="text/javascript">
+$(function() {
+	<%-- $("#modalBtn").click(function() {
+		if(<%=loginok!=null%>){
+			toggleModal();
+		}else{
+			var a=confirm("로그인 후 이용 가능합니다\n로그인 페이지로 이동 하시겠습니까?");
+			if(a)
+			{
+				location.href="../login/login.jsp";
+			}
+		}
+	}); --%>	
+$("#apitest").click(function() {
+	var place_num=$("input[name='place_num']").val();
+	console.log(place_num);
+	$.ajax({
+		type:"post",
+		dataType:"json",
+		url:"insertApi.jsp",
+		data:{"place_num":place_num},
+		success:function(res){
+			alert("1234");
+			var s="";
+			 res.reviews.forEach(function(r) {
+				 s+="<tr>";				
+				 s+="<th>"+r.author+"</th><br>";
+				 s+="<td><span>"+r.date+"</span></td>";
+				 s+="</tr>";
+	           // console.log(r.author, r.rating, r.text, r.date);
+	        });
+			 $("#reviewList").html(s);
+	    }	    
+	});
+});
+	
+	
+	
+});
+</script>
 </head>
 
 <body>
-<%
-	
-%>
+
 	<!-- 모달 버튼 -->
-	<button id="modalBtn">리뷰 작성</button>
+	<div>
+		<button id="modalBtn">리뷰 작성</button>
+		<button id="apitest">테스트</button>
+	<div>
+		<form action="">
+			<table id="reviewList">
+				<tr><th>이름</th></tr>
+				<tr>
+					<td class="input-group">				
+						 <input	type="hidden" name="review_star" id="review_star" value="r.rating">					 
+							<div class="star_rating">
+							<span>5</span>&nbsp;
+							​​<span class="star" value="1"></span> ​​ 
+							<span class="star" value="2"> </span> ​​
+							<span class="star" value="3"> </span> ​​
+							<span class="star" value="4"> </span> ​​ 
+							<span class="star" value="5"> </span>				
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><span class="review_writeday">2025.05.29</span></td>
+				</tr>			
+			</table>
+		</form>
+	</div>
+</div>
+	
+
+
+
+	
+
+
+
+
+
+
+
 
 	<!-- 모달 창 -->
 	<div id="myModal" class="modal">
-		<form action="review/reviewaddAction.jsp" method="post"
-			class="modalfrm" enctype="multipart/form-data">
+		<form class="modalfrm" enctype="multipart/form-data">
 			<div align="center" class="modal-head">
-				<h4>관광지 이름</h4>
+			<input type="hidden" name="place_num" value="26">
+				<h4><%=place_name %></h4>
 			</div>
 			<div class="modal-content">
 				<table>
 					<tr>
-						<td><b>닉네임</b><br> <br></td>
+						
+						<td>
+						<input type="hidden" name="review_id" value="user01">
+						<b>user01</b><br> <br>
+						</td>
 					</tr>
 					<tr>
 						<td class="input-group"><span>별점</span> &nbsp; <input
@@ -73,7 +173,7 @@
 			</div>
 			<div class="modal-foot">
 				<button type="button" class="close" id="closeBtn">취소</button>
-				<button type="submit" class="save">게시</button>
+				<button type="button" class="save">게시</button>
 			</div>
 		</form>
 	</div>

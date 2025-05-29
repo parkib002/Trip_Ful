@@ -12,6 +12,14 @@ public class ReviewDto {
 	private Timestamp review_writeday;
 	private String place_num;
 	
+	
+	
+	@Override
+	public String toString() {
+		return "ReviewDto [review_idx=" + review_idx + ", review_id=" + review_id + ", review_content=" + review_content
+				+ ", review_img=" + review_img + ", review_name=" + review_name + ", review_star=" + review_star
+				+ ", review_writeday=" + review_writeday + ", place_num=" + place_num + "]";
+	}
 	public String getReview_idx() {
 		return review_idx;
 	}

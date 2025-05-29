@@ -196,3 +196,12 @@
   color: red;
   cursor: pointer;
 }
+
+/* 리뷰css */
+#reviewList{
+	margin: 10px;
+}
+.review_writeday{
+	
+	color: #ccc;
+}
