@@ -66,7 +66,6 @@
             // mainEventImage = parts[parts.length - 1];
         }
 
-
         // 5. DTO 객체 생성 및 데이터 설정
         BoardEventDto dto = new BoardEventDto();
         dto.setEvent_title(eventTitle);
@@ -82,8 +81,9 @@
 
         // 7. 결과 처리
         // 성공 시 목록 페이지 또는 다른 적절한 페이지로 이동
-        out.println("<script>alert('이벤트 글이 성공적으로 작성되었습니다.'); location.href='eventList.jsp';</script>"); // eventList.jsp는 예시
-
+        String redirectUrl = request.getContextPath() + "/index.jsp?main=board/boardList.jsp&sub=event.jsp";
+        out.println("<script>alert('이벤트 글이 성공적으로 작성되었습니다.'); location.href='" + redirectUrl + "';</script>");
+        
     } catch (Exception e) {
         e.printStackTrace();
         // 사용자에게 보여줄 오류 메시지는 좀 더 친절하게

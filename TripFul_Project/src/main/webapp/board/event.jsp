@@ -14,6 +14,7 @@
 </head>
 <%
 BoardEventDao dao=new BoardEventDao();
+String loginok=(String)session.getAttribute("loginok");
 
 //페이징처리
 //전체갯수
@@ -64,6 +65,15 @@ no=totalCount-(currentPage-1)*perPage;
 <div class="notice-wrapper">
 	<div class="notice-header">
 		<h3><i class="bi bi-x-diamond-fill">  </i><b>이벤트</b></h3>
+		<%
+			if(loginok!=null && loginok.equals("admin"))
+			{%>
+					<a style="float: right; text-decoration: none; color: black;" 
+					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=eventInsertForm.jsp">
+						<i class="bi bi-plus-square"></i>&nbsp;추가
+					</a>				
+			<%}
+		%>
 		<hr>
 	</div>
 	<br>

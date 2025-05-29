@@ -45,7 +45,7 @@ public class BoardSupportDao {
 		{
 			int max=0;
 			
-			String sql="select ifnull(max(num),0) max from tripful_qna";
+			String sql="select ifnull(max(qna_idx),0) max from tripful_qna";
 			
 			Connection conn=db.getConnection();
 			PreparedStatement pstmt=null;
@@ -98,14 +98,14 @@ public class BoardSupportDao {
 		//판단: dto의 num이 null이면 새글로 아니면 답글로 insert할것
 		public void insertReboard(BoardSupportDto dto)
 		{
-			String num=dto.getQna_idx();
+			String idx=dto.getQna_idx();
 			int regroup=dto.getRegroup();
 			int restep=dto.getRestep();
 			int relevel=dto.getRelevel();
 			
 			String sql="insert into tripful_qna values (null,?,?,?,?,?,0,now(),?,?,?,?)";
 			
-			if(num==null) {
+			if(idx==null) {
 				//새글을 의미
 				regroup=this.getMaxNum()+1;
 				restep=0;
@@ -265,7 +265,7 @@ public class BoardSupportDao {
 			public List<BoardSupportDto> getRepliesByRegroup(int regroup) {
 			    List<BoardSupportDto> list = new Vector<BoardSupportDto>();
 			    // 답글만 가져오고, restep 순으로 정렬
-			    String sql = "SELECT * FROM tripful_qna WHERE regroup = ? AND relevel > 0 ORDER BY restep ASC";
+			    String sql = "SELECT * FROM tripful_qna WHERE regroup = ? AND relevel > 0 ORDER BY restep desc";
 			    Connection conn = db.getConnection();
 			    PreparedStatement pstmt = null;
 			    ResultSet rs = null;

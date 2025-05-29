@@ -251,17 +251,33 @@ $(document).ready(function() {
                     var post = response.originalPost;
                     htmlContent += '<div class="original-post-content" style="padding:15px; border-bottom:1px solid #eee;">';
                     htmlContent += '<h4>[질문] ' + escapeHtml(post.qna_title) + '</h4>';
-                    htmlContent +='<button type="button" class="btn answerAdd" style="float: right;" onclick="location.href=`#`"><i class="bi bi-plus-square">답글</i></button>'
+                 	
+                	 // support.jsp의 AJAX success 콜백 내
+                    var post_qna_idx = post.qna_idx !== undefined && post.qna_idx !== null ? post.qna_idx : '0'; // 기본값 예시
+                    var post_regroup = post.regroup !== undefined && post.regroup !== null ? post.regroup : '0';
+                    var post_restep = post.restep !== undefined && post.restep !== null ? post.restep : '0';
+                    var post_relevel = post.relevel !== undefined && post.relevel !== null ? post.relevel : '0';
+                    
+                    // "답글" 버튼 수정
+                    var replyFormUrl = '<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=supportReplyForm.jsp' +
+                                       '&parent_idx=' + post.qna_idx +       // 부모 글의 고유 ID
+                                       '&regroup=' + post.regroup +         // 부모 글의 그룹 ID
+                                       '&restep=' + post.restep +           // 부모 글의 스텝
+                                       '&relevel=' + post.relevel;          // 부모 글의 레벨
+                                       
+                    htmlContent += '<button type="button" class="btn btn-sm btn-outline-secondary answerAdd" style="float: right;" ' +
+                    'onclick="location.href=\'' + replyFormUrl + '\'">' +
+                    '<i class="bi bi-pencil-square"></i>&nbsp;답글 작성</button>';
                     htmlContent += '<p>작성자: ' + escapeHtml(post.qna_writer) + ' | 작성일: ' + escapeHtml(post.qna_writeday_formatted) + ' | 조회수: ' + post.qna_readcount + '</p>';
                     htmlContent += '<hr>';
                     // 이미지가 있다면 표시 (경로 수정 필요)
                     if (post.qna_img && post.qna_img.trim() !== "") {
-                         htmlContent += '<img src="<%=request.getContextPath()%>/boardUpload/' + escapeHtml(post.qna_img) + '" alt="첨부 이미지" style="max-width:400px; margin-bottom:10px;"><br>';
+                         htmlContent += '<img src="<%=request.getContextPath()%>/upload/' + escapeHtml(post.qna_img) + '" alt="첨부 이미지" style="max-width:400px; margin-bottom:10px;"><br>';
                     }
                     htmlContent += '<div>' + escapeHtml(post.qna_content).replace(/\n/g, '<br>') + '</div>'; // 내용 (개행문자 <br>로 변경)
                     htmlContent += '</div>';
+                    console.log(htmlContent);
                 }
-
                 // 답글 목록 표시
                 htmlContent += '<div class="replies-section" style="padding:15px;"><h5>답변 목록</h5>';
                 if (response.replies && response.replies.length > 0) {
@@ -271,7 +287,7 @@ $(document).ready(function() {
                         htmlContent += '<img src="<%=request.getContextPath()%>/image/re.png" alt="re"> <strong>' + escapeHtml(reply.qna_title) + '</strong><br>';
                         htmlContent += '<small>작성자: ' + escapeHtml(reply.qna_writer) + ' | 작성일: ' + escapeHtml(reply.qna_writeday_formatted) + '</small>';
                         if (reply.qna_img && reply.qna_img.trim() !== "") {
-                            htmlContent += '<br><img src="<%=request.getContextPath()%>/boardUpload/' + escapeHtml(reply.qna_img) + '" alt="답변 이미지" style="max-width:300px; margin-top:5px; margin-bottom:5px;">';
+                            htmlContent += '<br><img src="<%=request.getContextPath()%>/upload/' + escapeHtml(reply.qna_img) + '" alt="답변 이미지" style="max-width:300px; margin-top:5px; margin-bottom:5px;">';
                         }
                         htmlContent += '<div>' + escapeHtml(reply.qna_content).replace(/\n/g, '<br>') + '</div>';
                         htmlContent += '</li>';

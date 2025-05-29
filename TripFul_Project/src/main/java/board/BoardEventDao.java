@@ -19,15 +19,16 @@ public class BoardEventDao {
 		Connection conn=db.getConnection();
 		PreparedStatement pstmt=null;
 		
-		String sql="insert into tripful_event values(null,?,?,?,?,?,now())";
+		String sql="insert into tripful_event values(null,?,?,?,?,now(),?)";
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getEvent_title());
 			pstmt.setString(2, dto.getEvent_content());
 			pstmt.setString(3, dto.getEvent_img());
-			pstmt.setInt(4, dto.getEvent_readcount());
-			pstmt.setString(5, dto.getEvent_writer());
+			pstmt.setString(4, dto.getEvent_writer());
+			pstmt.setInt(5, dto.getEvent_readcount());
+
 			pstmt.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
