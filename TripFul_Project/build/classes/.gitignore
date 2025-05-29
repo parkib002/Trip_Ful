@@ -1,9 +1,5 @@
 /board/
-<<<<<<< HEAD
 /login/
 /mysql/
-/BoardSupportDao.class
-=======
-/mysql/
-/login/
->>>>>>> a7fb1cb7f14c9902a928f454077c8632071b0b6d
+/place/
+/review/
