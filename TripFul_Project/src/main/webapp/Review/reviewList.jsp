@@ -61,7 +61,7 @@ $(function() {
 	});  
 $("#apitest").click(function() {
 	var place_num="<%=place_num%>";
-	console.log(place_num);
+	//console.log(place_num);
 	$.ajax({
 		type:"post",
 		dataType:"json",
@@ -79,6 +79,12 @@ $("#apitest").click(function() {
 	                    reviewCard += "<div class='card h-100 p-3'>";
 	                    reviewCard += "<div class='review-header d-flex justify-content-between align-items-center mb-2'>";
 	                    reviewCard += "<b>" + r.author + "</b>";
+	                    if(r.read !=="DB" && r.read !== "")
+                    	{
+                    	reviewCard += "<div class='googlechk mb-2'>";
+                    	reviewCard += "<span class='googlereview'>"+r.read+"</span>";
+                    	reviewCard += "</div>";
+                    	}
 	                    reviewCard += "<div>";
 	                    reviewCard += "<span class='review_writeday'>" + r.date + "</span>&nbsp;&nbsp;";
 	                    reviewCard += "<i class='bi bi-three-dots-vertical category'></i></div></div>";
@@ -97,7 +103,7 @@ $("#apitest").click(function() {
 	                    // 리뷰 이미지 (사진이 있을 경우에만 추가)
 	                    if (r.photo !== "null" && r.photo !== "") {
 	                        reviewCard += "<div class='review-image-container mb-2'>";
-	                        reviewCard += "<img src='../save/" + r.photo + "' class='img-fluid rounded'>";
+	                        reviewCard += "<img src='save/" + r.photo + "' class='img-fluid rounded'>";
 	                        reviewCard += "</div>";
 	                    }
 
