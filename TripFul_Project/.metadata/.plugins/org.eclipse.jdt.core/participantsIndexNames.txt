@@ -1,3 +1,0 @@
-INDEX VERSION 1.134
-C:\sist0217\pro1\tripful\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3588862510.index
-\TripFul\src\main\java

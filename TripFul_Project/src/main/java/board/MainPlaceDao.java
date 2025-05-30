@@ -26,7 +26,7 @@ public class MainPlaceDao {
 
             while (rs.next()) {
                 MainPlaceDto dto = new MainPlaceDto(
-                        rs.getInt("place_num"),
+                        rs.getString("place_num"),
                         rs.getString("country_name"),
                         rs.getString("place_img"),
                         rs.getString("place_content"),

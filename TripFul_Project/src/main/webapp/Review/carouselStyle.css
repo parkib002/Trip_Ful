@@ -1,0 +1,134 @@
+@charset "UTF-8";
+
+/* 캐러셀 내 카드 스타일 (Bootstrap 기본 카드 외 추가 스타일) */
+.item .card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-height: 300px; /* 카드 최소 높이 설정 (내용이 적을 때 보기 좋게) */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 내용이 카드 내에서 분산되도록 */
+}
+
+.review-image-container {
+    max-height: 200px; /* 이미지 컨테이너 최대 높이 */
+    overflow: hidden; /* 넘치는 부분 숨김 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.review-image-container img {      
+    width: 200px; /* 이미지 높이 100% */   
+    height: 200px; /* 이미지 높이 100% */   
+    object-fit: cover;
+}
+
+/* 별점 스타일 */
+.star_rating2 {
+	width: 150px;
+	box-sizing: border-box;
+	display: inline-flex;
+	float: left;
+	flex-direction: row;
+	justify-content: flex-start;
+	margin-bottom: 10px;
+}
+
+/* 텍스트 줄바꿈 유지 */
+.card-text {
+    white-space: pre-wrap; /* 공백 및 줄바꿈 유지 */
+    max-height: 200px; 
+    overflow: auto; /* 넘치는 부분 숨김 */
+}
+
+
+
+
+/* Owl Carousel Navigation 버튼 스타일링 */
+#reviewCarousel.owl-carousel .owl-nav {
+    position: absolute; /* 캐러셀 컨테이너를 기준으로 절대 위치 */
+    top: 50%; /* 수직 1/3지점 정렬 */
+    transform: translateY(-50%); /* 정확한 중앙 정렬을 위한 조정 */
+    width: 100%; /* 부모 너비에 맞춤 */
+    display: flex; /* 버튼을 가로로 정렬 */
+    justify-content: space-between; /* 버튼을 양 끝으로 분산 */
+    padding: 0 10px; /* 좌우 패딩 (컨테이너 경계에서 떨어뜨리기) */
+    pointer-events: none; /* 버튼 외 영역 클릭 방지 (버튼 클릭은 가능) */
+    
+    
+}
+
+#reviewCarousel.owl-carousel .owl-nav button {
+    background: rgba(0, 0, 0, 0.3); /* 투명 배경 */
+    color: white; /* 아이콘 색상 */
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%; /* 원형 버튼 */    
+    cursor: pointer;
+    pointer-events: all; /* 버튼 클릭 가능하게 설정 */
+    transition: background-color 0.3s ease; /* 호버 효과 */    
+    
+     /* --- 여기서부터 중요 --- */
+    display: flex; /* Flex 컨테이너로 만듭니다. */
+    align-items: center; /* 자식 요소를 수직 중앙 정렬합니다. */
+    justify-content: center; /* 자식 요소를 수평 중앙 정렬합니다. */
+    width: 40px; /* 버튼의 고정 너비 */
+    height: 40px; /* 버튼의 고정 높이 */
+    /* --- 여기까지 --- */
+    
+     /* --- 여기서 추가: 기본 버튼 텍스트를 숨깁니다 --- */
+    font-size: 0; /* 버튼 자체의 폰트 크기를 0으로 만들어 텍스트를 숨깁니다. */
+    line-height: 0; /* 라인 높이도 0으로 설정하여 공간을 제거합니다. */
+    /* -------------------------------------------------- */
+}
+
+/* Bootstrap Icons를 사용하는 경우 */
+#reviewCarousel.owl-carousel .owl-nav button.owl-prev:before,
+#reviewCarousel.owl-carousel .owl-nav button.owl-next:before {
+    /* 가상 요소의 폰트 크기는 여기서 다시 지정하여 아이콘이 보이게 합니다. */
+    font-size: 24px; /* 원하는 아이콘 크기로 설정 */
+    font-family: "bootstrap-icons"; /* Bootstrap Icons 폰트 패밀리 */
+    /* 기존 content 속성은 그대로 유지됩니다. */
+}
+
+ #reviewCarousel.owl-carousel .owl-nav button:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+#reviewCarousel.owl-carousel .owl-nav button.owl-prev:before {
+    /* 왼쪽 버튼 */    
+    content: "\F284"; /* Bootstrap Icons: chevron-left 유니코드 */ 
+  
+}
+
+#reviewCarousel.owl-carousel .owl-nav button.owl-next:before {
+    /* 오른쪽 버튼 */    
+    content: "\F285"; 
+} 
+
+/* 캐러셀 점(dots)이 필요 없다면 숨김 */
+#reviewCarousel.owl-carousel .owl-dots {
+    display: none;
+}
+
+/* 카테고리 아이콘 */
+i.category{
+	background: rgba(0, 0, 0, 0); /* 투명 배경 */
+    color: #CCC; /* 아이콘 색상 */
+    border: none;
+    padding: 5px 7.5px;
+    border-radius: 50%; /* 원형 버튼 */    
+    cursor: pointer;
+    pointer-events: all; /* 버튼 클릭 가능하게 설정 */
+    transition: background-color 0.3s ease; /* 호버 효과 */   
+  
+     /* --- 여기서부터 중요 --- */     
+    width: 30px; /* 버튼의 고정 너비 */
+    height: 30px; /* 버튼의 고정 높이 */
+    /* --- 여기까지 --- */
+}
+i.category:hover {
+	background: rgba(0, 0, 0, 0.5);
+}

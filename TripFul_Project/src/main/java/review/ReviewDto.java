@@ -1,6 +1,6 @@
 package review;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 public class ReviewDto {
 	private String review_idx;
@@ -8,7 +8,7 @@ public class ReviewDto {
 	private String review_content;
 	private String review_img;
 	private String review_name;
-	private int review_star;
+	private double review_star;
 	private Timestamp review_writeday;
 	private String place_num;
 	
@@ -50,10 +50,10 @@ public class ReviewDto {
 	public void setReview_name(String review_name) {
 		this.review_name = review_name;
 	}
-	public int getReview_star() {
+	public double getReview_star() {
 		return review_star;
 	}
-	public void setReview_star(int review_star) {
+	public void setReview_star(Double review_star) {
 		this.review_star = review_star;
 	}
 	public Timestamp getReview_writeday() {

@@ -25,7 +25,7 @@ public class ReviewDao {
 			pstmt.setString(1, dto.getReview_id());
 			pstmt.setString(2, dto.getReview_content());
 			pstmt.setString(3, dto.getReview_img());
-			pstmt.setInt(4, dto.getReview_star());
+			pstmt.setDouble(4, dto.getReview_star());
 			pstmt.setString(5, dto.getPlace_num());
 			pstmt.execute();
 			
@@ -90,11 +90,11 @@ public class ReviewDao {
 	}
 	
 	//관광지 전체리스트
-	public List<HashMap<String, String>> getPlaceList(String place_name)
+	public List<HashMap<String, String>> getPlaceList(String place_num)
 	{
 		String sql="select r.review_idx, r.review_id, r.review_content, r.review_img, r.review_star, r.review_writeday, r.place_num "
 				+ "from tripful_review r,tripful_place p "
-				+ "where r.place_num=p.place_num and p.place_name=?";
+				+ "where r.place_num=p.place_num and p.place_num=?";
 		
 		List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
 		
@@ -104,7 +104,7 @@ public class ReviewDao {
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, place_name);
+			pstmt.setString(1, place_num);
 			rs=pstmt.executeQuery();
 			
 			while(rs.next())
@@ -130,6 +130,32 @@ public class ReviewDao {
 		}		
 		
 		return list;
+	}
+	
+	public double getAverageRatingByPlace(String place_num) {
+	    
+			Connection conn=db.getConnection();
+			PreparedStatement pstmt=null;
+			ResultSet rs=null;
+		
+		double avg = 0.0;
+	    try {
+	        String sql = "SELECT round(AVG(review_star),1) FROM tripful_review WHERE place_num = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, place_num);
+	        rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            avg = rs.getDouble(1);
+	            if (rs.wasNull()) { // 평균값이 없으면
+	                avg = -1.0; // 평점 없음 표시를 위해 -1.0 반환
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+	    return avg;
 	}
 
 }
