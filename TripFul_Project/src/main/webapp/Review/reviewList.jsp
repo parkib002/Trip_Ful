@@ -28,7 +28,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 <link rel="stylesheet" href="Review/carouselStyle.css">
 
-<title>Insert title her1</title>
+<title>Insert title her</title>
 <%
 	//place_num 얻기
 	String place_num=request.getParameter("place_num");	
@@ -60,12 +60,12 @@ $(function() {
 		}
 	});  
 $("#apitest").click(function() {
-	var place_num=<%=place_num%>
+	var place_num="<%=place_num%>";
 	console.log(place_num);
 	$.ajax({
 		type:"post",
 		dataType:"json",
-		url:"insertApi.jsp",
+		url:"Review/insertApi.jsp",
 		data:{"place_num":place_num},
 		success:function(res){
 			 var carouselItemsHtml = ""; // 각 카드를 직접 여기에 넣음
@@ -79,16 +79,9 @@ $("#apitest").click(function() {
 	                    reviewCard += "<div class='card h-100 p-3'>";
 	                    reviewCard += "<div class='review-header d-flex justify-content-between align-items-center mb-2'>";
 	                    reviewCard += "<b>" + r.author + "</b>";
-	                    if(r.read !=="DB" && r.read !== "")
-                    	{
-                    	reviewCard += "<div class='googlechk mb-2'>";
-                    	reviewCard += "<span class='googlereview'>"+r.read+"</span>";
-                    	reviewCard += "</div>";
-                    	}
 	                    reviewCard += "<div>";
 	                    reviewCard += "<span class='review_writeday'>" + r.date + "</span>&nbsp;&nbsp;";
 	                    reviewCard += "<i class='bi bi-three-dots-vertical category'></i></div></div>";
-	                    
 	                    reviewCard += "<div class='star_rating2 mb-2'>";
 	                    reviewCard += "<span>" + r.rating + "</span>&nbsp;&nbsp;";
 
@@ -153,13 +146,13 @@ $("#apitest").click(function() {
 	                    }
 	                }
 	            });
-	    }	    
+	    },	    error: function(xhr, status, error) {
+	        console.error("AJAX 실패:", status, error);
+	        console.log("응답 텍스트:", xhr.responseText);
+	        alert("리뷰 데이터를 불러오는 중 오류가 발생했습니다.");
+	    }   
 	});
 });		
-$("#aa").hide();
-$("#list").click(function() {
-	$("#aa").toggle();
-})
 		
 });
 </script>
@@ -181,15 +174,7 @@ $("#list").click(function() {
 	</div>
 </div>
 	
-	<button id="list">리스트</button>
-<div>
-	<ul>
-		<li id="aa">
-			<button type="button" class="btn btn-info">수정</button>
-			<button type="button" class="btn btn-danger">삭제</button>
-		</li>
-	</ul>
-</div>
+
 
 	
 
