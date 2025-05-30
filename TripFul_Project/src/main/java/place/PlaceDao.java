@@ -53,7 +53,7 @@ public class PlaceDao {
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		
-		String sql="select * from tripful_place where country_name=?";
+		String sql="select * from tripful_place where country_name=? order by place_name ASC";
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
@@ -116,7 +116,7 @@ public class PlaceDao {
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		
-		 String sql = "SELECT place_num, country_name, place_name, place_img, continent_name FROM tripful_place WHERE continent_name = ?";
+		 String sql = "SELECT place_num, country_name, place_name, place_img, continent_name FROM tripful_place WHERE continent_name = ? order by place_name ASC";
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
@@ -177,6 +177,7 @@ public class PlaceDao {
 				dto.setPlace_name(rs.getString("place_name"));
 				dto.setPlace_count(rs.getInt("place_count"));
 				dto.setPlace_addr(rs.getString("place_addr"));
+				dto.setPlace_like(rs.getInt("place_like"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -193,7 +194,7 @@ public class PlaceDao {
 		Connection conn=db.getConnection();
 		PreparedStatement pstmt=null;
 		
-		String sql="update set tripful_place place_count=place_count+1 where place_num=?";
+		String sql="update tripful_place set place_count=place_count+1 where place_num=?";
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
@@ -248,6 +249,82 @@ public class PlaceDao {
 		}
 		
 		return list;
+	}
+	
+	public int getLikeCount(String num) {
+	    int like = 0;
+	  
+	    Connection conn=db.getConnection();
+	    PreparedStatement pstmt=null;
+	    ResultSet rs=null;
+	    
+	    String sql = "SELECT place_like FROM tripful_place WHERE place_num = ?";
+	  
+	    try {
+			pstmt=conn.prepareStatement(sql);
+			
+			pstmt.setString(1, num);
+			
+			rs=pstmt.executeQuery();
+			
+			if(rs.next())
+			{
+				like=rs.getInt("place_like");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+	    
+	    return like;
+	}
+	
+	public void likeCount(String num)
+	{
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		
+		String sql="update tripful_place set place_like=place_like+1 where place_num=?";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			
+			pstmt.setString(1, num);
+			
+			pstmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(pstmt, conn);
+		}
+	}
+	
+	public List<PlaceDto> selectAllPlacesPaged(int start, int count) throws SQLException {
+	    List<PlaceDto> list = new ArrayList<>();
+	    String sql = "SELECT * FROM tripful_place ORDER BY place_name ASC LIMIT ?, ?";
+
+	    try (Connection conn = db.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        
+	        pstmt.setInt(1, start);
+	        pstmt.setInt(2, count);
+
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            while (rs.next()) {
+	                PlaceDto dto = new PlaceDto();
+	                dto.setPlace_num(rs.getString("place_num"));
+	                dto.setPlace_name(rs.getString("place_name"));
+	                dto.setPlace_img(rs.getString("place_img"));
+	                dto.setCountry_name(rs.getString("country_name"));
+	                list.add(dto);
+	            }
+	        }
+	    }
+
+	    return list;
 	}
 
 }

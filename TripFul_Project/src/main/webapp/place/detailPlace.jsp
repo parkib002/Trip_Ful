@@ -30,6 +30,7 @@
 	
 	List<ReviewDto> list=dao.selectReview(num);	
 	
+	String loginok=(String)session.getAttribute("loginok");
 	
 %>
 <style type="text/css">
@@ -128,6 +129,30 @@ body {
 </style>
 </head>
 <script>
+$(function(){
+	
+	$("#like").click(function(){
+		
+		var num=$("#num").val()
+		
+		$.ajax({
+			
+			type:"get",
+			url:"place/likeAction.jsp",
+			dataType:"json",
+			data:{"place_num":num},
+			success:function(res){
+				
+				var like=res.place_like;
+				
+				$("#likecount").text(like);
+				
+			}
+		})
+		
+	})
+})
+
   function initMap() {
     const map = new google.maps.Map(document.getElementById("map"), {
       zoom: 15,
@@ -154,7 +179,7 @@ body {
         console.error("Place ID lookup failed:", status);
       }
     });
-  }
+  } 
 </script>
 
 <script
@@ -167,6 +192,12 @@ body {
     	<p class="category m-0">카테고리: <%=dto.getPlace_tag() %></p>
    	 	<p class="views m-0">조회수: <%=dto.getPlace_count() %></p>
    	 	<p class="views m-0">별점: <%=star==-1.0?"없음":star%></p>
+   	 	<input type="hidden" id="num" value="<%=dto.getPlace_num()%>">
+<!-- 좋아요 아이콘과 텍스트 묶기 -->
+<div class="d-flex align-items-center gap-1">
+  <img alt="좋아요" src="./image/places/white_heart.png" style="width: 25px; height: 25px;" id="like">
+  <span>좋아요: <span id="likecount"><%=dto.getPlace_like() %></span></span>
+</div>
 		</div>
         <div class="main-section">
            <!-- Carousel -->
