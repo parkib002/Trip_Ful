@@ -1,2 +1,0 @@
-INDEX VERSION 1.134+C:\Trip_ful\Trip_Ful\TripFul_Project\.metadata\.plugins\org.eclipse.jdt.core
-1865797976.index
