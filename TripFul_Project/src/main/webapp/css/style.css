@@ -163,3 +163,17 @@ body {
         font-size: 0.9rem;
     }
 }
+
+
+.username-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.username-link:hover {
+    text-decoration: underline;
+    color: #fb8c00;
+    cursor: pointer;
+}
+

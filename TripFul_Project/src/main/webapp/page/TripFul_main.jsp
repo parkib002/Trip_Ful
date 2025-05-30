@@ -73,7 +73,49 @@
     </div>
 </div>
 
+<%--<!-- ✅ 2. 실시간 인기 관광지 -->--%>
+<%--<div class="container my-5">--%>
+<%--    <h3 class="text-center mb-4">🔥 실시간 인기 관광지</h3>--%>
+<%--    <div class="row row-cols-1 row-cols-md-3 g-4">--%>
+<%--        <% for(MainPlaceDto place : dao.getPopularPlaces()) { %>--%>
+<%--        <div class="col">--%>
+<%--            <div class="card h-100 shadow-sm">--%>
+<%--                <img src="<%=request.getContextPath()%>/images/<%= place.getPlaceImg() %>" class="card-img-top" style="height: 200px; object-fit: cover;">--%>
+<%--                <div class="card-body">--%>
+<%--                    <h5 class="card-title"><%= place.getPlaceName() %></h5>--%>
+<%--                    <p class="card-text text-truncate"><%= place.getPlaceContent() %></p>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
+<%--        <% } %>--%>
+<%--    </div>--%>
+<%--</div>--%>
 
+<!-- ✅ 3. 공지사항 / 이벤트 / 최신 리뷰 -->
+<div class="container my-5">
+    <h3 class="text-center mb-4">📰 공지사항 & 이벤트</h3>
+    <div class="alert alert-warning text-center fw-semibold fs-5 shadow-sm">
+        📣 [이벤트] 여름맞이 특별 할인! 전 세계 인기 여행지 최대 30% OFF ~ 6월 30일까지
+    </div>
+    <div class="bg-light p-4 rounded-3 shadow-sm mt-3">
+        <h5 class="fw-bold mb-2">✍ 최신 여행자 리뷰</h5>
+        <p class="fst-italic mb-1">“오사카 도톤보리는 야경이 정말 예뻐요! 쇼핑도 재밌고요 😊”</p>
+        <small class="text-muted">- 여행자9912님</small>
+    </di
+
+        v>
+</div>
+
+<!-- ✅ 4. Tripful 소개 -->
+<div class="container my-5">
+    <h3 class="text-center mb-4">🧭 Tripful은 어떤 사이트인가요?</h3>
+    <div class="p-4 bg-white shadow-sm rounded-3 text-center">
+        <p class="fs-5 mb-0">
+            Tripful은 여행지를 추천하고, 사용자 리뷰를 통해 더 나은 여행을 돕는 플랫폼입니다.<br>
+            지역, 테마, 키워드로 원하는 장소를 찾고, 다른 여행자의 경험을 함께 나눠보세요.
+        </p>
+    </div>
+</div>
     <!-- Bootstrap JS CDN -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

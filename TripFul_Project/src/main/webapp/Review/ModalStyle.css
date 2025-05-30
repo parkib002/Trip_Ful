@@ -101,7 +101,7 @@
 	margin-bottom: 10px;
 }
 
-.star_rating .star {
+.star_rating .star{
 	width: 25px;
 	height: 25px;
 	margin-right: 10px;
@@ -112,7 +112,7 @@
 	box-sizing: border-box;
 }
 
-.star_rating .star.on {
+.star_rating .star.on{
 	width: 25px;
 	height: 25px;
 	margin-right: 10px;
@@ -197,11 +197,3 @@
   cursor: pointer;
 }
 
-/* 리뷰css */
-#reviewList{
-	margin: 10px;
-}
-.review_writeday{
-	
-	color: #ccc;
-}

@@ -1,8 +1,12 @@
 package board;
-import java.sql.*;
-import java.util.*;
-import java.sql.Connection;
+
 import mysql.db.DbConnect;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainPlaceDao {
     DbConnect db = new DbConnect();
@@ -22,7 +26,7 @@ public class MainPlaceDao {
 
             while (rs.next()) {
                 MainPlaceDto dto = new MainPlaceDto(
-                        rs.getInt("place_num"),
+                        rs.getString("place_num"),
                         rs.getString("country_name"),
                         rs.getString("place_img"),
                         rs.getString("place_content"),
