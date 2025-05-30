@@ -1,6 +1,6 @@
 /* 기본 바디와 글자 색상 */
 body {
-    background-color: white;
+    background-color: #FFFFF0;
     color: black;
     font-family: 'Noto Sans KR', sans-serif;
 }
@@ -52,8 +52,9 @@ body {
 
 /* 캐러셀 전체 컨테이너 */
 #spotReviewCarousel {
-    max-width: 900px;   /* 최대 너비 */
-    height: 700px;      /* 높이 고정 */
+    width: 100%;  /* 전체 너비 사용 */
+    max-width: 1200px;  /* 선택: 너무 넓어지는 걸 막고 싶다면 */
+    height: 700px;
     margin: 0 auto 50px;
     overflow: hidden;
     border-radius: 20px;
@@ -61,10 +62,12 @@ body {
     background-color: white;
 }
 
+
 /* 캐러셀 내부 높이 */
 #spotReviewCarousel .carousel-inner,
 #spotReviewCarousel .carousel-item {
     height: 100%;
+    overflow: hidden;
 }
 
 /* 캐러셀 이미지 */

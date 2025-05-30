@@ -1,3 +1,6 @@
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.security.SecureRandom" %>
+<%@ page import="java.math.BigInteger" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -14,15 +17,24 @@
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <title>Insert title here</title>
 <%
 String login = request.getParameter("login");
 String id = null;
+String clientId = "IajLk4vELxMTjBeM9JGp";//애플리케이션 클라이언트 아이디값";
+String redirectURI = URLEncoder.encode("http://localhost:8080/TripFul_Project/index.jsp?main=login/naverLoginAction.jsp", "UTF-8");
+SecureRandom random = new SecureRandom();
+String state = new BigInteger(130, random).toString();
+String apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code"
+     + "&client_id=" + clientId
+     + "&redirect_uri=" + redirectURI
+     + "&state=" + state;
+session.setAttribute("state", state);
 if (session.getAttribute("id") != null) {
 	id = (String) session.getAttribute("id");
 }
+
 %>
 <script>
 		$(function() {
@@ -34,10 +46,11 @@ if (session.getAttribute("id") != null) {
 				alert("아이디 또는 비밀번호를 다시 확인해주세요");
 			}
 			
-			<%if (id != null) {%>
-						$("#check").prop("checked",true);
-						$("#user").val('<%=id%>
-	');
+			<%
+			if (id != null) {
+			%>
+				$("#check").prop("checked",true);
+				$("#user").val('<%=id%>');
 <%}%>
 	});
 </script>
@@ -79,7 +92,7 @@ if (session.getAttribute("id") != null) {
 						<div class="social_login">
 							<img src="./login/social_img/google.png"> <img
 								src="./login/social_img/kakao.png"> <img
-								src="./login/social_img/naver.png">
+								src="./login/social_img/naver.png" onclick="location.href='<%=apiURL%>'">
 						</div>
 					</form>
 				</div>
