@@ -5,6 +5,7 @@
 <%@ page import="java.util.stream.Stream" %>
 <%@ page import="board.MainPlaceDao" %>
 <%@ page import="board.MainPlaceDto" %>
+<%@ page import="com.google.gson.Gson" %>
 
 <%
     String keyword = request.getParameter("keyword");
@@ -30,14 +31,9 @@
         .limit(10)
         .collect(Collectors.toSet());
 
-    // JSON 문자열 출력
-    StringBuilder json = new StringBuilder("[");
-    int index = 0;
-    for (String suggestion : suggestions) {
-        if (index++ > 0) json.append(",");
-        json.append("\"").append(suggestion.replace("\"", "\\\"")).append("\"");
-    }
-    json.append("]");
+    // Gson을 이용해 JSON으로 변환
+    Gson gson = new Gson();
+    String json = gson.toJson(suggestions);
 
-    out.print(json.toString());
+    out.print(json);
 %>
