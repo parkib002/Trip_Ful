@@ -28,7 +28,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 <link rel="stylesheet" href="Review/carouselStyle.css">
 
-<title>Insert title here</title>
+<title>Insert title her</title>
 <%
 	//place_num 얻기
 	String place_num=request.getParameter("place_num");	
