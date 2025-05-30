@@ -22,8 +22,5 @@ Thumbs.db
 .classpath
 .project
 .settings/
-<<<<<<< HEAD
 .metadata/
-=======
-.metadata/
->>>>>>> b5f1803c4d0f518869ea878f01ae4082cae89395
+build/
