@@ -12,7 +12,14 @@ public class PlaceDto {
 	private int place_count;
 	private String continent_name;
 	private String place_addr;
+	private int place_like;
 	
+	public int getPlace_like() {
+		return place_like;
+	}
+	public void setPlace_like(int place_like) {
+		this.place_like = place_like;
+	}
 	public String getPlace_name() {
 		return place_name;
 	}
