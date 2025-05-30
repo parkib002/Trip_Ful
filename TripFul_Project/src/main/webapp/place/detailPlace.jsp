@@ -215,25 +215,11 @@ body {
 <div class="review-section">
   <h2>방문자 리뷰</h2>
 
-<%
-	for(int i=0;i<list.size();i++){
-		ReviewDto rdto=list.get(i);
-%>
+
   <div class="review-card">
-    <div class="review-header">
-      <div class="review-id">리뷰 #<%=rdto.getReview_idx() %></div>
-      <div class="review-date"><%=rdto.getReview_writeday() %></div>
-    </div>
-    <div class="review-header">
-      <span class="review-user">작성자: <%=rdto.getReview_id() %></span>
-      <span class="review-rating">⭐ <%=rdto.getReview_star()%></span>
-    </div>
-    <div class="review-content">
-    <%=rdto.getReview_content() %>
-      <img src="<%=rdto.getReview_img() %>" alt="리뷰 이미지" class="review-image" />
-    </div>
+    <jsp:include page="../Review/reviewList.jsp?place_num=<%=num %>"/>
   </div>
-	<% }%>
+	
 </div>
     </div>
 </body>
