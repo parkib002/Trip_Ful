@@ -2,14 +2,17 @@
 <%@ page import="login.LoginDao" %>
 <%@ page import="login.LoginDto" %>
 <%
-    String myid = (String) session.getAttribute("id");
-    String name = null;
+String myid = null;
+String name = null;
+if (session.getAttribute("loginok") != null) {
+	myid = (String) session.getAttribute("id");
 
-    if (myid != null) {
-        LoginDao dao = new LoginDao();
-        LoginDto dto = dao.getOneMember(myid);
-        name = dto.getName();
-    }
+	if (myid != null) {
+		LoginDao dao = new LoginDao();
+		LoginDto dto = dao.getOneMember(myid);
+		name = dto.getName();
+	}
+}
 %>
 
 <nav class="navbar navbar-light shadow px-4" style="height: 90px; position: relative; z-index: 1000;">
