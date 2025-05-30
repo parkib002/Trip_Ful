@@ -21,10 +21,10 @@
 	
     String apiKey = ""; // 여기에 본인의 API 키 입력
     
-   String placeId = "ChIJod7tSseifDUR9hXHLFNGMIs"; // 예시: Sydney의 Google place ID
+  // String placeId = "ChIJod7tSseifDUR9hXHLFNGMIs"; // 예시: Sydney의 Google place ID
     
 	//placeId를 place_code로 바꿔주면된다
-    String urlString = "https://maps.googleapis.com/maps/api/place/details/json?place_id=" + placeId +"&language=ko" + "&fields=review,rating&key=" + apiKey;
+    String urlString = "https://maps.googleapis.com/maps/api/place/details/json?place_id=" + place_code +"&language=ko" + "&fields=review,rating&key=" + apiKey;
 	
     URL url = new URL(urlString);	
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -52,7 +52,7 @@
          apilist.put("author", r.optString("author_name"));
          apilist.put("rating", String.valueOf(r.optDouble("rating")));
          apilist.put("text", r.optString("text"));
-
+		 
          long time = r.optLong("time") * 1000L;
          String date = "";
          if (time > 0) {
@@ -62,7 +62,7 @@
              date = sdf.format(d);
          }
          apilist.put("date", date);
-       	
+       	 apilist.put("photo", "null");
          //api 리뷰 리스트 병합 리스트에 추가
          merged.add(apilist);    // Google 리뷰
       	
@@ -76,6 +76,7 @@
         review.put("rating", map.get("review_star"));
         review.put("text", map.get("review_content"));
         review.put("date", map.get("review_writeday"));
+        review.put("photo", map.get("review_img"));
         merged.add(review);
     } 	
  	
@@ -98,7 +99,7 @@
 
     JSONObject result = new JSONObject();
     result.put("reviews", jsonArr);
-   System.out.println(result.toString());
+    System.out.println(result.toString());
     
 %>
 <%=result.toString() %>
