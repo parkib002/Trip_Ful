@@ -42,10 +42,10 @@
         String loginok = (String) session.getAttribute("loginok"); // 폼에서 admin만 쓰도록 했으므로, 여기서도 확인 가능
 
         // 로그인 유효성 검사 (폼에서도 했지만, 액션에서도 하는 것이 안전)
-        if (loggedInUserId == null || loggedInUserId.trim().isEmpty() || loginok == null /* || !"admin".equals(loginok) */ ) {
+        if (loggedInUserId == null || loggedInUserId.trim().isEmpty() || loginok == null) {
             // 폼에서 admin 체크를 했으므로, 여기서는 로그인 여부만 주로 확인하거나 필요에 따라 admin 체크도 추가
             // loginok이 "admin"이어야만 글쓰기가 가능하다면 해당 조건 추가
-            response.sendRedirect(request.getContextPath() + "/index.jsp?main=login/loginForm.jsp&errMsg=not_logged_in");
+            response.sendRedirect(request.getContextPath() + "/index.jsp?main=login/login.jsp");
             return;
         }
         String qna_writer = loggedInUserId;
