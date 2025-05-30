@@ -62,9 +62,9 @@
 							<a href="index.jsp?main=./login/forgotPw.jsp">Forgot Password?</a>
 						</div>
 						<div class="social_login">
-						<img src="./social_img/google.png">
-						<img src="./social_img/kakao.png">
-						<img src="./social_img/naver.png">
+						<img src="./login/social_img/google.png">
+						<img src="./login/social_img/kakao.png">
+						<img src="./login/social_img/naver.png">
 						</div>
 					</form>
 				</div>
@@ -100,9 +100,9 @@
 							<input type="submit" class="button" value="Sign Up">
 						</div>
 						<div class="social_signin">
-						<img src="./social_img/google.png">
-						<img src="./social_img/kakao.png">
-						<img src="./social_img/naver.png">
+						<img src="./login/social_img/google.png">
+						<img src="./login/social_img/kakao.png">
+						<img src="./login/social_img/naver.png">
 						</div>
 					</form>
 				</div>
