@@ -134,9 +134,17 @@ function showPlaces(title, places) {
     const $card = $('<div class="place-card">').css('cursor', 'pointer');
 
     const fileName = place.place_img ? place.place_img.split(',')[0] : null;
-    const imgPath = fileName
-      ? './' + fileName
-      : 'https://via.placeholder.com/200x150?text=No+Image';
+    let imgPath;
+
+    if (fileName) {
+      if (fileName.startsWith('save/')) {
+        imgPath = fileName;
+      } else {
+        imgPath = './' + fileName;
+      }
+    } else {
+      imgPath = 'https://via.placeholder.com/200x150?text=No+Image';
+    }
 
     const $imgWrapper = $('<div class="image-wrapper">');
     const $img = $('<img>')
@@ -144,38 +152,74 @@ function showPlaces(title, places) {
       .attr('src', imgPath);
     $imgWrapper.append($img);
 
-    $card.append($imgWrapper);
-    $('<div class="caption">').text(place.place_name).appendTo($card);
+    // 텍스트 영역 추가
+    const $textArea = $('<div class="text-area">');
+    const $caption = $('<div class="caption">').text(place.place_name)
+      .css({ margin: '0', paddingBottom: '2px' });
+    const ratingText = (typeof place.avg_rating === 'number' && place.avg_rating >= 0)
+      ? '⭐ ' + place.avg_rating.toFixed(1)
+      : '⭐ 평점없음';
+    const $rating = $('<div class="rating">').text(ratingText)
+      .css({ margin: '0', padding: '0' });
+
+    $textArea.append($caption).append($rating);
+
+    $card.append($imgWrapper).append($textArea);
 
     $card.click(() => {
-      const targetUrl = 'index.jsp?main=place/detailPlace.jsp' +
-        '&place_num=' + place.place_num;
+      const targetUrl = 'index.jsp?main=place/detailPlace.jsp&place_num=' + place.place_num;
       location.href = targetUrl;
     });
 
-    $card.appendTo($container);
+    $container.append($card);
   });
 }
+
+
 
 function appendPlaces(places) {
   const $container = $('#placeContainer');
 
   $.each(places, function (_, place) {
     const $card = $('<div class="place-card">').css('cursor', 'pointer');
-	const $imgWrapper = $('<div class="image-wrapper">');
-	
-	const fileName = place.place_img ? place.place_img.split(',')[0] : null;
-	 const imgPath = fileName
-	   ? './' + fileName
-	   : 'https://via.placeholder.com/200x150?text=No+Image';
 
+    const fileName = place.place_img ? place.place_img.split(',')[0] : null;
+    let imgPath;
+
+    if (fileName) {
+      if (fileName.startsWith('save/')) {
+        imgPath = fileName;
+      } else {
+        imgPath = './' + fileName;
+      }
+    } else {
+      imgPath = 'https://via.placeholder.com/200x150?text=No+Image';
+    }
+
+    const $imgWrapper = $('<div class="image-wrapper">');
     const $img = $('<img>')
       .attr('alt', place.place_name)
       .attr('src', imgPath);
 
     $imgWrapper.append($img);
-	$card.append($imgWrapper);
-    $('<div class="caption">').text(place.place_name).appendTo($card);
+
+    // 텍스트 영역 추가
+    const $textArea = $('<div class="text-area">');
+    const $caption = $('<div class="caption">').text(place.place_name)
+      .css({ margin: '0', paddingBottom: '2px' });
+
+    let rating = Number(place.avg_rating);
+    const ratingText = (!isNaN(rating) && rating >= 0)
+      ? '⭐ ' + rating.toFixed(1)
+      : '⭐ 평점없음';
+
+    const $rating = $('<div class="rating">')
+      .text(ratingText)
+      .css({ margin: '0', padding: '0' });
+
+    $textArea.append($caption).append($rating);
+
+    $card.append($imgWrapper).append($textArea);
 
     $card.click(() => {
       location.href = 'index.jsp?main=place/detailPlace.jsp&place_num=' + place.place_num;
@@ -184,6 +228,8 @@ function appendPlaces(places) {
     $container.append($card);
   });
 }
+
+
 
 
 // ✅ 페이지 로딩 시 전체 관광지 출력 + 대륙 버튼만 표시 (전체보기 버튼 없음)

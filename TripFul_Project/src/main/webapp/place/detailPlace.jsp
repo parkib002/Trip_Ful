@@ -1,3 +1,7 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.List"%>
+<%@page import="review.ReviewDao"%>
+<%@page import="review.ReviewDto"%>
 <%@page import="place.PlaceDto"%>
 <%@page import="place.PlaceDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -10,6 +14,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <title>Insert title here</title>
 <%
+	request.setCharacterEncoding("utf-8");
+
 	String num=request.getParameter("place_num");
 
 	PlaceDao dao=new PlaceDao();
@@ -17,6 +23,14 @@
 	PlaceDto dto=dao.getPlaceData(num);
 	
 	String [] img=dto.getPlace_img().split(",");
+	
+	ReviewDao rdao=new ReviewDao();
+	
+	double star=rdao.getAverageRatingByPlace(num);
+	
+	List<ReviewDto> list=dao.selectReview(num);	
+	
+	
 %>
 <style type="text/css">
 body {
@@ -120,7 +134,7 @@ body {
       center: { lat: 37.5665, lng: 126.9780 }, // 초기값 (서울)
     });
 
-    const placeId = "<%=dto.getPlace_code()%>"; // 예시 Place ID
+    const placeId = "<%=dto.getPlace_code() %>"; // 예시 Place ID
 
     const request = {
       placeId: placeId,
@@ -152,6 +166,7 @@ body {
         <div class="category-views d-flex justify-content-between align-items-center mb-2">
     	<p class="category m-0">카테고리: <%=dto.getPlace_tag() %></p>
    	 	<p class="views m-0">조회수: <%=dto.getPlace_count() %></p>
+   	 	<p class="views m-0">별점: <%=star==-1.0?"없음":star%></p>
 		</div>
         <div class="main-section">
            <!-- Carousel -->
@@ -197,19 +212,29 @@ body {
 				<%=dto.getPlace_content() %>
 		</div>
 		
-        <div class="review-section">
-            <h2>방문자 리뷰</h2>
-             
-                <div class="review-card">
-                    <div class="review-header">
-                        <span class="review-user"></span>
-                        <span class="review-date"></span>
-                    </div>
-                    <div class="review-content">
-                    </div>
-                </div>
-            
-        </div>
+<div class="review-section">
+  <h2>방문자 리뷰</h2>
+
+<%
+	for(int i=0;i<list.size();i++){
+		ReviewDto rdto=list.get(i);
+%>
+  <div class="review-card">
+    <div class="review-header">
+      <div class="review-id">리뷰 #<%=rdto.getReview_idx() %></div>
+      <div class="review-date"><%=rdto.getReview_writeday() %></div>
+    </div>
+    <div class="review-header">
+      <span class="review-user">작성자: <%=rdto.getReview_id() %></span>
+      <span class="review-rating">⭐ <%=rdto.getReview_star()%></span>
+    </div>
+    <div class="review-content">
+    <%=rdto.getReview_content() %>
+      <img src="<%=rdto.getReview_img() %>" alt="리뷰 이미지" class="review-image" />
+    </div>
+  </div>
+	<% }%>
+</div>
     </div>
 </body>
 </html>

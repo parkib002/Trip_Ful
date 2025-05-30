@@ -52,51 +52,50 @@
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 1rem;
     }
-   .place-card {
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  overflow: hidden;
-  width: 100%;
-  height: 230px; /* 카드 전체 높이 고정 (이미지 + 텍스트) */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
 .place-card {
-  background-color: white;
+  padding: 0;
+  margin: 0;
   border-radius: 0.5rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   overflow: hidden;
-  width: 100%;
-  height: 230px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
+  justify-content: flex-start; /* 위쪽 정렬 */
+  height: 230px;
+}
+.place-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* 맨 아래 정렬 */
+  height: 230px;
 }
 .image-wrapper {
-  width: 100%;
-  height: 150px;
-  display: flex;
-  align-items: center;   /* 세로 중앙 정렬 */
-  justify-content: center; /* 가로 중앙 정렬 */
+  height: 170px;
   overflow: hidden;
-  background-color: #eee; /* 이미지 없을 경우 대비 */
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 6px;
 }
+
 
 .image-wrapper img {
+  width: 100%;
   height: 100%;
-  width: auto;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  display: block;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  border-radius: 0.5rem 0.5rem 0 0;
 }
 
+
+
+
 .place-card .caption {
-  padding: 0.75rem;
+  padding: 2px 5px; /* 적당히 위아래 패딩 줄임 */
   text-align: center;
-  height: 80px;
+  height: auto; /* 높이 고정 제거 */
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
    .place-card img {
  	width: 100%;
@@ -137,6 +136,43 @@
   background-color: #2196f3;
   color: #fff;
 }
+
+.caption, .rating {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.1;      /* 줄 높이 줄이기 */
+  font-size: 1rem;
+}
+
+.text-container {
+  display: block !important;
+  padding: 0 3px 3px 3px !important;
+}
+
+.caption {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #333;
+}
+
+
+.rating {
+  color: #f39c12;
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+.text-area {
+  background-color: #f9f9f9;
+  padding: 8px 10px;
+  border-top: 1px solid #ddd;
+  border-radius: 0 0 0.5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
   </style>
   <script type="text/javascript">
   $('#sortSelect').on('change', function () {
@@ -169,7 +205,11 @@
   <div class="selection-buttons" id="selection-area" style="position: relative; z-index: 10;"></div>
   <div class="places" id="placeContainer"></div>
 </div>
- 
+ <% 
+ System.out.println("관광지 DAO 진입: " + System.currentTimeMillis());
+
+System.out.println("관광지 DAO 응답 완료: " + System.currentTimeMillis());
+%>
 </body>
 </html>
 
