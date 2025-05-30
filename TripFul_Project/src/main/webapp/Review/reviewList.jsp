@@ -60,12 +60,12 @@ $(function() {
 		}
 	});  
 $("#apitest").click(function() {
-	var place_num=<%=place_num%>
+	var place_num="<%=place_num%>";
 	console.log(place_num);
 	$.ajax({
 		type:"post",
 		dataType:"json",
-		url:"insertApi.jsp",
+		url:"Review/insertApi.jsp",
 		data:{"place_num":place_num},
 		success:function(res){
 			 var carouselItemsHtml = ""; // 각 카드를 직접 여기에 넣음
@@ -146,7 +146,11 @@ $("#apitest").click(function() {
 	                    }
 	                }
 	            });
-	    }	    
+	    },	    error: function(xhr, status, error) {
+	        console.error("AJAX 실패:", status, error);
+	        console.log("응답 텍스트:", xhr.responseText);
+	        alert("리뷰 데이터를 불러오는 중 오류가 발생했습니다.");
+	    }   
 	});
 });		
 		
