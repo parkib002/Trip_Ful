@@ -20,7 +20,11 @@
 
 </head>
 <body>
-<%
+<%	
+	
+	session.invalidate();
+	session = request.getSession(true);
+
 	String id = request.getParameter("user");
 	String pw = request.getParameter("pass");
 	String chk = request.getParameter("check");

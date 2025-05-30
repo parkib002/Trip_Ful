@@ -13,7 +13,10 @@
 <body>
 <%
     //loginok세션제거
-    session.invalidate(); // 세션 자체를 무효화
+    session.removeAttribute("loginok");
+	if(session.getAttribute("rememberId")==null){
+		session.removeAttribute("id");
+	}
     //loginmain으로 이동
     response.sendRedirect("../index.jsp");
 %>
