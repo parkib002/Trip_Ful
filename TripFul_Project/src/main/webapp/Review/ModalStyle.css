@@ -91,7 +91,7 @@
 }
 
 /* 별점 스타일 */
-.star_rating {
+.star_rating, .star_rating2 {
 	width: 100%;
 	box-sizing: border-box;
 	display: inline-flex;
@@ -101,7 +101,7 @@
 	margin-bottom: 10px;
 }
 
-.star_rating .star, .rating {
+.star_rating .star, .star_rating2 .rating.off {
 	width: 25px;
 	height: 25px;
 	margin-right: 10px;
@@ -112,7 +112,7 @@
 	box-sizing: border-box;
 }
 
-.on {
+.star_rating .star.on, .star_rating2 .rating.on {
 	width: 25px;
 	height: 25px;
 	margin-right: 10px;
@@ -197,24 +197,3 @@
   cursor: pointer;
 }
 
-/* 리뷰css */
-#reviewList{
-	margin: 10px;
-}
-.review_writeday{
-	
-	right:20%;
-	color: #ccc;
-}
-i.category{
-	
-	right: 15%;
-}
-i.category:hover {
-	border-radius: 80px;
-	background: #ccc;
-	color: white;
-	cursor: pointer;
-	
-	
-}
