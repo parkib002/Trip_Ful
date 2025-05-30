@@ -33,7 +33,7 @@
 	//System.out.println(flag);
 	
 	if(flag==0){
-		session.setAttribute("loginok",null);
+		session.setAttribute("loginok","no");
 		response.sendRedirect("../index.jsp?main=login/login.jsp&login=1");
 	}
 	else if (flag==1){

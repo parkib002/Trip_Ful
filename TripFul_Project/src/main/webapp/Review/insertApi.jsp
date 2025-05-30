@@ -21,7 +21,7 @@
 	
     String apiKey = "AIzaSyCKGdGbCxXFTXVCUSrJ5ktk_jpgeBdon6A"; // 여기에 본인의 API 키 입력
     
-  	//String placeId = "ChIJod7tSseifDUR9hXHLFNGMIs"; // 예시: Sydney의 Google place ID
+  // String placeId = "ChIJod7tSseifDUR9hXHLFNGMIs"; // 예시: Sydney의 Google place ID
     
 	//placeId를 place_code로 바꿔주면된다
     String urlString = "https://maps.googleapis.com/maps/api/place/details/json?place_id=" + place_code +"&language=ko" + "&fields=review,rating&key=" + apiKey;
@@ -63,7 +63,6 @@
          }
          apilist.put("date", date);
        	 apilist.put("photo", "null");
-       	 apilist.put("read", "Google");
          //api 리뷰 리스트 병합 리스트에 추가
          merged.add(apilist);    // Google 리뷰
       	
@@ -78,7 +77,6 @@
         review.put("text", map.get("review_content"));
         review.put("date", map.get("review_writeday"));
         review.put("photo", map.get("review_img"));
-        review.put("read","DB");
         merged.add(review);
     } 	
  	

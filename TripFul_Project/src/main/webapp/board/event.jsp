@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="../css/noticeStyle.css">
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/noticeStyle.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -77,7 +77,7 @@ no=totalCount-(currentPage-1)*perPage;
 		<hr>
 	</div>
 	<br>
-	<table class="table table-hover notice-table" style="width: 1400px;">
+	<table class="table table-hover notice-table">
 		<thead>
 			<tr>
 				<th scope="col" style="width: 8%;">번호</th>

@@ -5,8 +5,6 @@
 <%@ page import="java.io.File" %>
 <%@ page import="board.BoardSupportDto" %>
 <%@ page import="board.BoardSupportDao" %>
-
-
 <%
     request.setCharacterEncoding("UTF-8");
 
@@ -19,87 +17,79 @@
     String encType = "UTF-8";
     MultipartRequest multi = null;
 
+    // 로그인 정보 확인
+    String loggedInUserId_reply = (String) session.getAttribute("id");
+    if (loggedInUserId_reply == null) {
+        out.println("<script>alert('로그인이 필요한 서비스입니다.'); location.href='" + request.getContextPath() + "/index.jsp?main=login/loginMain.jsp';</script>");
+        return;
+    }
+	
     try {
         multi = new MultipartRequest(request, savePath, maxSize, encType, new DefaultFileRenamePolicy());
 
-        String parent_idx = multi.getParameter("parent_idx");
-        String regroup_str = multi.getParameter("regroup");
-        String restep_parent_str = multi.getParameter("restep_parent");
-        String relevel_parent_str = multi.getParameter("relevel_parent");
+        // 폼에서 넘어온 부모 글의 정보
+        String parent_regroup_str = multi.getParameter("regroup");
+        String parent_restep_str = multi.getParameter("restep");     // 부모의 restep
+        String parent_relevel_str = multi.getParameter("relevel");   // 부모의 relevel
 
+        // 새 답변의 내용
         String qna_title = multi.getParameter("qna_title");
         String qna_content = multi.getParameter("qna_content");
-        // String qna_private_param = multi.getParameter("qna_private");
+        String qna_writer = multi.getParameter("qna_writer"); // 폼에서 readonly로 설정된 작성자 ID
 
-        String loggedInUserId_reply = (String) session.getAttribute("id");
-        String loginok_reply = (String) session.getAttribute("loginok");
-        
-        System.out.println("DEBUG: parent_idx_str = " + multi.getParameter("parent_idx"));
-        System.out.println("DEBUG: regroup_str = " + multi.getParameter("regroup"));
-        System.out.println("DEBUG: restep_parent_str = " + multi.getParameter("restep_parent"));
-        System.out.println("DEBUG: relevel_parent_str = " + multi.getParameter("relevel_parent"));
-
-        if (loggedInUserId_reply == null || loggedInUserId_reply.trim().isEmpty() || loginok_reply == null /* || !"admin".equals(loggedInUserId_reply) */) {
-            response.sendRedirect(request.getContextPath() + "/index.jsp?main=login/loginForm.jsp&errMsg=reply_auth_failed");
-            return;
-        }
-        String qna_writer = loggedInUserId_reply;
-
+        // 필수 파라미터 검사
         if (qna_title == null || qna_title.trim().isEmpty() ||
             qna_content == null || qna_content.trim().isEmpty() ||
-            parent_idx == null || regroup_str == null || restep_parent_str == null || relevel_parent_str == null) { // parent_idx 추가
-            out.println("<script>alert('제목, 내용 및 답글 정보가 올바르지 않습니다.'); history.back();</script>");
+            parent_regroup_str == null || parent_restep_str == null || parent_relevel_str == null) {
+            out.println("<script>alert('제목, 내용 및 필수 답글 정보가 누락되었습니다.'); history.back();</script>");
             return;
         }
 
-        String qna_img = null;
-        String originalFileName = multi.getOriginalFileName("qna_img");
-        String filesystemName = multi.getFilesystemName("qna_img");
-        if (originalFileName != null && filesystemName != null) {
-            qna_img = filesystemName;
-        }
+        // 첨부 파일 처리
+        String qna_img = multi.getFilesystemName("qna_img"); // 저장된 파일명
 
-        String qna_private_status = "0"; // 기본 공개
+        // 비밀글 여부 (답변은 기본적으로 공개 "0"으로 설정. 필요시 폼에서 받아오도록 수정)
+        String qna_private_status = "0"; 
+        // String qna_private_param = multi.getParameter("qna_private");
         // if (qna_private_param != null && qna_private_param.equals("1")) {
         //     qna_private_status = "1";
         // }
 
+
+        // 새 답변 DTO 생성
         BoardSupportDto replyDto = new BoardSupportDto();
-        replyDto.setQna_idx(parent_idx); // ⬅️ **수정된 부분: 부모글 ID를 qna_idx로 설정 (DAO가 답글로 인식하도록)**
-        
-        replyDto.setQna_category("답변"); // DAO의 insertReboard가 qna_category를 필요로 함
         replyDto.setQna_writer(qna_writer);
         replyDto.setQna_title(qna_title);
         replyDto.setQna_content(qna_content);
         replyDto.setQna_img(qna_img);
         replyDto.setQna_private(qna_private_status);
-        
-        int regroup = Integer.parseInt(regroup_str);
-        int restep_parent = Integer.parseInt(restep_parent_str);
-        int relevel_parent = Integer.parseInt(relevel_parent_str);
+        replyDto.setQna_category("답변"); // 답변글의 카테고리 (필요에 따라 설정)
+        // qna_readcount는 DAO의 SQL문에서 0으로 직접 설정됨
 
-        // DAO의 insertReboard는 이 값들을 받아 내부에서 새 답글의 restep/relevel을 계산합니다.
-        replyDto.setRegroup(regroup);
-        replyDto.setRestep(restep_parent);
-        replyDto.setRelevel(relevel_parent);
+        // 부모의 regroup, restep, relevel을 DTO에 설정하여 DAO로 전달
+        // DAO의 insertReboard 메소드가 이 값들을 기준으로 새 답글의 값을 계산함
+        replyDto.setRegroup(Integer.parseInt(parent_regroup_str));
+        replyDto.setRestep(Integer.parseInt(parent_restep_str));
+        replyDto.setRelevel(Integer.parseInt(parent_relevel_str));
         
-        // qna_readcount는 DAO의 SQL문에서 0으로 직접 설정하거나, 여기서 설정해도 됩니다.
-        // replyDto.setQna_readcount(0); // DAO의 SQL에 이미 '0'으로 되어 있다면 생략 가능
-
         BoardSupportDao dao = new BoardSupportDao();
         dao.insertReboard(replyDto); // 이 메소드가 내부적으로 updateRestep 호출 및 답글 처리
 
+        // 성공 후 목록 페이지로 이동
         String listPage = request.getContextPath() + "/index.jsp?main=board/boardList.jsp&sub=support.jsp";
-        response.sendRedirect(listPage + "&msg=reply_success");
+        response.sendRedirect(listPage); // 필요시 성공 메시지 파라미터 추가 가능: + "&msg=reply_success"
 
     } catch (IOException ioe) {
+        // 파일 업로드 관련 예외 (예: 크기 초과)
         ioe.printStackTrace();
         out.println("<script>alert('파일 업로드 중 오류가 발생했습니다. (예: 파일 크기 초과)'); history.back();</script>");
     } catch (NumberFormatException nfe) {
+        // 숫자 변환 오류 (regroup, restep, relevel 파싱 실패 시)
         nfe.printStackTrace();
-        out.println("<script>alert('잘못된 숫자 형식의 파라미터입니다.'); history.back();</script>");
+        out.println("<script>alert('잘못된 형식의 파라미터입니다. (숫자 오류)'); history.back();</script>");
     } catch (Exception e) {
+        // 기타 모든 예외
         e.printStackTrace();
-        out.println("<script>alert('답변 등록 중 오류가 발생했습니다.'); history.back();</script>");
+        out.println("<script>alert('답변 등록 중 알 수 없는 오류가 발생했습니다.'); history.back();</script>");
     }
 %>

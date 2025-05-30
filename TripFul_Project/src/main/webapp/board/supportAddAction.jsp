@@ -93,7 +93,7 @@
         dao.insertReboard(dto); //
 
         // 9. 결과 처리: 성공 시 고객센터 목록 페이지로 이동
-        String redirectUrl = request.getContextPath() + "../index.jsp?main=board/boardList.jsp&sub=support.jsp"; // 문의 목록 페이지
+        String redirectUrl = request.getContextPath() + "/index.jsp?main=board/boardList.jsp&sub=support.jsp"; // 문의 목록 페이지
         // out.println("<script>alert('문의가 성공적으로 등록되었습니다.'); location.href='" + redirectUrl + "';</script>");
         // alert 없이 바로 이동하려면 response.sendRedirect 사용
         response.sendRedirect(redirectUrl);

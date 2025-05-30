@@ -35,7 +35,7 @@
 		 String review_id=multi.getParameter("review_id");
 		 String review_content=multi.getParameter("review_content");
 		 String review_img=multi.getFilesystemName("review_img");
-		 int review_star=Integer.parseInt(multi.getParameter("review_star"));
+		 Double review_star=Double.parseDouble(multi.getParameter("review_star"));
 		 String place_num=multi.getParameter("place_num");
 		 
 		 ReviewDto dto=new ReviewDto();
