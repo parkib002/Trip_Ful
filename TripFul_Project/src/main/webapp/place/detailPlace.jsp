@@ -1,3 +1,4 @@
+<%@page import="javax.print.DocFlavor.STRING"%>
 <%@page import="place.PlaceDto"%>
 <%@page import="place.PlaceDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -15,6 +16,8 @@
 	PlaceDao dao=new PlaceDao();
 	
 	PlaceDto dto=dao.getPlaceData(num);
+	
+	String [] img=dto.getPlace_img().split(",");
 %>
 <style type="text/css">
 body {
@@ -165,7 +168,7 @@ body {
   <!-- The slideshow/carousel -->
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="./save/<%=dto.getPlace_img() %>" alt="Los Angeles" class="d-block" style="width:500px;">
+      <img src="./<%=img[0] %>" alt="Los Angeles" class="d-block" style="width:500px;">
     </div>
     <div class="carousel-item">
       <img src="./image/places/성산일출봉.jpg" alt="Chicago" class="d-block" style="width:500px;">
