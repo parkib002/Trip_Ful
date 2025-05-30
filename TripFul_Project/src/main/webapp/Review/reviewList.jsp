@@ -79,6 +79,12 @@ $("#apitest").click(function() {
 	                    reviewCard += "<div class='card h-100 p-3'>";
 	                    reviewCard += "<div class='review-header d-flex justify-content-between align-items-center mb-2'>";
 	                    reviewCard += "<b>" + r.author + "</b>";
+	                    if(r.read !=="DB" && r.read !== "")
+                    	{
+                    	reviewCard += "<div class='googlechk mb-2'>";
+                    	reviewCard += "<span class='googlereview'>"+r.read+"</span>";
+                    	reviewCard += "</div>";
+                    	}
 	                    reviewCard += "<div>";
 	                    reviewCard += "<span class='review_writeday'>" + r.date + "</span>&nbsp;&nbsp;";
 	                    reviewCard += "<i class='bi bi-three-dots-vertical category'></i></div></div>";
