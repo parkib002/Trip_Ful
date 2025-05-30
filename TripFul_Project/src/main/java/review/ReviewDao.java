@@ -92,7 +92,7 @@ public class ReviewDao {
 	//관광지 전체리스트
 	public List<HashMap<String, String>> getPlaceList(String place_num)
 	{
-		String sql="select r.review_idx, r.review_id, r.review_content, r.review_img, r.review_star, r.review_writeday, r.place_num "
+		String sql="select r.review_idx, r.review_id, r.review_content, r.review_img, r.review_star, r.review_writeday, p.place_num "
 				+ "from tripful_review r,tripful_place p "
 				+ "where r.place_num=p.place_num and p.place_num=?";
 		

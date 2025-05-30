@@ -109,5 +109,9 @@ $("#birth").keyup(function() {
 			$(this).siblings(".label").removeClass("error");
 		}
 	}
+	
+	function googleHandle(){
+		alert("로그인 됬나?");
+	}
 
 })
