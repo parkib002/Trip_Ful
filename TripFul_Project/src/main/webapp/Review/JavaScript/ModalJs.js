@@ -7,14 +7,13 @@
 	var save = $(".save");
 	
 	// 모달제어
-	function toggleModal() {
+	function toggleModal() {		
 		modal.toggleClass("show");
 	}
-
-	// events	
-	modalBtn.click(function(){
-		toggleModal();
-	})
+	
+	/*modalBtn.click(function() {
+			toggleModal();
+		});*/
 	closeBtn.click(function() {
 		toggleModal();
 	});
@@ -48,8 +47,8 @@
 	});
 
 	//별점
-	$('.star_rating .star').click(function() {
-
+	$(".star_rating .star").click(function() {
+		//alert("aa");
 		var clickedStar = $(this);
 
 		//console.log(clickedStar.hasClass("on"));
@@ -93,4 +92,6 @@
 		 e.stopPropagation(); // <- 이 줄이 핵심!
 		    $(".img-wrapper").hide();
 		    $(".btn-upload").show();
-		  });
+		  });		  
+	
+	
