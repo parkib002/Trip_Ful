@@ -1,4 +1,3 @@
-<%@page import="javax.print.DocFlavor.STRING"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.List"%>
 <%@page import="review.ReviewDao"%>
@@ -25,8 +24,6 @@
 	
 	String [] img=dto.getPlace_img().split(",");
 	
-
-	
 	ReviewDao rdao=new ReviewDao();
 	
 	double star=rdao.getAverageRatingByPlace(num);
@@ -34,7 +31,6 @@
 	List<ReviewDto> list=dao.selectReview(num);	
 	
 	
-
 %>
 <style type="text/css">
 body {
@@ -185,14 +181,6 @@ body {
   
   <!-- The slideshow/carousel -->
   <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="./<%=img[0] %>" alt="Los Angeles" class="d-block" style="width:500px;">
-    </div>
-    <div class="carousel-item">
-      <img src="./image/places/성산일출봉.jpg" alt="Chicago" class="d-block" style="width:500px;">
-    </div>
-    <div class="carousel-item">
-      <img src="./image/places/해운대.jpg" alt="New York" class="d-block" style="width:500px;">
   <%
   	for(int i=0;i<img.length;i++){
   %>
