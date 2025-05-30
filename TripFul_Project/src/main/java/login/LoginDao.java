@@ -21,10 +21,12 @@ public class LoginDao {
 		String sql = "insert into tripful_member(id, hash_pw, salt, name, email, birth, joindate) values(?,?,?,?,?,?,now())";
 
 		try {
-			
-			String salt = BCrypt.gensalt();
-			String hash_pw = BCrypt.hashpw(dto.getPw(), salt);
-			
+			String salt = null;
+			String hash_pw = null;
+			if(dto.getPw()!=null) {
+				salt = BCrypt.gensalt();
+				hash_pw = BCrypt.hashpw(dto.getPw(), salt);
+			}
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getId());
 			pstmt.setString(2, hash_pw);
@@ -164,6 +166,9 @@ public class LoginDao {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
 			String salt = this.getSalt(id);
+			if(salt.equals("")) {
+				return flag;
+			}
 			String hash_pw = BCrypt.hashpw(pw, salt);
 			System.out.println(hash_pw);
 			pstmt.setString(2, hash_pw);
@@ -268,6 +273,55 @@ public class LoginDao {
 		
 		//System.out.println(salt);
 		return salt;
+	}
+	
+	public String getMemberIdx(String provider, String key) {
+		String m_idx = null;
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select member_idx from tripful_social_member where social_provider = ? and social_provider_key = ?";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, provider);
+			pstmt.setString(2, key);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				m_idx = rs.getString("member_idx");
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {db.dbClose(rs, pstmt, conn);}
+		
+		return m_idx;
+	}
+	
+	public String getIdwithIdx(String idx) {
+		String id = null;
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "select id from tripful_member where idx=?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, idx);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				id = rs.getString("id");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {db.dbClose(rs, pstmt, conn);}
+		
+		return id;
 	}
 
 }

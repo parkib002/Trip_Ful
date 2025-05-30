@@ -6,16 +6,15 @@
 	var closeBtn = $("#closeBtn");
 	var save = $(".save");
 	
-	// 모달제어
-	function toggleModal() {		
-		modal.toggleClass("show");
-	}
 	
 	/*modalBtn.click(function() {
 			toggleModal();
 		});*/
 	closeBtn.click(function() {
-		toggleModal();
+		$('.modal').removeClass('show');
+		setTimeout(function() {
+		    $('.modal').css('display', 'none'); // 트랜지션 완료 후 display를 none으로 변경
+		}, 300);
 	});
 	save.click(function(e) {		
 		
@@ -36,13 +35,19 @@
 			}
 			
 		})
-		toggleModal();
+		$('.modal').removeClass('show');
+		setTimeout(function() {
+		    $('.modal').css('display', 'none'); // 트랜지션 완료 후 display를 none으로 변경
+		}, 300);
 	});
 
 	$(window).on("click", function(event) {
 		// 모달의 검은색 배경 부분이 클릭된 경우 닫히도록 하는 코드
 		if ($(event.target).is(modal)) {
-			toggleModal();
+			$('.modal').removeClass('show');
+			setTimeout(function() {
+			    $('.modal').css('display', 'none'); // 트랜지션 완료 후 display를 none으로 변경
+			}, 300);
 		}
 	});
 

@@ -10,9 +10,11 @@
 
 <%
     String subPage = request.getParameter("sub");
-    if (subPage == null || subPage.isEmpty()) { // .equals("") 보다 .isEmpty()가 더 안전합니다.
+    if (subPage == null || subPage.isEmpty()) {
         subPage = "notice.jsp";
     }
+    
+    
 %>
 <div class="board_header">
     <div class="title">

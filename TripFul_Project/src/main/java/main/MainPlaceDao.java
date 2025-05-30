@@ -1,8 +1,12 @@
-package board;
-import java.sql.*;
-import java.util.*;
-import java.sql.Connection;
+package main;
+
 import mysql.db.DbConnect;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainPlaceDao {
     DbConnect db = new DbConnect();

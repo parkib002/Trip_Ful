@@ -160,6 +160,7 @@
   color: #f39c12;
   font-size: 0.9rem;
   margin-top: 2px;
+  text-align: center;
 }
 .text-area {
   background-color: #f9f9f9;

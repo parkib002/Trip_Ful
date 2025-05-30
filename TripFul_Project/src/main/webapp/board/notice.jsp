@@ -7,15 +7,23 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="../css/noticeStyle.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <title>Insert title here</title>
 </head>
 <%
 BoardNoticeDao dao=new BoardNoticeDao();
+
+String loginok=null;
+String id=null;
+
+//세션에서 id 값을 가져올 때 null 체크 추가 (NPE 방지)
+if( session.getAttribute("loginok")!=null)
+{
+loginok=(String)session.getAttribute("loginok");
+if(session.getAttribute("id") != null) {
+id=(String)session.getAttribute("id");
+}
+}
 
 //페이징처리
 //전체갯수
@@ -67,10 +75,19 @@ List<BoardNoticeDto> list=dao.getList(startNum, perPage);
 <div class="notice-wrapper">
 	<div class="notice-header">
 		<h3><i class="bi bi-x-diamond-fill">  </i><b>공지사항</b></h3>
+		<%
+			if("admin".equals(loginok))
+			{%>
+				<a style="float: right; text-decoration: none; color: black;"
+				href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=noticeAddForm.jsp">
+					<i class="bi bi-plus-square"></i>&nbsp;글쓰기
+				</a>
+			<%}
+		%>
 		<hr>
 	</div>
 	<br>
-	<table class="table table-hover notice-table" style="width: 1400px;">
+	<table class="table table-hover notice-table">
 		<thead>
 			<tr>
 				<th scope="col" style="width: 8%;">번호</th>
@@ -81,35 +98,64 @@ List<BoardNoticeDto> list=dao.getList(startNum, perPage);
 			</tr>
 		</thead>
 		<tbody>
+		
+		
+		
 		<%
-			for(int i=0;i<10;i++)
+		
+			if(list.isEmpty())
 			{%>
 				<tr>
-					<th scope="row"><%=i+1%></th>
-					<td>제목</td>
-					<td>손흥민</td>
-					<td>2025-05-21</td>
-					<td>3</td>
+					<td colspan="5" align="center"><b>등록된 게시글이 없습니다</b></td>
 				</tr>
-			<%}
+			<%}else{
+					for(int i=0;i<list.size();i++)
+					{
+						BoardNoticeDto dto=list.get(i);
+					%>
+						<tr>
+							<th scope="row"><%=no - i%></th>
+							<td>
+								<a href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=noticeDetail.jsp&idx=<%=dto.getNotice_idx() %>"
+								style="text-decoration: none; color: black;">
+									<%=dto.getNotice_title() %>
+								</a>
+							</td>
+							<td><%=dto.getNotice_writer() %></td>
+							<td><%=dto.getNotice_writeday() %></td>
+							<td><%=dto.getNotice_readcount() %></td>
+						</tr>
+					<%}
+			}
 		%>
 		</tbody>
 	</table>
 	
 	<nav class="pagination-container">
-		<div class="pagination">
-				<a class="pagination-newer" href="#">이전</a>
-				<span class="pagination-inner">
-					<a class="pagination-active" href="#">1</a>
-					<a href="#">2</a>
-					<a href="#">3</a>
-					<a href="#">4</a>
-					<a href="#">5</a>
-					<a href="#">6</a>
-				</span>
-				<a class="pagination-older" href="#">다음</a>
-		</div>
-</nav>
+			<div class="pagination">
+				<span class="pagination-inner"> <%
+					if(startPage>1){%> <a class="pagination-newer"
+					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=notice.jsp&currentPage=<%=startPage-perBlock%>">이전</a>
+					<%}
+				
+				for(int pp=startPage;pp<=endPage;pp++)
+				{
+					if(pp==currentPage)
+					{%> <a class="pagination-active"
+					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=notice.jsp&currentPage=<%=pp%>"><%=pp %></a>
+					<%}else{%> <a class="page-link" <%-- 클래스명 일관성 --%>
+					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=notice.jsp&currentPage=<%=pp%>"><%=pp %></a>
+					<%}
+				}
+				
+				//다음
+				if(endPage<totalPage)
+				{%> <a class="pagination-older"
+					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=notice.jsp&currentPage=<%=endPage+1%>">다음</a>
+					<%}
+				%>
+			</div>
+		</nav>
 </div>
 
 </body>
