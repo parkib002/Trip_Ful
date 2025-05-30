@@ -1,7 +1,0 @@
-INDEX VERSION 1.4+C:\Trip_ful\Trip_Ful\TripFul_Project\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
-1930647020.index
-3999934651.index
-1133897514.index
-1151782820.index
-3990724380.index
-2836209296.index

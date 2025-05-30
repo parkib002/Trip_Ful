@@ -1,7 +1,7 @@
 package board;
 
 public class MainPlaceDto {
-    private int placeNum;
+    private String placeNum;
     private String countryName;
     private String placeImg;
     private String placeContent;
@@ -13,7 +13,7 @@ public class MainPlaceDto {
 
     public MainPlaceDto() {}
 
-    public MainPlaceDto(int placeNum, String countryName, String placeImg, String placeContent,
+    public MainPlaceDto(String placeNum, String countryName, String placeImg, String placeContent,
                         String placeTag, String placeCode, String placeName,
                         int placeCount, String continentName) {
         this.placeNum = placeNum;
@@ -28,11 +28,11 @@ public class MainPlaceDto {
     }
 
     // Getters & Setters
-    public int getPlaceNum() {
+    public String getPlaceNum() {
         return placeNum;
     }
 
-    public void setPlaceNum(int placeNum) {
+    public void setPlaceNum(String placeNum) {
         this.placeNum = placeNum;
     }
 

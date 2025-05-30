@@ -52,23 +52,51 @@
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 1rem;
     }
-    .place-card {
-      background-color: white;
-      border-radius: 0.5rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-    .place-card img {
-  	width: 100%;
-  	height: 150px;
-  	object-fit: cover;
- 	 transition: transform 0.3s ease;
-	}
-    .place-card .caption {
-    padding: 0.75rem;
-    text-align: center;
-    }
-    
+.place-card {
+  padding: 0;
+  margin: 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 위쪽 정렬 */
+  height: 230px;
+}
+.place-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* 맨 아래 정렬 */
+  height: 230px;
+}
+.image-wrapper {
+  height: 170px;
+  overflow: hidden;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 6px;
+}
+
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+
+
+
+.place-card .caption {
+  padding: 2px 5px; /* 적당히 위아래 패딩 줄임 */
+  text-align: center;
+  height: auto; /* 높이 고정 제거 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
    .place-card img {
  	width: 100%;
     height: 150px;
@@ -83,22 +111,105 @@
    margin-bottom: 1rem;
    }
 
-   .place-card:hover img {
-   transform: scale(0.95); /* 95% 크기로 축소 */
-   }
+   .place-card:hover .image-wrapper img {
+  transform: scale(0.95);
+}
+   
+   .sort-label {
+  font-weight: bold;
+  color: #2196f3;
+  font-size: 1rem;
+}
+
+.sort-dropdown {
+  padding: 0.65rem 1rem;
+  border: 2px solid #2196f3;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  color: #2196f3;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sort-dropdown:hover {
+  background-color: #2196f3;
+  color: #fff;
+}
+
+.caption, .rating {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.1;      /* 줄 높이 줄이기 */
+  font-size: 1rem;
+}
+
+.text-container {
+  display: block !important;
+  padding: 0 3px 3px 3px !important;
+}
+
+.caption {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #333;
+}
+
+
+.rating {
+  color: #f39c12;
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+.text-area {
+  background-color: #f9f9f9;
+  padding: 8px 10px;
+  border-top: 1px solid #ddd;
+  border-radius: 0 0 0.5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
   </style>
+  <script type="text/javascript">
+  $('#sortSelect').on('change', function () {
+	  const selectedSort = $(this).val();
+	  currentPage = 1;
+	  lastLoaded = false;
+	  $('#placeContainer').empty();
+
+	  loadAllPlaces(currentPage, selectedSort);
+	});
+  </script>
 </head>
 <body>
+
   <header>
     <h1>관광지 선택</h1>
   </header>
 
- <div class="container">
-  <div class="selection-buttons" id="global-controls"></div> <!-- ✅ 추가된 부분 -->
+<div class="container">
+  <div class="selection-buttons" id="global-controls">
+    <!-- 🔽 정렬 드롭다운 추가 -->
+    <label for="sortSelect" class="sort-label">정렬: </label>
+    <select id="sortSelect" class="sort-dropdown">
+      <option value="popular">조회순</option>
+      <option value="rating">별점순</option>
+      <option value="likes">좋아요순</option>
+    </select>
+  </div>
+
   <div class="selection-buttons" id="selection-area" style="position: relative; z-index: 10;"></div>
   <div class="places" id="placeContainer"></div>
 </div>
- 
+ <% 
+ System.out.println("관광지 DAO 진입: " + System.currentTimeMillis());
+
+System.out.println("관광지 DAO 응답 완료: " + System.currentTimeMillis());
+%>
 </body>
 </html>
 

@@ -20,21 +20,22 @@
 
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="ModalStyle.css">
+<link rel="stylesheet" href="Review/ModalStyle.css">
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-<link rel="stylesheet" href="carouselStyle.css">
+<link rel="stylesheet" href="Review/carouselStyle.css">
 
-<title>Insert title here</title>
+<title>Insert title her</title>
 <%
 	//place_num 얻기
 	String place_num=request.getParameter("place_num");	
 	ReviewDao rdao=new ReviewDao();
 	ReviewDto rdto=new ReviewDto();
 	
+	System.out.println(place_num);
 	//아이디, 로그인상태 세션값 받기
 	String review_id=(String)session.getAttribute("id");
 	String loginok=(String)session.getAttribute("loginok");
@@ -59,7 +60,7 @@ $(function() {
 		}
 	});  
 $("#apitest").click(function() {
-	var place_num=$("input[name='place_num']").val();
+	var place_num=<%=place_num%>
 	console.log(place_num);
 	$.ajax({
 		type:"post",
@@ -233,7 +234,7 @@ $("#apitest").click(function() {
 	</div>
 	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-	 <script src="./JavaScript/ModalJs.js"></script>
+	 <script src="Review/JavaScript/ModalJs.js"></script>
 </body>
 
 </html>

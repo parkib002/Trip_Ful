@@ -4,10 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+
+import board.MainPlaceDto;
 import mysql.db.DbConnect;
+import review.ReviewDto;
 
 public class PlaceDao {
 
@@ -206,4 +211,46 @@ public class PlaceDao {
 			db.dbClose(pstmt, conn);
 		}
 	}
+	
+	public List<ReviewDto> selectReview(String num)
+	{
+		List<ReviewDto> list=new Vector<ReviewDto>();
+		
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		
+		String sql="select * from tripful_review where place_num=?";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			
+			pstmt.setString(1, num);
+			
+			rs=pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				ReviewDto dto=new ReviewDto();
+				
+				dto.setReview_idx(rs.getString("review_idx"));
+				dto.setReview_id(rs.getString("review_id"));
+				dto.setReview_content(rs.getString("review_content"));
+				dto.setReview_img(rs.getString("review_img"));
+				dto.setReview_star(rs.getDouble("review_star"));
+				dto.setReview_writeday(rs.getTimestamp("review_writeday"));
+				dto.setPlace_num(rs.getString("place_num"));
+				
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
+		return list;
+	}
+
 }

@@ -1,3 +1,4 @@
+<%@page import="review.ReviewDao"%>
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.json.simple.JSONArray"%>
 <%@page import="place.PlaceDto"%>
@@ -7,17 +8,21 @@
 
 <%
 PlaceDao dao = new PlaceDao();
-List<PlaceDto> allPlaces = dao.selectAllPlaces(); // 모든 관광지 가져오는 메서드 작성 필요
-JSONArray jsonArray = new JSONArray();
+ReviewDao rdao = new ReviewDao();
+List<PlaceDto> list = dao.selectAllPlaces();
 
-for (PlaceDto place : allPlaces) {
+JSONArray arr = new JSONArray();
+
+for (PlaceDto dto : list) {
     JSONObject obj = new JSONObject();
-    obj.put("place_num", place.getPlace_num());
-    obj.put("place_name", place.getPlace_name());
-    obj.put("place_img", place.getPlace_img());
-    obj.put("country", place.getCountry_name());
-    jsonArray.add(obj);
+    obj.put("place_num", dto.getPlace_num());
+    obj.put("place_name", dto.getPlace_name());
+    obj.put("place_img", dto.getPlace_img());
+
+    double avg = rdao.getAverageRatingByPlace(dto.getPlace_num());
+    obj.put("avg_rating", avg); // -1.0이면 '평점 없음' 처리
+    arr.add(obj);
 }
 
-out.print(jsonArray.toString());
+out.print(arr.toString());
 %>
