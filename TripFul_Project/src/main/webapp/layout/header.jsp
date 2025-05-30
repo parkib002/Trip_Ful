@@ -65,7 +65,7 @@
         <!-- 중앙 로고 -->
         <div class="position-absolute top-50 start-50 translate-middle">
             <a class="navbar-brand" href="index.jsp">
-                <img src="../image/tripful_logo.png" alt="Tripful Logo" style="height: 110px;">
+                <img src="./image/tripful_logo.png" alt="Tripful Logo" style="height: 110px;">
             </a>
         </div>
 

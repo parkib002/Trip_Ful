@@ -1,3 +1,7 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.List"%>
+<%@page import="review.ReviewDao"%>
+<%@page import="review.ReviewDto"%>
 <%@page import="place.PlaceDto"%>
 <%@page import="place.PlaceDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -10,11 +14,23 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <title>Insert title here</title>
 <%
+	request.setCharacterEncoding("utf-8");
+
 	String num=request.getParameter("place_num");
 
 	PlaceDao dao=new PlaceDao();
 	
 	PlaceDto dto=dao.getPlaceData(num);
+	
+	String [] img=dto.getPlace_img().split(",");
+	
+	ReviewDao rdao=new ReviewDao();
+	
+	double star=rdao.getAverageRatingByPlace(num);
+	
+	List<ReviewDto> list=dao.selectReview(num);	
+	
+	
 %>
 <style type="text/css">
 body {
@@ -118,7 +134,7 @@ body {
       center: { lat: 37.5665, lng: 126.9780 }, // 초기값 (서울)
     });
 
-    const placeId = "<%=dto.getPlace_code()%>"; // 예시 Place ID
+    const placeId = "<%=dto.getPlace_code() %>"; // 예시 Place ID
 
     const request = {
       placeId: placeId,
@@ -150,29 +166,30 @@ body {
         <div class="category-views d-flex justify-content-between align-items-center mb-2">
     	<p class="category m-0">카테고리: <%=dto.getPlace_tag() %></p>
    	 	<p class="views m-0">조회수: <%=dto.getPlace_count() %></p>
+   	 	<p class="views m-0">별점: <%=star==-1.0?"없음":star%></p>
 		</div>
         <div class="main-section">
            <!-- Carousel -->
 <div id="demo" class="carousel slide" data-bs-ride="carousel">
 
   <!-- Indicators/dots -->
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
-    <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
-    <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
-  </div>
+<div class="carousel-indicators">
+  <% for (int i = 0; i < img.length; i++) { %>
+    <button type="button" data-bs-target="#demo" data-bs-slide-to="<%=i%>" class="<%= (i == 0 ? "active" : "") %>"></button>
+  <% } %>
+</div>
   
   <!-- The slideshow/carousel -->
   <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="./save/<%=dto.getPlace_img() %>" alt="Los Angeles" class="d-block" style="width:500px;">
+  <%
+  	for(int i=0;i<img.length;i++){
+  %>
+    <div class="carousel-item <%= (i == 0 ? "active" : "") %>">
+      <img src="./<%=img[i] %>" alt="Los Angeles" class="d-block" style="width:500px;">
     </div>
-    <div class="carousel-item">
-      <img src="./image/places/성산일출봉.jpg" alt="Chicago" class="d-block" style="width:500px;">
-    </div>
-    <div class="carousel-item">
-      <img src="./image/places/해운대.jpg" alt="New York" class="d-block" style="width:500px;">
-    </div>
+   
+    <%} 
+    %>
   </div>
   
   <!-- Left and right controls/icons -->
@@ -195,19 +212,15 @@ body {
 				<%=dto.getPlace_content() %>
 		</div>
 		
-        <div class="review-section">
-            <h2>방문자 리뷰</h2>
-             
-                <div class="review-card">
-                    <div class="review-header">
-                        <span class="review-user"></span>
-                        <span class="review-date"></span>
-                    </div>
-                    <div class="review-content">
-                    </div>
-                </div>
-            
-        </div>
+<div class="review-section">
+  <h2>방문자 리뷰</h2>
+
+
+  <div class="review-card">
+    <jsp:include page="../Review/reviewList.jsp?place_num=<%=num %>"/>
+  </div>
+	
+</div>
     </div>
 </body>
 </html>
