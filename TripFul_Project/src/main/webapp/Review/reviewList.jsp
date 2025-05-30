@@ -48,9 +48,14 @@
 %>
 <script type="text/javascript">
 $(function() {
+	
+	var review_id="<%=review_id%>";
 	   $("#modalBtn").click(function() {		
 		if(<%=loginok!=null%>){
-			toggleModal();
+			$('.modal').css('display', 'flex'); // 먼저 display 속성을 flex로 변경
+			setTimeout(function() { // 약간의 딜레이를 주어 transition이 적용되게 함
+			    $('.modal').addClass('show');
+			}, 10);
 		}else{
 			var a=confirm("로그인 후 이용 가능합니다\n로그인 페이지로 이동 하시겠습니까?");
 			if(a)
@@ -87,7 +92,22 @@ $("#apitest").click(function() {
                     	}
 	                    reviewCard += "<div>";
 	                    reviewCard += "<span class='review_writeday'>" + r.date + "</span>&nbsp;&nbsp;";
-	                    reviewCard += "<i class='bi bi-three-dots-vertical category'></i></div></div>";
+	                    reviewCard += "<i class='bi bi-three-dots-vertical category' review_id='"+r.author+"'></i>";
+	                    console.log(r.author, review_id);
+	                    				if(r.author == review_id)
+	                    					{
+	                    					reviewCard += "<div class='dropdown-menu'>";	                    					
+	                    			        reviewCard += "<button type='submit'class='edit-btn' review_id='" + r.author + "'>수정</button>";
+	                    			        
+	                    			        if(r.author == review_id){
+	                    			      	 	reviewCard += "<button type='button' class='delete-btn' review_id='" + r.author + "'>삭제</button>";
+	                    			        }	                    			        
+	                    				}else{
+	                    					reviewCard += "<div class='dropdown-menu'>";
+	                    					reviewCard += "<button>신고</button>"
+	                    				}
+	                    reviewCard += "</div>";//카테고리 끝
+	                    reviewCard += "</div></div>"; //날짜 리뷰헤더 끝        
 	                    reviewCard += "<div class='star_rating2 mb-2'>";
 	                    reviewCard += "<span>" + r.rating + "</span>&nbsp;&nbsp;";
 
@@ -111,7 +131,7 @@ $("#apitest").click(function() {
 	                    reviewCard += "<p class='card-text'>" + r.text.replaceAll("\n", "<br>") + "</p>";
 	                    reviewCard += "</div>"; // .card 끝
 	                    reviewCard += "</div>"; // .item 끝
-
+						
 	                    carouselItemsHtml += reviewCard;
 	                });
 	            } else {
@@ -157,7 +177,7 @@ $("#apitest").click(function() {
 	        console.log("응답 텍스트:", xhr.responseText);
 	        alert("리뷰 데이터를 불러오는 중 오류가 발생했습니다.");
 	    }   
-	});
+	});	
 });		
 		
 });
@@ -172,7 +192,7 @@ $("#apitest").click(function() {
 		<button id="apitest">테스트</button>
 	
 	<div class="container mt-3">
-		<form action="">
+		<form class="updatefrm" enctype="multipart/form-data" >
 			<div id="reviewCarousel" class="owl-carousel owl-theme">  
 								
 			</div>			
@@ -182,7 +202,14 @@ $("#apitest").click(function() {
 	
 
 
-	
+	<div>
+		<ul>
+			<li>
+				<button type="submit" class="btn btn-success">수정</button>
+				<button type="button" class="btn btn-danger">수정</button>
+			</li>
+		</ul>
+	</div>
 
 
 
@@ -245,6 +272,7 @@ $("#apitest").click(function() {
 	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 	 <script src="Review/JavaScript/ModalJs.js"></script>
+	 <script src="Review/JavaScript/reviewJs.js"></script>
 </body>
 
 </html>
