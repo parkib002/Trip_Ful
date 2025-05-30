@@ -101,7 +101,9 @@
         <h5 class="fw-bold mb-2">✍ 최신 여행자 리뷰</h5>
         <p class="fst-italic mb-1">“오사카 도톤보리는 야경이 정말 예뻐요! 쇼핑도 재밌고요 😊”</p>
         <small class="text-muted">- 여행자9912님</small>
-    </div>
+    </di
+
+        v>
 </div>
 
 <!-- ✅ 4. Tripful 소개 -->
