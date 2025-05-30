@@ -2,17 +2,17 @@
 <%@ page import="login.LoginDao" %>
 <%@ page import="login.LoginDto" %>
 <%
-String myid = null;
-String name = null;
-if (session.getAttribute("loginok") != null) {
-	myid = (String) session.getAttribute("id");
+    String myid = null;
+    String name = null;
+    if (session.getAttribute("loginok") != null) {
+        myid = (String) session.getAttribute("id");
 
-	if (myid != null) {
-		LoginDao dao = new LoginDao();
-		LoginDto dto = dao.getOneMember(myid);
-		name = dto.getName();
-	}
-}
+        if (myid != null) {
+            LoginDao dao = new LoginDao();
+            LoginDto dto = dao.getOneMember(myid);
+            name = dto.getName();
+        }
+    }
 %>
 
 <nav class="navbar navbar-light shadow px-4" style="height: 90px; position: relative; z-index: 1000;">
@@ -90,116 +90,3 @@ if (session.getAttribute("loginok") != null) {
         </ul>
     </div>
 </nav>
-
-<script>
-    const input = document.getElementById('searchInput');
-    const suggestions = document.getElementById('suggestions');
-    const searchForm = input.closest('form');
-
-    let isComposing = false;
-    let latestQuery = "";
-
-    input.addEventListener('compositionstart', () => {
-        isComposing = true;
-    });
-
-    input.addEventListener('compositionend', () => {
-        isComposing = false;
-        triggerSearch(false);
-    });
-
-    input.addEventListener('input', () => {
-        if (isComposing) {
-            triggerSearch(true);
-        } else {
-            setTimeout(() => triggerSearch(false), 0);
-        }
-    });
-
-    input.addEventListener('focus', () => {
-        if (suggestions.children.length > 0) {
-            suggestions.style.display = 'block';
-        }
-    });
-
-    input.addEventListener('blur', () => {
-        setTimeout(() => {
-            suggestions.style.display = 'none';
-        }, 150);
-    });
-
-    function triggerSearch(isDraft = false) {
-        const query = input.value.trim();
-        if (query.length === 0) {
-            suggestions.style.display = 'none';
-            suggestions.innerHTML = '';
-            latestQuery = "";
-            return;
-        }
-        if (query === latestQuery) return;
-        latestQuery = query;
-
-        fetch('page/searchSuggestions.jsp?keyword=' + encodeURIComponent(query) + '&draft=' + isDraft)
-            .then(res => res.json())
-            .then(data => {
-                suggestions.innerHTML = '';
-                if (!data || data.length === 0) {
-                    suggestions.style.display = 'none';
-                    return;
-                }
-
-                data.forEach(name => {
-                    const li = document.createElement('li');
-                    li.textContent = name;
-                    li.style.padding = '8px 12px';
-                    li.style.cursor = 'pointer';
-
-                    li.addEventListener('mousedown', (e) => {
-                        e.preventDefault();
-
-                        input.blur();
-
-                        setTimeout(() => {
-                            input.value = name;
-                            suggestions.style.display = 'none';
-                            input.focus();
-
-                            setTimeout(() => {
-                                searchForm.submit();
-                            }, 100);
-                        }, 10);
-                    });
-
-                    li.addEventListener('mouseover', () => {
-                        li.style.backgroundColor = '#eee';
-                    });
-                    li.addEventListener('mouseout', () => {
-                        li.style.backgroundColor = 'transparent';
-                    });
-
-                    suggestions.appendChild(li);
-                });
-
-                suggestions.style.display = 'block';
-            })
-            .catch(() => {
-                suggestions.style.display = 'none';
-            });
-    }
-
-    searchForm.querySelector('button[type="submit"]').addEventListener('click', (event) => {
-        event.preventDefault();
-        if (input.value.trim().length > 0) {
-            searchForm.submit();
-        }
-    });
-
-    input.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            if (input.value.trim().length > 0) {
-                searchForm.submit();
-            }
-        }
-    });
-</script>
