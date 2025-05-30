@@ -5,10 +5,13 @@
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    min-height: 300px; /* 카드 최소 높이 설정 (내용이 적을 때 보기 좋게) */
+    min-height: 400px; /* 카드 최소 높이 설정 (내용이 적을 때 보기 좋게) */
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* 내용이 카드 내에서 분산되도록 */
+    
+}
+.googlereview{
+	color: #ccc;
 }
 
 .review-image-container {
@@ -22,18 +25,41 @@
 .review-image-container img {      
     width: 200px; /* 이미지 높이 100% */   
     height: 200px; /* 이미지 높이 100% */   
-    object-fit: cover;
+    border-radius:10px;    
 }
 
 /* 별점 스타일 */
 .star_rating2 {
-	width: 150px;
+	width: 100%;
+	height: 60px;
 	box-sizing: border-box;
 	display: inline-flex;
 	float: left;
 	flex-direction: row;
 	justify-content: flex-start;
 	margin-bottom: 10px;
+}
+
+.star_rating2 .rating.off {
+	width: 25px;
+	height: 25px;
+	margin-right: 10px;
+	display: inline-block;
+	background-image: url("../review_image/icons8-star-filled-40.png");
+	background-repeat: no-repeat;
+	background-size: 100%;
+	box-sizing: border-box;
+}
+
+.star_rating2 .rating.on {
+	width: 25px;
+	height: 25px;
+	margin-right: 10px;
+	display: inline-block;
+	background-image: url("../review_image/icons8-채워진-스타-48.png");
+	background-repeat: no-repeat;
+	background-size: 100%;
+	box-sizing: border-box;
 }
 
 /* 텍스트 줄바꿈 유지 */
