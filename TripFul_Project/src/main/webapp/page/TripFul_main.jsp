@@ -9,14 +9,10 @@
     List<MainPlaceDto> placeList = dao.getRandomPlaces(5);
 %>
 
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>추천 관광지</title>
-
-</head>
-<body>
+<%--
+    <head>와 <body>, </html> 태그는 index.jsp에 이미 존재하므로 여기서는 제거합니다.
+    Bootstrap JS CDN도 index.jsp에서 로드하므로 여기서는 제거합니다.
+--%>
 
 <header class="hero text-center p-4 bg-light">
     <h1>Welcome To Our Tripful</h1>
@@ -68,7 +64,7 @@
     </div>
 </div>
 
-<%--<!-- ✅ 2. 실시간 인기 관광지 -->--%>
+<%----%>
 <%--<div class="container my-5">--%>
 <%--    <h3 class="text-center mb-4">🔥 실시간 인기 관광지</h3>--%>
 <%--    <div class="row row-cols-1 row-cols-md-3 g-4">--%>
@@ -86,7 +82,6 @@
 <%--    </div>--%>
 <%--</div>--%>
 
-<!-- ✅ 3. 공지사항 / 이벤트 / 최신 리뷰 -->
 <div class="container my-5">
     <h3 class="text-center mb-4">📰 공지사항 & 이벤트</h3>
     <a href="index.jsp?main=<%=request.getContextPath()%>/board/event.jsp" class="alert alert-warning text-center fw-semibold fs-5 shadow-sm d-block text-decoration-none text-dark">
@@ -101,10 +96,9 @@
             <a href="index.jsp?main=<%=request.getContextPath()%>/Review/reviewList.jsp" class="btn btn-outline-secondary btn-sm">리뷰 전체 보기</a>
         </div>
     </div>
-    </div>
+</div>
 
 
-<!-- ✅ 4. Tripful 소개 -->
 <div class="container my-5">
     <h3 class= " text-center mb-4">🧭 Tripful은 어떤 사이트인가요?</h3>
     <div class="p-4 bg-white shadow-sm rounded-3 text-center">
@@ -114,23 +108,9 @@
         </p>
     </div>
 </div>
-    <!-- Bootstrap JS CDN -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const carousel = document.querySelector('#spotReviewCarousel');
-        const bsCarousel = new bootstrap.Carousel(carousel, {
-            interval: 8000,
-            ride: 'carousel'
-        });
-
-        // 클릭 시 수동 슬라이드 전환
-        carousel.addEventListener('click', function () {
-            bsCarousel.next();
-        });
-    });
-</script>
-
-</body>
-</html>
+<%--
+    캐러셀 관련 JavaScript 코드를 별도의 파일 (예: mainPageCarousel.js)로 분리하고,
+    index.jsp의 </body> 닫는 태그 바로 위에 로드하는 것이 좋습니다.
+    아래 코드는 이제 mainPage.jsp에서 제거됩니다.
+--%>
