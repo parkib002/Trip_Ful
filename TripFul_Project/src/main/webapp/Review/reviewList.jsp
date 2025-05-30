@@ -61,7 +61,7 @@ $(function() {
 	});  
 $("#apitest").click(function() {
 	var place_num="<%=place_num%>";
-	console.log(place_num);
+	//console.log(place_num);
 	$.ajax({
 		type:"post",
 		dataType:"json",
@@ -103,7 +103,7 @@ $("#apitest").click(function() {
 	                    // 리뷰 이미지 (사진이 있을 경우에만 추가)
 	                    if (r.photo !== "null" && r.photo !== "") {
 	                        reviewCard += "<div class='review-image-container mb-2'>";
-	                        reviewCard += "<img src='../save/" + r.photo + "' class='img-fluid rounded'>";
+	                        reviewCard += "<img src='save/" + r.photo + "' class='img-fluid rounded'>";
 	                        reviewCard += "</div>";
 	                    }
 

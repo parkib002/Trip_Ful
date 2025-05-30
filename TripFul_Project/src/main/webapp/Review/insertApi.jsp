@@ -17,7 +17,7 @@
 	String place_code=dao.getPlaceCode(place_num);
 	
 	//DB리스트
-	List<HashMap<String,String>> DBlist=dao.getPlaceList(place_name);
+	List<HashMap<String,String>> DBlist=dao.getPlaceList(place_num);
 	
     String apiKey = "AIzaSyCKGdGbCxXFTXVCUSrJ5ktk_jpgeBdon6A"; // 여기에 본인의 API 키 입력
     
