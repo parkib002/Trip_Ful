@@ -3,8 +3,8 @@
 <%@ page import="java.util.Set" %>
 <%@ page import="java.util.stream.Collectors" %>
 <%@ page import="java.util.stream.Stream" %>
-<%@ page import="board.MainPlaceDao" %>
-<%@ page import="board.MainPlaceDto" %>
+<%@ page import="main.MainPlaceDao" %>
+<%@ page import="main.MainPlaceDto" %>
 <%@ page import="com.google.gson.Gson" %>
 
 <%
