@@ -62,7 +62,7 @@
 
     // 로그인이 안되어있으면 로그인 페이지로 이동
     if (loginok == null || !"admin".equals(loginok) || userId == null) {
-        response.sendRedirect(request.getContextPath() + "../index.jsp?main=login/loginForm.jsp"); // 로그인 폼 경로에 맞게 수정
+        response.sendRedirect(request.getContextPath() + "../index.jsp?main=login/login.jsp");
         return;
     }
 %>

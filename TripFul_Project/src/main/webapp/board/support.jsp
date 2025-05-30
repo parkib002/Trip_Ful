@@ -9,15 +9,6 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet"
-	href="<%= request.getContextPath() %>/css/noticeStyle.css">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <title>고객센터</title> <%-- Title 변경 --%>
 </head>
@@ -38,7 +29,7 @@ SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 //페이징처리
 //전체갯수
 int totalCount=dao.getTotalCount();
-int perPage=10; //한페이지에 보여질 글의 갯수
+int perPage=3; //한페이지에 보여질 글의 갯수
 int perBlock=5; //한블럭당 보여질 페이지의 갯수
 int startNum; //db에서 가져올 글의 시작번호(mysql:0 오라클:1번)
 int startPage; //각블럭당 보여질 시작페이지
@@ -91,7 +82,7 @@ List<BoardSupportDto> list=dao.getAllDatas(startNum, perPage);
 				if(loginok==null)
 				{%>
 					<a style="float: right; text-decoration: none; color: black;"
-					href="<%= request.getContextPath() %>/index.jsp?main=/login/loginMain.jsp"> <%-- 로그인 페이지 경로 수정 --%>
+					href="<%= request.getContextPath() %>/index.jsp?main=/login/login.jsp">
 						<i class="bi bi-plus-square"></i>&nbsp;문의하기
 					</a>
 				<%}else{%>
@@ -116,17 +107,17 @@ List<BoardSupportDto> list=dao.getAllDatas(startNum, perPage);
 			</thead>
 			<tbody>
 				<%
-    if(list.isEmpty()){
-%>
-				<tr>
-					<td colspan="5" align="center"><b>등록된 게시글이 없습니다</b></td>
-				</tr>
-				<%
-    } else {
-        for(int i=0; i<list.size(); i++) {
-            BoardSupportDto dto = list.get(i);
-            if (dto.getRelevel() == 0) { // 원글만 표시
-%>
+				    if(list.isEmpty()){
+				%>
+								<tr>
+									<td colspan="5" align="center"><b>등록된 게시글이 없습니다</b></td>
+								</tr>
+								<%
+				    } else {
+				        for(int i=0; i<list.size(); i++) {
+				            BoardSupportDto dto = list.get(i);
+				            if (dto.getRelevel() == 0) { // 원글만 표시
+				%>
 				<tr class="original-post-row" data-idx="<%=dto.getQna_idx()%>"
 					data-regroup="<%=dto.getRegroup()%>">
 					<td><%=no-i%></td>
