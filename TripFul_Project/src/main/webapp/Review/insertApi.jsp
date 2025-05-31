@@ -15,7 +15,7 @@
 	String place_name=dao.getPlaceName(place_num);
 	//관광지 코드
 	String place_code=dao.getPlaceCode(place_num);
-	
+	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 	//DB리스트
 	List<HashMap<String,String>> DBlist=dao.getPlaceList(place_num);
 	
@@ -56,8 +56,7 @@
          long time = r.optLong("time") * 1000L;
          String date = "";
          if (time > 0) {
-             Date d = new Date(time);
-             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+             Date d = new Date(time);             
              sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
              date = sdf.format(d);
          }
@@ -70,20 +69,24 @@
      	
      }
  }
+ 	
+ 	
     // DB 리뷰에서 키명 맞추기
     for (HashMap<String, String> map : DBlist) {
         HashMap<String, String> review = new HashMap<>();
-        review.put("author", map.get("review_id"));
+        String reviewData=map.get("review_writeday");
+        reviewData=reviewData.substring(0,reviewData.length()-9);
+        review.put("author", map.get("review_id"));	
         review.put("rating", map.get("review_star"));
-        review.put("text", map.get("review_content"));
-        review.put("date", map.get("review_writeday"));
+        review.put("text", map.get("review_content"));        
+        review.put("date", reviewData);
         review.put("photo", map.get("review_img"));
         review.put("read","DB");
+        review.put("review_idx", map.get("review_idx"));
         merged.add(review);
     } 	
  	
-    // 날짜순 정렬
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    // 날짜순 정렬   
     Collections.sort(merged, (m1, m2) -> {
         try {
             return sdf.parse(m2.get("date")).compareTo(sdf.parse(m1.get("date")));

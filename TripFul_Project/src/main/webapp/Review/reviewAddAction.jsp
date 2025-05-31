@@ -49,7 +49,7 @@
 		 ReviewDao dao=new ReviewDao();
 		 dao.insertReview(dto);
 		 
-	     //System.out.println(dto.toString());
+	     System.out.println(dto.toString());
 	  }catch(Exception e){
 		  //System.out.print(e);
 	  }

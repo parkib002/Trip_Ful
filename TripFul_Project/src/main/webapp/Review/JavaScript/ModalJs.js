@@ -26,7 +26,7 @@
 		$.ajax({
 			type:"post",
 			dataType:"html",
-			url:"reviewAddAction.jsp",
+			url:"Review/reviewAddAction.jsp",
 			data:formData,
 			processData: false, // 필수
 			contentType: false, // 필수
@@ -100,3 +100,22 @@
 		  });		  
 	
 	
+	//업데이트 모달창버튼
+	$(document).on("click", ".updateModal",function(){
+		var review_idx=$(this).attr("review_idx");
+		
+		$('.modal').css('display', 'flex'); // 먼저 display 속성을 flex로 변경
+					setTimeout(function() { // 약간의 딜레이를 주어 transition이 적용되게 함
+					    $('.modal').addClass('show');
+					}, 10);
+			var rating=$(".rating").attr("rating");		
+			console.log(rating);
+			var star=$(".star rating .star");
+			if(rating)
+				{
+					star.addClass('on').prevAll('.star').addClass('on');
+					star.nextAll('.star').removeClass('on');
+				}
+			
+		
+	});

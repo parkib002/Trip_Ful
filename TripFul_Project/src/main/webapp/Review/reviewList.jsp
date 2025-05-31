@@ -17,17 +17,16 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
-
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="Review/ModalStyle.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 <link rel="stylesheet" href="Review/carouselStyle.css">
-
+<link rel="stylesheet" href="Review/ModalStyle.css">
 <title>Insert title her</title>
 <%
 	//place_num 얻기
@@ -45,6 +44,7 @@
 	
 	//관광지 이름에 해당하는 리뷰리스트
 	List<HashMap<String,String>> list=rdao.getPlaceList(place_name);
+	
 %>
 <script type="text/javascript">
 $(function() {
@@ -57,11 +57,22 @@ $(function() {
 			    $('.modal').addClass('show');
 			}, 10);
 		}else{
-			var a=confirm("로그인 후 이용 가능합니다\n로그인 페이지로 이동 하시겠습니까?");
-			if(a)
-			{
-				location.href="../index.jsp?main=login/login.jsp";
-			}
+			 swal.fire({
+			        title: "로그인 후 이용 가능합니다", 
+			        text: "로그인 페이지로 이동하시겠습니까?", 
+			        type: "warning",
+			        confirmButtonColor: "#3085d6",
+			        cancelButtonColor: "#d33",
+			        confirmButtonText: "네, 이동하겠습니다",
+			        cancelButtonText: "아니요",
+			        
+			        showCancelButton: true
+			        })
+			          .then((result) => {
+			          if (result.value) {
+			              window.location = 'index.jsp?main=login/login.jsp';
+			          }
+			        })
 		}
 	});  
 $("#apitest").click(function() {
@@ -78,7 +89,7 @@ $("#apitest").click(function() {
 	            
 	            if (reviews && reviews.length > 0) { // 리뷰 데이터가 있는지 확인
 	                reviews.forEach(function(r){	                   
-	                    // 각 리뷰마다 카드생성
+	                    // 각 리뷰마다 카드생성	                    
 	                    var reviewCard = "";
 	                    reviewCard += "<div class='item'>"; // Owl Carousel의 'item' 클래스
 	                    reviewCard += "<div class='card h-100 p-3'>";
@@ -93,18 +104,18 @@ $("#apitest").click(function() {
 	                    reviewCard += "<div>";
 	                    reviewCard += "<span class='review_writeday'>" + r.date + "</span>&nbsp;&nbsp;";
 	                    reviewCard += "<i class='bi bi-three-dots-vertical category' review_id='"+r.author+"'></i>";
+	                    reviewCard += "<div class='dropdown-menu'>";
 	                    console.log(r.author, review_id);
-	                    				if(r.author == review_id)
+	                    				if(r.author == review_id || review_id=="adminTripful" && r.read=="DB")
 	                    					{
-	                    					reviewCard += "<div class='dropdown-menu'>";	                    					
-	                    			        reviewCard += "<button type='submit'class='edit-btn' review_id='" + r.author + "'>수정</button>";
+	                    					reviewCard += "<button type='button' class='delete-btn' review_id='" + r.author + "'>삭제</button>";
+	                    			        
 	                    			        
 	                    			        if(r.author == review_id){
-	                    			      	 	reviewCard += "<button type='button' class='delete-btn' review_id='" + r.author + "'>삭제</button>";
+	                    			        	reviewCard += "<button type='button' class='updateModal' review_idx='"+r.review_idx+"'>수정</button>";
 	                    			        }	                    			        
-	                    				}else{
-	                    					reviewCard += "<div class='dropdown-menu'>";
-	                    					reviewCard += "<button>신고</button>"
+	                    				}else{	                    					
+	                    					reviewCard += "<button type='button' class='report'>신고</button>"
 	                    				}
 	                    reviewCard += "</div>";//카테고리 끝
 	                    reviewCard += "</div></div>"; //날짜 리뷰헤더 끝        
@@ -113,7 +124,7 @@ $("#apitest").click(function() {
 
 	                    // 별점 아이콘 생성
 	                    for (var i = 0; i < Number(r.rating); i++) {
-	                        reviewCard += "<span class='rating on'></span>";
+	                        reviewCard += "<span class='rating on' rating='"+r.rating+"'></span>";
 	                    }
 	                    for (var i = 0; i < (5 - Number(r.rating)); i++) {
 	                        reviewCard += "<span class='rating'></span>"; // 비활성 별
@@ -179,6 +190,8 @@ $("#apitest").click(function() {
 	    }   
 	});	
 });		
+
+	
 		
 });
 </script>
@@ -193,6 +206,7 @@ $("#apitest").click(function() {
 	
 	<div class="container mt-3">
 		<form class="updatefrm" enctype="multipart/form-data" >
+		
 			<div id="reviewCarousel" class="owl-carousel owl-theme">  
 								
 			</div>			
@@ -200,17 +214,6 @@ $("#apitest").click(function() {
 	</div>
 </div>
 	
-
-
-	<div>
-		<ul>
-			<li>
-				<button type="submit" class="btn btn-success">수정</button>
-				<button type="button" class="btn btn-danger">수정</button>
-			</li>
-		</ul>
-	</div>
-
 
 
 
@@ -221,8 +224,10 @@ $("#apitest").click(function() {
 	<!-- 모달 창 -->
 	<div id="myModal" class="modal">
 		<form class="modalfrm" enctype="multipart/form-data">
+			
+			
 			<div align="center" class="modal-head">
-			<input type="hidden" name="place_num" value="26">
+			<input type="hidden" name="place_num" value="<%=place_num%>">
 				<h4><%=place_name %></h4>
 			</div>
 			<div class="modal-content">
@@ -230,8 +235,8 @@ $("#apitest").click(function() {
 					<tr>
 						
 						<td>
-						<input type="hidden" name="review_id" value="user01">
-						<b>user01</b><br> <br>
+						<input type="hidden" name="review_id" value="<%=review_id%>">
+						<b><%=review_id %></b><br> <br>
 						</td>
 					</tr>
 					<tr>
@@ -272,7 +277,7 @@ $("#apitest").click(function() {
 	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 	 <script src="Review/JavaScript/ModalJs.js"></script>
-	 <script src="Review/JavaScript/reviewJs.js"></script>
+	 <script src="Review/JavaScript/reviewListJs.js"></script>
 </body>
 
 </html>

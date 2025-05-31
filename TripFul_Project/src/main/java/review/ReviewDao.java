@@ -132,6 +132,36 @@ public class ReviewDao {
 		return list;
 	}
 	
+	public ReviewDto getOneData(String review_idx) {
+		ReviewDto dto=new ReviewDto();
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql="select * from tripful_review where review_idx=?";
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, review_idx);
+			rs=pstmt.executeQuery();
+			if(rs.next())
+			{
+				dto.setReview_idx(rs.getString("review_idx"));
+				dto.setReview_id(rs.getString("review_id"));
+				dto.setReview_content(rs.getString("review_content"));
+				dto.setReview_img(rs.getString("review_img"));
+				dto.setReview_star(rs.getDouble("review_star"));
+				dto.setReview_writeday(rs.getTimestamp("review_writeday"));
+				dto.setPlace_num(rs.getString("place_num"));
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dto;
+		
+	}
+	
 	public double getAverageRatingByPlace(String place_num) {
 	    
 			Connection conn=db.getConnection();
