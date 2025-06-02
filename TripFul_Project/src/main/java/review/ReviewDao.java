@@ -180,7 +180,8 @@ public class ReviewDao {
 				map.put("rating", rs.getString("review_star"));     // review_star를 rating으로 매핑
 				map.put("text", rs.getString("review_content"));    // review_content를 text로 매핑
 				map.put("photo", rs.getString("review_img"));       // review_img를 photo로 매핑
-				map.put("date", rs.getString("review_writeday"));   // review_writeday를 date로 매핑
+				map.put("date", rs.getString("review_writeday"));   // review_writeday를 date로 매핑\
+				map.put("place_num", rs.getString("place_num"));
 				// 'review_read_type' 컬럼이 'tripful_review' 테이블에 없거나 필요 없다면 이 줄은 삭제하세요.
 				// map.put("read", rs.getString("review_read_type"));
 
