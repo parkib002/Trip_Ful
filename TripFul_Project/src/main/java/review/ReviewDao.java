@@ -194,4 +194,38 @@ public class ReviewDao {
 		}
 		return list;
 	}
+
+
+	public HashMap<String, String> getLatestReviewForPlace(String place_num) {
+		HashMap<String, String> review = null; // review 라는 이름의 HashMap 사용
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT review_idx, review_id, review_content, review_img, review_star, review_writeday, place_num " +
+				"FROM tripful_review WHERE place_num = ? ORDER BY review_writeday DESC LIMIT 1";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, place_num);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				review = new HashMap<>(); // 여기서 review 객체 초기화
+				review.put("review_num", rs.getString("review_idx"));
+				review.put("author", rs.getString("review_id"));
+				review.put("rating", rs.getString("review_star"));
+				// *** 이 부분입니다! review.put("text", ...); 로 수정해주세요. ***
+				review.put("text", rs.getString("review_content"));
+				review.put("photo", rs.getString("review_img"));
+				review.put("date", rs.getString("review_writeday"));
+				review.put("place_num", rs.getString("place_num"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		return review;
+	}
+
 }
