@@ -1,4 +1,4 @@
-package board;
+package main;
 
 public class MainPlaceDto {
     private String placeNum;

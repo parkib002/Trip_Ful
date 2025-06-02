@@ -20,13 +20,15 @@ public class BoardNoticeDao {
 		Connection conn=db.getConnection();
 		PreparedStatement pstmt=null;
 		
-		String sql="insert into tripful_notice values(null,?,?,?,now())";
+		String sql="insert into tripful_notice values(null,?,?,?,?,now(),?)";
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getNotice_title());
 			pstmt.setString(2, dto.getNotice_content());
 			pstmt.setString(3, dto.getNotice_img());
+			pstmt.setString(4, dto.getNotice_writer());
+			pstmt.setInt(5, dto.getNotice_readcount());
 			pstmt.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -102,4 +104,21 @@ public class BoardNoticeDao {
 			}
 			return list;
 		}
+		
+		//조회수 증가
+		// 조회수 1 증가
+	    public void updateReadCount(String idx) {
+	        String sql = "update tripful_notice set notice_readcount=notice_readcount+1 where notice_idx=?";
+	        Connection conn = db.getConnection();
+	        PreparedStatement pstmt = null;
+	        try {
+	            pstmt = conn.prepareStatement(sql);
+	            pstmt.setString(1, idx);
+	            pstmt.execute();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } finally {
+	            db.dbClose(pstmt, conn);
+	        }
+	    }
 }
