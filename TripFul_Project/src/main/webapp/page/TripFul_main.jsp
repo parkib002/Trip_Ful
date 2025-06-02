@@ -8,25 +8,26 @@
     MainPlaceDao dao = new MainPlaceDao();
     List<MainPlaceDto> placeList = dao.getRandomPlaces(5);
 %>
+<header class="hero">
+    <video autoplay muted loop playsinline class="bg-video">
+        <source src="../image/hero.mp4" type="video/mp4">
 
-<%--
-    <head>와 <body>, </html> 태그는 index.jsp에 이미 존재하므로 여기서는 제거합니다.
-    Bootstrap JS CDN도 index.jsp에서 로드하므로 여기서는 제거합니다.
---%>
-
-<header class="hero text-center p-4 bg-light">
-    <h1>Welcome To Our Tripful</h1>
-    <h2>IT'S Travel review site</h2>
+    </video>
+    <div class="hero-content">
+        <h1>Welcome To Our Tripful</h1>
+        <h2>IT'S Travel review site</h2>
+    </div>
 </header>
+
 <div id="spotReviewCarousel" class="carousel slide" data-bs-ride="carousel">
 
-    <div class="carousel-indicators">
-        <% for (int i = 0; i < placeList.size(); i++) {
-            String activeClass = (i == 0) ? "active" : "";
-        %>
-        <button type="button" data-bs-target="#spotReviewCarousel" data-bs-slide-to="<%=i%>" class="<%=activeClass%>" aria-current="<%= (i == 0) ? "true" : "false" %>" aria-label="슬라이드 <%=i+1%>"></button>
-        <% } %>
-    </div>
+    <%--    <div class="carousel-indicators">--%>
+    <%--        <% for (int i = 0; i < placeList.size(); i++) {--%>
+    <%--            String activeClass = (i == 0) ? "active" : "";--%>
+    <%--        %>--%>
+    <%--        <button type="button" data-bs-target="#spotReviewCarousel" data-bs-slide-to="<%=i%>" class="<%=activeClass%>" aria-current="<%= (i == 0) ? "true" : "false" %>" aria-label="슬라이드 <%=i+1%>"></button>--%>
+    <%--        <% } %>--%>
+    <%--    </div>--%>
 
     <div class="carousel-inner">
         <% for (int i = 0; i < placeList.size(); i++) {
@@ -48,7 +49,8 @@
                         <h5 class="card-title fw-bold text-primary"><%= place.getPlaceName() %></h5>
                         <p class="card-text"><%= place.getPlaceContent() %></p>
                         <p class="text-muted small">태그: <%= place.getPlaceTag() %> | 대륙: <%= place.getContinentName() %></p>
-                        <a href="#" class="btn btn-outline-warning mt-2">자세히 보기</a>
+                        <%-- "자세히 보기" 링크에 placeNum 적용 --%>
+                        <a href="index.jsp?main=<%=request.getContextPath()%>/place/detailPlace.jsp?place_num=<%= place.getPlaceNum() %>" class="btn btn-outline-warning mt-2">자세히 보기</a>
 
                         <div class="bg-light p-4 mt-4 rounded-4 shadow-sm border-start border-5 border-warning">
                             <h6 class="fw-bold mb-2"><%= place.getPlaceName() %>에 대한 여행자의 리뷰</h6>
@@ -63,6 +65,7 @@
         <% } %>
     </div>
 </div>
+
 
 <%----%>
 <%--<div class="container my-5">--%>
@@ -93,6 +96,7 @@
         <p class="fst-italic mb-1">“오사카 도톤보리는 야경이 정말 예뻐요! 쇼핑도 재밌고요 😊”</p>
         <small class="text-muted">- 여행자9912님</small>
         <div class="mt-3">
+            <%-- "리뷰 전체 보기" 링크는 그대로 유지 --%>
             <a href="index.jsp?main=<%=request.getContextPath()%>/Review/reviewList.jsp" class="btn btn-outline-secondary btn-sm">리뷰 전체 보기</a>
         </div>
     </div>
@@ -100,17 +104,12 @@
 
 
 <div class="container my-5">
-    <h3 class= " text-center mb-4">🧭 Tripful은 어떤 사이트인가요?</h3>
+
     <div class="p-4 bg-white shadow-sm rounded-3 text-center">
+        <h3 class= " text-center mb-4">🧭 Tripful은 어떤 사이트인가요?</h3>
         <p class="fs-5 mb-0">
             Tripful은 여행지를 추천하고, 사용자 리뷰를 통해 더 나은 여행을 돕는 플랫폼입니다.<br>
             지역, 테마, 키워드로 원하는 장소를 찾고, 다른 여행자의 경험을 함께 나눠보세요.
         </p>
     </div>
 </div>
-
-<%--
-    캐러셀 관련 JavaScript 코드를 별도의 파일 (예: mainPageCarousel.js)로 분리하고,
-    index.jsp의 </body> 닫는 태그 바로 위에 로드하는 것이 좋습니다.
-    아래 코드는 이제 mainPage.jsp에서 제거됩니다.
---%>

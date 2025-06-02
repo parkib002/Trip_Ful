@@ -15,7 +15,7 @@
     }
 %>
 
-<nav class="navbar navbar-light shadow px-4" style="height: 90px; position: relative; z-index: 1000;">
+<nav class="navbar navbar-light shadow px-4">
     <div class="container-fluid position-relative d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center flex-grow-1" style="min-width: 0; position: relative;">
             <button class="navbar-toggler d-block border-0 me-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu">
