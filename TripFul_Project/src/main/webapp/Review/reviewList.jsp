@@ -72,7 +72,7 @@ $(function() {
 			        confirmButtonColor: "#3085d6",
 			        cancelButtonColor: "#d33",
 			        confirmButtonText: "네, 이동하겠습니다",
-			        cancelButtonText: "아니요",			        
+			        cancelButtonText: "아니요",  
 			        showCancelButton: true
 			        })
 			          .then((result) => {
@@ -81,12 +81,8 @@ $(function() {
 			          }
 			        })
 		}
-	});  	   
-	
+	});  	   	
 	   loadReviews();
-
-	
-		
 });
 
 function loadReviews() {
@@ -110,8 +106,10 @@ function loadReviews() {
 	                var starCounts = { '5': 0, '4': 0, '3': 0, '2': 0, '1': 0 }; // 각 별점별 개수 저장
 	                
 	                reviews.forEach(function(r){	                   
-	                    // 각 리뷰마다 카드생성	             
+
+	                    // 각 리뷰마다 카드생성	       
 	                    
+
 	                    var reviewCard = "";
 	                    reviewCard += "<div class='item'>"; // Owl Carousel의 'item' 클래스
 	                    reviewCard += "<div class='card h-100 p-3'>";
@@ -121,15 +119,16 @@ function loadReviews() {
 	                    reviewCard += "<span class='review_writeday'>" + r.date + "</span>&nbsp;&nbsp;";
 	                    reviewCard += "<i class='bi bi-three-dots-vertical category' review_id='"+r.author+"'></i>";
 	                    reviewCard += "<div class='dropdown-menu'>";
+
 	                    //console.log(r.author, review_id);
 	                    				if(r.author == review_id || review_id=="adminTripful" && r.read=="DB")
 	                    					{
-	                    					reviewCard += "<button type='button' class='delete-btn' review_id='" + r.author + "' review_idx='"+r.review_idx+"'>삭제</button>";
-	                    			        
+	                    					reviewCard += "<button type='button' class='delete-btn' review_id='" + r.author + "' review_idx='"+r.review_idx+"'>삭제</button>";               			        
 	                    			        
 	                    			        if(r.author == review_id){
 	                    			        	reviewCard += "<button type='button' class='updateModal' review_idx='"+r.review_idx+"'>수정</button>";
 	                    			        }	                    			        
+
 	                    				}else if(r.author!=review_id && r.read=="DB" || r.read=="Google"){	                    					
 	                    					reviewCard += "<button type='button' class='report'>신고</button>"
 	                    				}
@@ -140,7 +139,9 @@ function loadReviews() {
 						reviewCard += "<input type='hidden' id='rating' name='rating' value='"+r.rating+"'>"
 	                    // 별점 아이콘 생성
 	                    for (var i = 0; i < Number(r.rating); i++) {
-	                        reviewCard += "<span class='rating on'></span>";	                        
+
+	                        reviewCard += "<span class='rating on' rating='"+r.rating+"'></span>";
+
 	                    }
 	                    for (var i = 0; i < (5 - Number(r.rating)); i++) {
 	                        reviewCard += "<span class='rating off'></span>"; // 비활성 별
@@ -238,8 +239,9 @@ function loadReviews() {
 	    }   
 	});	
 	
+}	
 	
-}		
+
 </script>
 </head>
 
@@ -364,7 +366,7 @@ function loadReviews() {
 	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 	 <script src="Review/JavaScript/ModalJs.js"></script>
-	 <script src="Review/JavaScript/reviewJs.js"></script>
+	 <script src="Review/JavaScript/reviewListJs.js"></script>
 </body>
 
 </html>

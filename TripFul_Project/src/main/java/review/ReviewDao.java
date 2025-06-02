@@ -134,7 +134,9 @@ public class ReviewDao {
 		return list;
 	}
 	
+
 	//리뷰 1개의 데이타 
+
 	public ReviewDto getOneData(String review_idx) {
 		ReviewDto dto=new ReviewDto();
 		Connection conn=db.getConnection();
@@ -165,6 +167,7 @@ public class ReviewDao {
 		
 	}
 	
+
 	//리뷰 업데이트
 	public void updateReview(ReviewDto dto)
 	{
@@ -205,6 +208,7 @@ public class ReviewDao {
 		}		
 	}
 	
+
 	public double getAverageRatingByPlace(String place_num) {
 	    
 			Connection conn=db.getConnection();

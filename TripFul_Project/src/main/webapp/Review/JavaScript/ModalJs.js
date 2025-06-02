@@ -72,7 +72,101 @@ function updateModalData(reviewItem) {
     var showContainer = $("#show");
 	var fileName = getimg ? getimg.substring(getimg.lastIndexOf('/') + 1) : "";
 	
+<<<<<<< HEAD
 	console.log(fileName);
+=======
+	/*modalBtn.click(function() {
+			toggleModal();
+		});*/
+	closeBtn.click(function() {
+		$('.modal').removeClass('show');
+		setTimeout(function() {
+		    $('.modal').css('display', 'none'); // 트랜지션 완료 후 display를 none으로 변경
+		}, 300);
+	});
+	save.click(function(e) {		
+		
+		e.preventDefault(); // 폼 제출 막기
+		var frm=document.querySelector(".modalfrm");
+		
+		var formData = new FormData(frm);
+		console.log(formData);
+		$.ajax({
+			type:"post",
+			dataType:"html",
+			url:"Review/reviewAddAction.jsp",
+			data:formData,
+			processData: false, // 필수
+			contentType: false, // 필수
+			success:function(){
+				
+			}
+			
+		})
+		$('.modal').removeClass('show');
+		setTimeout(function() {
+		    $('.modal').css('display', 'none'); // 트랜지션 완료 후 display를 none으로 변경
+		}, 300);
+	});
+
+	$(window).on("click", function(event) {
+		// 모달의 검은색 배경 부분이 클릭된 경우 닫히도록 하는 코드
+		if ($(event.target).is(modal)) {
+			$('.modal').removeClass('show');
+			setTimeout(function() {
+			    $('.modal').css('display', 'none'); // 트랜지션 완료 후 display를 none으로 변경
+			}, 300);
+		}
+	});
+
+	//별점
+	$(".star_rating .star").click(function() {
+		//alert("aa");
+		var clickedStar = $(this);
+
+		//console.log(clickedStar.hasClass("on"));
+
+		// 이미 on인 경우 = 다시 클릭하면 전부 off
+		if (clickedStar.hasClass('on') && !clickedStar.next().hasClass('on')) 
+		{
+			clickedStar.removeClass('on').prevAll('.star').removeClass('on');
+		} else {
+			// 해당 별까지 on, 나머지는 off
+			clickedStar.addClass('on').prevAll('.star').addClass('on');
+			clickedStar.nextAll('.star').removeClass('on');
+		}
+			//별점 값 저장 (1~5)
+			var review_star = clickedStar.hasClass('on') ? clickedStar.index() + 1 : 0;
+			$('#review_star').val(review_star);
+			//console.log($("#review_star").val());
+	});
+	 
+	  // 파일 선택 이벤트는 1회만 바인딩
+	  $("#file").change(function () {
+	    const file = this.files[0];
+	    if (file) {
+	      const reader = new FileReader();
+	      reader.onload = function (e) {
+	    	// 기존 이미지 제거
+	    	 $("#show").find(".img-wrapper").remove();
+	        // 버튼 숨기고 이미지 표시
+	        $(".btn-upload").hide();
+	        $("#show").append("<div class='img-wrapper'><img id='showimg' src='"+e.target.result+"'><i class='bi bi-x img-icon'></i></div>");
+	      };
+	      reader.readAsDataURL(file);
+	    }
+	  });
+		
+	  // 이미지 클릭하면 파일 선택 다시 열기
+	  $(document).on("click", "#showimg", function () {
+	    $("#file").click();
+	  });
+	  $(document).on("click", ".img-icon", function (e) {
+		 e.stopPropagation(); // <- 이 줄이 핵심!
+		    $(".img-wrapper").hide();
+		    $(".btn-upload").show();
+		  });		  
+>>>>>>> 838cfa62f91cf7f956f0a8316817e4751fe43878
 	
     showContainer.find(".img-wrapper").remove(); // 기존 이미지 미리보기 삭제
     if (getimg && getimg !== "null" && getimg !== "undefined" && getimg !== "") { // 이미지 유효성 검사
@@ -85,6 +179,7 @@ function updateModalData(reviewItem) {
 		$("input[name='photo']").val("");
     }
 	
+<<<<<<< HEAD
 }
 
 // --- 이벤트 핸들러 ---
@@ -208,3 +303,24 @@ $(document).on("click", ".updateModal", function() {
     // 모달 열기
     openModal();
 });
+=======
+	//업데이트 모달창버튼
+	$(document).on("click", ".updateModal",function(){
+		var review_idx=$(this).attr("review_idx");
+		
+		$('.modal').css('display', 'flex'); // 먼저 display 속성을 flex로 변경
+					setTimeout(function() { // 약간의 딜레이를 주어 transition이 적용되게 함
+					    $('.modal').addClass('show');
+					}, 10);
+			var rating=$(".rating").attr("rating");		
+			console.log(rating);
+			var star=$(".star rating .star");
+			if(rating)
+				{
+					star.addClass('on').prevAll('.star').addClass('on');
+					star.nextAll('.star').removeClass('on');
+				}
+			
+		
+	});
+>>>>>>> 838cfa62f91cf7f956f0a8316817e4751fe43878

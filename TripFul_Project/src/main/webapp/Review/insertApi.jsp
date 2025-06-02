@@ -78,7 +78,7 @@
         reviewData=reviewData.substring(0,reviewData.length()-9);
         review.put("author", map.get("review_id"));	
         review.put("rating", map.get("review_star"));
-        review.put("text", map.get("review_content"));        
+        review.put("text", map.get("review_content"));       
         review.put("date", reviewData);       
         review.put("photo", map.get("review_img"));
         review.put("read","DB");
