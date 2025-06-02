@@ -97,7 +97,7 @@
         <small class="text-muted">- 여행자9912님</small>
         <div class="mt-3">
             <%-- "리뷰 전체 보기" 링크는 그대로 유지 --%>
-            <a href="index.jsp?main=<%=request.getContextPath()%>/Review/reviewList.jsp" class="btn btn-outline-secondary btn-sm">리뷰 전체 보기</a>
+            <a href="index.jsp?main=<%=request.getContextPath()%>/Review/allReviews.jsp" class="btn btn-outline-secondary btn-sm">리뷰 전체 보기</a>
         </div>
     </div>
 </div>
