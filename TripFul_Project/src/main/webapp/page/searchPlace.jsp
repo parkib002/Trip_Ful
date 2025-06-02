@@ -29,19 +29,21 @@
     <meta charset="UTF-8">
     <title>검색 결과</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript">
+        $(function(){
+
+            $(document).on("click", ".col", function(){
+                // 현재 클릭한 카드 안에서 .place_num 값을 찾음
+                var num = $(this).find(".place_num").val();
+
+                location.href="index.jsp?main=place/detailPlace.jsp&place_num="+num;
+            });
+        });
+    </script>
 </head>
-<script type="text/javascript">
-	$(function(){
-		
-	    $(document).on("click", ".col", function(){
-	        // 현재 클릭한 카드 안에서 .place_num 값을 찾음
-	        var num = $(this).find(".place_num").val();
-	        
-	        location.href="index.jsp?main=place/detailPlace.jsp&place_num="+num;
-	    });
-	});
-</script>
+
 <body class="bg-light">
 <div class="container py-5">
     <h3 class="mb-4">'<%= keyword %>'에 대한 검색 결과</h3>

@@ -8,10 +8,9 @@ body {
 
 /* 네비게이션 바 */
 .navbar-toggler:focus {
-    outline: none;
-    box-shadow: none;
+    outline: none !important;
+    box-shadow: none !important;
 }
-
 .navbar {
     background-color: #ffffff;
     height: 90px;   /* header.jsp에서 옮겨온 높이 */
@@ -227,7 +226,7 @@ body {
 
 /* Collapse 메뉴 위치 조정 */
 .collapse#mainMenu {
-    position: fixed; /* 헤더가 fixed이므로 메뉴도 fixed로 조정 */
+    position: relative; /* 헤더가 fixed이므로 메뉴도 fixed로 조정 */
     top: 90px; /* 헤더 높이만큼 아래에 위치 */
     left: 0;
     width: 100%;
