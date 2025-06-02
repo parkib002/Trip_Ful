@@ -1,13 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%--
-    boardList.jsp는 index.jsp에 포함될 부분이므로,
-    <!DOCTYPE html>, <html>, <head>, <body> 태그는 필요 없습니다.
-    만약 해당 태그들이 있다면 제거해주세요.
-    CSS와 JS 링크도 index.jsp에서 관리하는 것이 좋습니다.
---%>
-
 <%
     String subPage = request.getParameter("sub");
     if (subPage == null || subPage.isEmpty()) {
@@ -44,7 +37,5 @@
 </div>
 
 <div class="layout main">
-    <%-- 이 부분은 boardList.jsp와 같은 폴더(board/)에 notice.jsp, event.jsp, support.jsp가 있다고 가정합니다. --%>
-    <%-- 이 subPage들도 HTML 조각(fragment)이어야 합니다. --%>
     <jsp:include page="<%= subPage %>" />
 </div>
