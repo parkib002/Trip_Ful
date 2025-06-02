@@ -24,7 +24,7 @@
 	align-items: center;
 }
 
-.modalfrm {
+.modalfrm , .upmodalfrm {
 	/* 스타일 - customize */
 	max-width: 600px;
 	width: 100%;
@@ -46,28 +46,30 @@
 	pointer-events: auto;
 }
 
-.modal.show .modalfrm {
+.modal.show .modalfrm, .modal.show .upmodalfrm {
 	/* 모달이 열렸을 때 보여지게 하는 코드 */
 	opacity: 1;
 	transform: scale(1);
 }
 
-.close, .save {
+.close, .save , .update{
 	color: #aaa;
-	float: right;
+	float: right;	
 	font-size: 28px;
 	font-weight: bold;
 	cursor: pointer;
+	margin-left: 5px;
 }
 
-.close:hover, .save:hover {
+.close:hover, .save:hover ,.update:hover{
 	color: black;
 }
 
 .modal-foot {
 	position: fixed;
-	bottom: 0px;
-	right: 0px;
+	bottom: 5px;
+	right: 5px;
+	
 }
 
 /* 작성, 취소 버튼 스타일 */
@@ -103,22 +105,22 @@
 }
 
 .star_rating .star{
-	width: 25px;
-	height: 25px;
+	width: 30px;
+	height: 30px;
 	margin-right: 10px;
 	display: inline-block;
-	background-image: url("../review_image/icons8-star-filled-40.png");
+	background-image: url("../review_image/star3.png");
 	background-repeat: no-repeat;
 	background-size: 100%;
 	box-sizing: border-box;
 }
 
 .star_rating .star.on{
-	width: 25px;
-	height: 25px;
+	width: 30px;
+	height: 30px;
 	margin-right: 10px;
 	display: inline-block;
-	background-image: url("../review_image/icons8-채워진-스타-48.png");
+	background-image: url("../review_image/star4.png");
 	background-repeat: no-repeat;
 	background-size: 100%;
 	box-sizing: border-box;
@@ -128,10 +130,16 @@
 	width: 100%;
 	border-radius: 10px;
 	resize: none;
-	height: 150px;
+	height: 200px;
 	margin: 10px 0px 10px;
 	
 }
+.modal-content{
+	height: 700px;
+	padding: 5px;
+	
+}
+
 
 .review_content:focus {
 	outline-color: #5877f9;
@@ -187,6 +195,7 @@
 .img-wrapper {
   position: relative;
   display: inline-block;
+  cursor: pointer;
 }
 
 .img-icon {

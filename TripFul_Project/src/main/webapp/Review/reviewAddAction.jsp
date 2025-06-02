@@ -40,16 +40,17 @@
 		 
 		 ReviewDto dto=new ReviewDto();
 		 
+		 
 		 dto.setReview_id(review_id);
 		 dto.setReview_content(review_content);
-		 dto.setReview_img(review_img);
+		 dto.setReview_img(review_img==null?"":review_img);
 		 dto.setReview_star(review_star);
 		 dto.setPlace_num(place_num);
 		 
 		 ReviewDao dao=new ReviewDao();
 		 dao.insertReview(dto);
 		 
-	     //System.out.println(dto.toString());
+	     System.out.println(dto.toString());
 	  }catch(Exception e){
 		  //System.out.print(e);
 	  }
