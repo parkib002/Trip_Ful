@@ -126,23 +126,47 @@
                     reviewPlaceName = reviewDao.getPlaceName(reviewPlaceNum);
                 }
         %>
-        <div class="card mb-3 p-3 border-0 shadow-sm rounded-3 bg-white">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="mb-0 text-primary">
-                    <%= reviewAuthor %>
-                    <% if (!reviewPlaceName.isEmpty()) { %>
-                    <small class="text-muted ms-2">(<a href="index.jsp?main=place/detailPlace.jsp?place_num=<%= reviewPlaceNum %>" class="text-decoration-none text-info"><%= reviewPlaceName %></a>)</small>
-                    <% } %>
-                </h6>
-                <div class="text-warning">
-                    <% for (int k = 0; k < (int) reviewRating; k++) { %><i class="bi bi-star-fill"></i><% } %>
-                    <% if (reviewRating - (int) reviewRating >= 0.5) { %><i class="bi bi-star-half"></i><% } %>
-                    <small class="text-muted ms-1">(<%= String.format("%.1f", reviewRating) %>)</small>
+        <a href="index.jsp?main=place/detailPlace.jsp?place_num=<%= reviewPlaceNum %>"
+           class="text-decoration-none text-dark">
+            <div class="card mb-3 p-3 border-0 shadow-sm rounded-3 bg-white hover-shadow" style="cursor: pointer;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0 text-primary">
+                        <%= reviewAuthor %>
+                        <% if (!reviewPlaceName.isEmpty()) { %>
+                        <small class="text-muted ms-2">(<%= reviewPlaceName %>)</small>
+                        <% } %>
+                    </h6>
+                    <div class="text-warning">
+                        <%
+                            int fullStars = (int) reviewRating;
+                            boolean hasHalfStar = (reviewRating - fullStars) >= 0.5;
+                            int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+                            // 꽉 찬 별
+                            for (int k = 0; k < fullStars; k++) {
+                        %>
+                        <i class="bi bi-star-fill"></i>
+                        <%
+                            }
+                            if (hasHalfStar) {
+                        %>
+                        <i class="bi bi-star-half"></i>
+                        <%
+                            }
+                            for (int k = 0; k < emptyStars; k++) {
+                        %>
+                        <i class="bi bi-star"></i>
+                        <%
+                            }
+                        %>
+                        <small class="text-muted ms-1">(<%= String.format("%.1f", reviewRating) %>)</small>
+                    </div>
                 </div>
+                <p class="mb-2"><%= reviewText.length() > 150 ? reviewText.substring(0, 150) + "..." : reviewText %></p>
+                <small class="text-muted text-end">작성일: <%= reviewDate %></small>
             </div>
-            <p class="mb-2"><%= reviewText.length() > 150 ? reviewText.substring(0, 150) + "..." : reviewText %></p>
-            <small class="text-muted text-end">작성일: <%= reviewDate %></small>
-        </div>
+        </a>
+
         <%
             }
         } else {

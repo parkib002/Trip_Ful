@@ -81,7 +81,7 @@
         </div>
     </div>
 
-    <div class="collapse" id="mainMenu" style="position: absolute; top: 90px; left: 0; width: 100%; background-color: white; z-index: 1050;">
+    <div class="collapse" id="mainMenu" style="position: absolute; top: 90px; left: 0; background-color: white; z-index: 1050;">
         <ul class="navbar-nav px-4 py-3">
             <li class="nav-item"><a class="nav-link" href="index.jsp?main=/place/selectPlace.jsp">지역별 관광지</a></li>
             <li class="nav-item"><a class="nav-link" href="index.jsp?main=board/boardList.jsp&sub=event.jsp">이벤트</a></li>

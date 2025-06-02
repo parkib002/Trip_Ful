@@ -72,8 +72,8 @@ body {
 /* 캐러셀 컨테이너 */
 #spotReviewCarousel {
     width: 100%;
-    max-width: 1200px;
-    height: 700px;
+    max-width: 1920px;
+    height: 1080px;
     margin: 0 auto 50px;
     overflow: hidden;
     background-color: transparent;
@@ -229,11 +229,11 @@ body {
     position: relative; /* 헤더가 fixed이므로 메뉴도 fixed로 조정 */
     top: 90px; /* 헤더 높이만큼 아래에 위치 */
     left: 0;
-    width: 100%;
+    max-width: 30%;
     background-color: white;
     z-index: 1050;
-    /* transition: transform 0.3s ease-out; (선택 사항: 부드러운 애니메이션) */
-    /* transform: translateY(-100%); (선택 사항: 기본적으로 숨기고 JS로 보이기) */
+    transition: transform 0.3s ease-out;
+    /*transform: translateY(-100%); */
 }
 
 .star_rating2 .rating {

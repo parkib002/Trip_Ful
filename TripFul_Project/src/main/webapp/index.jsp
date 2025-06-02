@@ -48,7 +48,6 @@
 
 <script src="js/header.js" defer></script>
 <script src="js/selectPlace.js" defer></script>
-<script src="js/map.js" defer></script>
 <script src="js/mainPageCarousel.js" defer></script>
 
 </body>
