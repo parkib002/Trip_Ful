@@ -5,7 +5,19 @@ let lastLoaded = false;
 let currentContinent = null;
 let continentDataMap = {};
 
-// ✅ 관광지 로드 함수 (초기 10개, 이후 5개씩)
+// 초기화 및 전체보기용 리셋 함수
+function resetAndLoad() {
+  currentPage = 1;
+  lastLoaded = false;
+  isLoading = false;
+  currentContinent = null;
+  continentDataMap = {};
+  $('#placeContainer').empty();
+  showContinents(true); // 전체보기 버튼 표시
+  loadAllPlaces(10);
+}
+
+// 관광지 로드 함수 (초기 10개, 이후 5개씩)
 function loadAllPlaces(pageSize = 10) {
   if (isLoading || lastLoaded) return;
 
@@ -20,7 +32,9 @@ function loadAllPlaces(pageSize = 10) {
     },
     dataType: 'json',
     success: function (response) {
-      if (response.length === 0) {
+      console.log('전체 리스트 response:', response); // 데이터 구조 확인용 로그
+
+      if (!response || response.length === 0) {
         lastLoaded = true;
         return;
       }
@@ -37,7 +51,7 @@ function loadAllPlaces(pageSize = 10) {
   });
 }
 
-// ✅ 대륙 버튼 표시
+// 대륙 버튼 표시
 function showContinents(showAllButton = false) {
   const $area = $('#selection-area');
   $area.empty();
@@ -45,7 +59,7 @@ function showContinents(showAllButton = false) {
   if (showAllButton) {
     $('<div>').addClass('top-button-row').append(
       $('<button>').text('전체 보기').click(() => {
-        resetAndLoad(); // 전체 보기 누르면 리셋 후 다시 로드
+        resetAndLoad(); // 전체 보기 버튼 클릭 시 초기화 및 로드
       })
     ).appendTo($area);
   }
@@ -78,7 +92,7 @@ function showContinents(showAllButton = false) {
   $continentRow.appendTo($area);
 }
 
-// ✅ 나라 버튼 표시
+// 나라 버튼 표시
 function showCountries(continent, data, showBackButton = false) {
   const $area = $('#selection-area');
   $area.empty();
@@ -120,7 +134,7 @@ function showCountries(continent, data, showBackButton = false) {
   }
 }
 
-// ✅ 관광지 출력
+// 관광지 출력
 function showPlaces(title, places) {
   const $container = $('#placeContainer');
   $container.empty();
@@ -130,7 +144,7 @@ function showPlaces(title, places) {
   });
 }
 
-// ✅ 관광지 추가로 붙이기
+// 관광지 추가로 붙이기
 function appendPlaces(places) {
   const $container = $('#placeContainer');
 
@@ -139,7 +153,7 @@ function appendPlaces(places) {
   });
 }
 
-// ✅ 관광지 카드 생성
+// 관광지 카드 생성
 function appendPlaceCard(place, $container) {
   const $card = $('<div class="place-card">').css('cursor', 'pointer');
   const $imgWrapper = $('<div class="image-wrapper">');
@@ -171,6 +185,20 @@ function appendPlaceCard(place, $container) {
     .css({ margin: '0', padding: '0' })
     .appendTo($card);
 
+  // 조회수와 좋아요 표시
+  const viewsText = (typeof place.views === 'number' && place.views >= 0)
+    ? '👁 조회수: ' + place.views
+    : '👁 조회수 정보 없음';
+
+  const likesText = (typeof place.likes === 'number' && place.likes >= 0)
+    ? '❤️ 좋아요: ' + place.likes
+    : '❤️ 좋아요 정보 없음';
+
+  $('<div class="text-area">')
+    .css({ fontSize: '0.85rem', color: '#555' })
+    .html(viewsText + ' | ' + likesText)
+    .appendTo($card);
+
   $card.click(() => {
     location.href = 'index.jsp?main=place/detailPlace.jsp&place_num=' + place.place_num;
   });
@@ -178,16 +206,7 @@ function appendPlaceCard(place, $container) {
   $container.append($card);
 }
 
-// ✅ 초기화 후 전체 관광지 다시 불러오기
-function resetAndLoad() {
-  currentPage = 1;
-  lastLoaded = false;
-  $('#placeContainer').empty();
-  loadAllPlaces(10);
-  showContinents(false);
-}
-
-// ✅ 스크롤 이벤트 등록
+// 스크롤 이벤트 등록
 $(window).on('scroll', function () {
   if (
     !isLoading &&
@@ -198,8 +217,8 @@ $(window).on('scroll', function () {
   }
 });
 
-// ✅ 초기 페이지 로딩
+// 초기 페이지 로딩
 $(document).ready(function () {
-  loadAllPlaces(10); // 최초 10개
-  showContinents(false);
+  loadAllPlaces(10);  // 최초 10개 로드
+  showContinents(true);  // 전체보기 버튼 포함해서 대륙 버튼 표시
 });

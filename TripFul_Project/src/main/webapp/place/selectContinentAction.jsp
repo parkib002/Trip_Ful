@@ -14,14 +14,17 @@
 
   Map<String, JSONArray> map = new HashMap<>();
   for (PlaceDto dto : list) {
-    JSONObject obj = new JSONObject();
-    obj.put("place_num", dto.getPlace_num()); 
-    obj.put("place_name", dto.getPlace_name());
-    obj.put("place_img", dto.getPlace_img());
+	  JSONObject obj = new JSONObject();
+	  obj.put("place_num", dto.getPlace_num()); 
+	  obj.put("place_name", dto.getPlace_name());
+	  obj.put("place_img", dto.getPlace_img());
+	  obj.put("avg_rating", dto.getAvg_rating());
+	  obj.put("views", dto.getPlace_count());
+	  obj.put("likes", dto.getPlace_like());
 
-    String country = dto.getCountry_name();
-    map.computeIfAbsent(country, k -> new JSONArray()).add(obj);
-  }
+	  String country = dto.getCountry_name();
+	  map.computeIfAbsent(country, k -> new JSONArray()).add(obj);
+	}
 
   JSONObject result = new JSONObject();
   for (String country : map.keySet()) {

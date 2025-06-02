@@ -1,3 +1,5 @@
+<%@page import="place.PlaceDto"%>
+<%@page import="place.PlaceDao"%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -7,7 +9,36 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 필수 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>관광지 추가</title>
+  <title>관광지 수정</title>
+<%
+	String num=request.getParameter("place_num"); 
+
+	PlaceDao dao=new PlaceDao();
+	
+	PlaceDto dto=dao.getPlaceData(num);
+	
+    String content = dto.getPlace_content();
+    String imgPaths = dto.getPlace_img();
+
+    String imgTags = "";
+    if (imgPaths != null && imgPaths.trim().length() > 0) {
+        String[] paths = imgPaths.split(",");
+        StringBuilder sb = new StringBuilder();
+        for (String path : paths) {
+            sb.append("<img src='").append(path.trim()).append("' style='max-width:100%;'><br>");
+        }
+        imgTags = sb.toString();
+    }
+
+    String combinedContent = (content != null ? content : "") + "<br>" + imgTags;
+
+    // 자바스크립트에 그대로 넣을 문자열로 이스케이프
+    String jsEscapedContent = combinedContent.replace("\\", "\\\\")
+                                             .replace("\"", "\\\"")
+                                             .replace("\'", "\\\'")
+                                             .replace("\r", "\\r")
+                                             .replace("\n", "\\n");
+%>
   <style>
     #map {
       height: 500px;
@@ -17,19 +48,23 @@
   
   <script>
   $(document).ready(function() {
-    $('#summernote').summernote({
-      height: 300,             // 에디터 높이
-      placeholder: '내용을 입력하세요...',
-      toolbar: [
-    	  ['style', ['bold', 'italic', 'underline', 'clear']],
-    	    ['font', ['strikethrough', 'superscript', 'subscript']],
-    	    ['color', ['color']],  // ✅ 색상 도구 추가
-    	    ['para', ['ul', 'ol', 'paragraph']],
-    	    ['insert', ['link', 'picture']],
-    	    ['view', ['fullscreen', 'codeview']]
-      ]
-    });
-  });
+	  $('#summernote').summernote({
+	    height: 300,
+	    placeholder: '내용을 입력하세요...',
+	    toolbar: [
+	      ['style', ['bold', 'italic', 'underline', 'clear']],
+	      ['font', ['strikethrough', 'superscript', 'subscript']],
+	      ['color', ['color']],
+	      ['para', ['ul', 'ol', 'paragraph']],
+	      ['insert', ['link', 'picture']],
+	      ['view', ['fullscreen', 'codeview']]
+	    ]
+	  });
+
+	  // 서버에서 받아온 내용 + 이미지 넣기
+	  var initialContent = "<%= jsEscapedContent %>";
+	  $('#summernote').summernote('code', initialContent);
+	});
   
   $('#summernote').summernote({
 	  height: 300,
@@ -60,24 +95,26 @@
 
 
 </head>
+
 <body>
 
-  <h2>추가할 관광지를 검색하세요</h2>
-  <input id="autocomplete" type="text" placeholder="추가할 관광지를 검색하세요" style="width: 300px;" />
+  <h2>수정할 관광지를 검색하세요</h2>
+  <input id="autocomplete" type="text" placeholder="수정할 관광지를 검색하세요" style="width: 300px;" />
   <button onclick="searchPlace()">검색</button>
   <button onclick="savePlace()">추가</button>
 
   <div id="map"></div>
   
-  <form method="post" action="place/insertPlaceAction.jsp" enctype="multipart/form-data">
+  <form method="post" action="place/updatePlaceAction.jsp" enctype="multipart/form-data">
  <div id="place-info" style="margin-top:20px;">
   <strong>선택된 장소 정보:</strong><br>
-  이름: <input type="text" id="output-name" name="place_name"><br>
-  주소: <input type="text" id="output-address" name="place_address"><br>
-  Place ID: <input type="text" id="output-placeid" name="place_id"><br>
-  나라: <input type="text" name="country_name"><br>
-  대륙(영어): <input type="text" name="continent_name"><br>
-  카테고리: <input type="text" name="place_tag">
+  <input type="hidden" name="num" value="<%=num%>"> 
+  이름: <input type="text" id="output-name" name="place_name" value="<%=dto.getPlace_name()%>"><br>
+  주소: <input type="text" id="output-address" name="place_address" value="<%=dto.getPlace_addr()%>"><br>
+  Place ID: <input type="text" id="output-placeid" name="place_id" value="<%=dto.getPlace_code()%>"><br>
+  나라: <input type="text" name="country_name" value="<%=dto.getCountry_name()%>"><br>
+  대륙(영어): <input type="text" name="continent_name" value="<%=dto.getContinent_name()%>"><br>
+  카테고리: <input type="text" name="place_tag" value="<%=dto.getPlace_tag()%>">
   <textarea id="summernote" name="place_content"></textarea>
   <button type="submit">제출</button>
 </div>
@@ -148,8 +185,7 @@
   </script>
   
 
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpVlcErlSTHrCz7Y4h3_VM8FTMkm9eXAc&libraries=places&callback=initMap" async defer></script>
-
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpVlcErlSTHrCz7Y4h3_VM8FTMkm9eXAc&callback=initMap" async defer></script>
 
 </body>
 </html>

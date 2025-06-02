@@ -7,6 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>관광지 선택 페이지</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <%
+  	String loginok=(String)session.getAttribute("loginok");
+  %>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -201,6 +204,11 @@
       <option value="rating">별점순</option>
       <option value="likes">좋아요순</option>
     </select>
+    
+    <%
+    if("admin".equals(loginok)){%>
+    <button type="button" onclick="location.href='index.jsp?main=place/insertPlace.jsp'">관광지 추가</button>
+    <%} %>
   </div>
 
   <div class="selection-buttons" id="selection-area" style="position: relative; z-index: 10;"></div>

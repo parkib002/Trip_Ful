@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
-<%@ page import="board.MainPlaceDao, board.MainPlaceDto" %>
+<%@ page import="place.PlaceDao, place.PlaceDto" %>
 
 
 <%
     // DAO에서 5개 랜덤 장소 가져오기
-    MainPlaceDao dao = new MainPlaceDao();
-    List<MainPlaceDto> placeList = dao.getRandomPlaces(5);
+    PlaceDao dao = new PlaceDao();
+    List<PlaceDto> placeList = dao.getRandomPlaces(5);
 %>
 
 <!DOCTYPE html>
@@ -36,7 +36,7 @@
 
     <div class="carousel-inner">
         <% for (int i = 0; i < placeList.size(); i++) {
-            MainPlaceDto place = placeList.get(i);
+            PlaceDto place = placeList.get(i);
             String activeClass = (i == 0) ? "active" : "";
         %>
         <div class="carousel-item <%= activeClass %>">
@@ -45,16 +45,16 @@
                 <div class="col-md-6">
                     <div class="card border-0 shadow-lg h-100 rounded-4 overflow-hidden">
                         <div class="position-relative">
-                            <img src="<%=request.getContextPath()%>/images/<%= place.getPlaceImg() %>"
+                            <img src="<%=request.getContextPath()%>/images/<%= place.getPlace_img() %>"
                                  class="card-img-top object-fit-cover"
                                  style="height: 450px; width: 100%; filter: brightness(90%);"
-                                 alt="<%= place.getPlaceName() %>">
+                                 alt="<%= place.getPlace_name() %>">
                             <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-25"></div>
                         </div>
                         <div class="card-body p-4">
-                            <h5 class="card-title fw-bold text-primary"><%= place.getPlaceName() %></h5>
-                            <p class="card-text"><%= place.getPlaceContent() %></p>
-                            <p class="text-muted small">태그: <%= place.getPlaceTag() %> | 대륙: <%= place.getContinentName() %></p>
+                            <h5 class="card-title fw-bold text-primary"><%= place.getPlace_name() %></h5>
+                            <p class="card-text"><%= place.getPlace_content() %></p>
+                            <p class="text-muted small">태그: <%= place.getPlace_tag() %> | 대륙: <%= place.getContinent_name() %></p>
                             <a href="#" class="btn btn-outline-warning mt-2">자세히 보기</a>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                 <!-- 리뷰 -->
                 <div class="col-md-6">
                     <div class="bg-light p-4 rounded-4 shadow-sm border-start border-5 border-warning h-100 d-flex flex-column justify-content-center">
-                        <h6 class="fw-bold mb-2"><%= place.getPlaceName() %>에 대한 여행자의 리뷰</h6>
+                        <h6 class="fw-bold mb-2"><%= place.getPlace_name() %>에 대한 여행자의 리뷰</h6>
                         <p class="fst-italic mb-2">“정말 인상적인 장소였습니다. 추천해요!”</p>
                         <small class="text-muted">by 여행자</small>
                     </div>

@@ -13,7 +13,14 @@ public class PlaceDto {
 	private String continent_name;
 	private String place_addr;
 	private int place_like;
+	private double avg_rating;
 	
+	public double getAvg_rating() {
+		return avg_rating;
+	}
+	public void setAvg_rating(double avg_rating) {
+		this.avg_rating = avg_rating;
+	}
 	public int getPlace_like() {
 		return place_like;
 	}
