@@ -237,5 +237,11 @@ body {
     /* transform: translateY(-100%); (선택 사항: 기본적으로 숨기고 JS로 보이기) */
 }
 
-/* Bootstrap의 shadow 클래스를 CSS로 옮긴 것이지만, HTML에 shadow 클래스를 유지하면 중복됩니다. */
-/* 만약 .navbar에 shadow 클래스를 계속 사용한다면, 위 .navbar의 box-shadow 속성은 제거해도 됩니다. */
+.star_rating2 .rating {
+    font-size: 1.2em; /* 별 아이콘 크기 조절 */
+    color: #ccc; /* 기본 별 색상 (비어있는 별) */
+}
+.star_rating2 .rating.on {
+    color: #ffc107; /* 채워진 별 색상 (노란색) */
+}
+

@@ -14,20 +14,7 @@
     <link
             href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Dongle&family=Gaegu&family=Nanum+Pen+Script&display=swap"
             rel="stylesheet">
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-            rel="stylesheet">
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <%-- ModalStyle.css는 이제 리뷰 작성 모달이 없으므로 필요 없을 수 있습니다. --%>
-    <link rel="stylesheet" href="Review/ModalStyle.css">
-    <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-    <link rel="stylesheet" href="Review/carouselStyle.css">
 
     <title>모든 여행자 리뷰</title>
     <%
@@ -42,20 +29,6 @@
     %>
     <script type="text/javascript">
         $(function() {
-            // Owl Carousel 초기화 (페이지 로드 시 바로 적용)
-            var owl = $('#reviewCarousel');
-            owl.owlCarousel({
-                loop: false,
-                margin: 10,
-                nav: false,
-                dots: false,
-                responsive: {
-                    0: { items: 1, slideBy: 1 },
-                    768: { items: 2, slideBy: 1 },
-                    992: { items: 3, slideBy: 1 }
-                }
-            });
-
             // 리뷰 수정/삭제/신고 드롭다운 메뉴 토글
             $(document).on("click", ".category", function(e) {
                 e.stopPropagation(); // 이벤트 버블링 방지
@@ -70,132 +43,164 @@
             // reviewJs.js에 모달 관련 로직이 있다면 해당 스크립트 파일도 검토가 필요합니다.
         });
     </script>
+    <style>
+        /* 그리드 카드 간격 */
+        .card {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 카드에 그림자 효과 */
+            transition: transform 0.2s; /* 호버 시 부드러운 전환 */
+        }
+        .card:hover {
+            transform: translateY(-5px); /* 호버 시 살짝 위로 */
+        }
+        .review-image-container {
+            width: 100%;
+            height: 200px; /* 이미지 컨테이너 높이 고정 */
+            overflow: hidden; /* 넘치는 부분 숨김 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f9fa; /* 배경색 추가 */
+            border-radius: 0.25rem; /* 카드 테두리 반경과 일치 */
+        }
+        .review-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 이미지가 컨테이너를 채우도록 조절 */
+        }
+        /* 별점 아이콘 스타일 (Bootstrap Icons i 태그에 적용) */
+        .star_rating2 .bi-star,
+        .star_rating2 .bi-star-fill,
+        .star_rating2 .bi-star-half {
+            font-size: 1.2em; /* 별 아이콘 크기 조절 */
+        }
+        .star_rating2 .bi-star {
+            color: #ccc; /* 빈 별 색상 */
+        }
+        .star_rating2 .bi-star-fill,
+        .star_rating2 .bi-star-half {
+            color: #ffc107; /* 채워진 별 색상 (노란색) */
+        }
+        .card-text {
+            /* 리뷰 내용이 너무 길어지지 않도록 최대 높이 설정 및 스크롤 */
+            max-height: 100px;
+            overflow-y: auto;
+            word-wrap: break-word; /* 긴 단어 줄바꿈 */
+        }
+    </style>
 </head>
 
 <body>
 <div class="container mt-5">
     <h3 class="text-center mb-4">모든 여행자 리뷰</h3>
 
-    <div>
-        <%-- '리뷰 작성' 버튼 제거 --%>
-        <%-- 'API 테스트' 버튼도 제거 --%>
+    <div class="container mt-3">
+        <form class="updatefrm" enctype="multipart/form-data" >
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <% if (list != null && !list.isEmpty()) { %>
+                <% for (HashMap<String, String> r : list) {
+                    String currentPlaceNum = r.get("place_num"); // DAO에서 "place_num" 키로 값을 넘겼는지 확인
+                    String placeName = "알 수 없는 여행지"; // 기본값 설정
 
-        <div class="container mt-3">
-            <form class="updatefrm" enctype="multipart/form-data" >
-                <div id="reviewCarousel" class="owl-carousel owl-theme">
-                    <% if (list != null && !list.isEmpty()) { %>
-                    <% for (HashMap<String, String> r : list) {
-                        // 각 리뷰에 연결된 여행지의 이름을 가져옵니다.
-                        // r.get("place_num")은 ReviewDao의 getAllReviews()에서 "place_num" 키로 담았을 경우입니다.
-                        // 현재 JSP에서 r.get("author") 등을 쓰는 것으로 보아, DAO에서 "place_num" 대신 다른 키를 쓰고 있을 수 있습니다.
-                        // 만약 DAO에서 "place_num" 키를 사용하지 않는다면 이 부분을 수정해야 합니다.
-                        String currentPlaceNum = r.get("place_num"); // DAO에서 place_num 키로 값을 넘겼는지 확인
-                        String placeName = "알 수 없는 여행지"; // 기본값 설정
-
-                        if (currentPlaceNum != null && !currentPlaceNum.trim().isEmpty()) {
-                            // rdao.getPlaceName()은 ReviewDao에 존재하는 메서드입니다.
-                            String fetchedPlaceName = rdao.getPlaceName(currentPlaceNum);
-                            if (fetchedPlaceName != null && !fetchedPlaceName.trim().isEmpty()) {
-                                placeName = fetchedPlaceName;
-                            }
+                    if (currentPlaceNum != null && !currentPlaceNum.trim().isEmpty()) {
+                        String fetchedPlaceName = rdao.getPlaceName(currentPlaceNum);
+                        if (fetchedPlaceName != null && !fetchedPlaceName.trim().isEmpty()) {
+                            placeName = fetchedPlaceName;
                         }
-                    %>
-                    <div class='item'>
-                        <div class='card h-100 p-3'>
-                            <div class='review-header d-flex justify-content-between align-items-center mb-2'>
-                                <b><%= r.get("author") != null ? r.get("author") : "익명" %></b> <%-- author 값 null 체크 --%>
-                                <%-- 'read' 값 null 체크 및 "DB" 아닐 경우에만 표시 --%>
-                                <% if (r.get("read") != null && !r.get("read").equals("DB") && !r.get("read").trim().isEmpty()) { %>
-                                <div class='googlechk mb-2'>
-                                    <span class='googlereview'><%= r.get("read") %></span>
-                                </div>
-                                <% } %>
-                                <div>
-                                    <%-- 'date' 값 null 체크 --%>
-                                    <span class='review_writeday'><%= r.get("date") != null ? r.get("date") : "" %></span>&nbsp;&nbsp;
-                                    <i class='bi bi-three-dots-vertical category' review_id='<%= r.get("author") != null ? r.get("author") : "" %>'></i>
-                                    <%-- 세션 ID와 리뷰 작성자 ID 비교 --%>
-                                    <% if (review_id_session != null && review_id_session.equals(r.get("author"))) { %>
-                                    <div class='dropdown-menu'>
-                                        <button type='submit' class='edit-btn' review_id='<%= r.get("author") %>'>수정</button>
-                                        <button type='button' class='delete-btn' review_id='<%= r.get("author") %>'>삭제</button>
-                                    </div>
-                                    <% } else { %>
-                                    <div class='dropdown-menu'>
-                                        <button>신고</button>
-                                    </div>
-                                    <% } %>
-                                </div>
-                            </div>
-                            <div class='star_rating2 mb-2'>
-                                <%-- 'rating' 값 null 체크 및 파싱 --%>
-                                <span><%= r.get("rating") != null ? r.get("rating") : "0.0" %></span>&nbsp;&nbsp;
-                                <%
-                                    double doubleRating = 0.0;
-                                    String ratingStr = r.get("rating");
-                                    if (ratingStr != null && !ratingStr.trim().isEmpty()) {
-                                        try {
-                                            doubleRating = Double.parseDouble(ratingStr);
-                                        } catch (NumberFormatException e) {
-                                            System.err.println("Invalid rating format: " + ratingStr);
-                                        }
-                                    }
-                                    int rating = (int) doubleRating;
-                                %>
-                                <% for (int i = 0; i < rating; i++) { %>
-                                <span class='rating on'></span>
-                                <% } %>
-                                <% for (int i = 0; i < (5 - rating); i++) { %>
-                                <span class='rating'></span>
-                                <% } %>
-                            </div>
-                            <%-- 'photo' 값 null 체크 --%>
-                            <% String reviewPhoto = r.get("photo");
-                                if (reviewPhoto != null && !reviewPhoto.equals("null") && !reviewPhoto.trim().isEmpty()) { %>
-                            <div class='review-image-container mb-2'>
-                                <img src='save/<%= reviewPhoto %>' class='img-fluid rounded'>
+                    }
+                %>
+                <div class="col">
+                    <div class='card h-100 p-3'>
+                        <div class='review-header d-flex justify-content-between align-items-center mb-2'>
+                            <b><%= r.get("author") != null ? r.get("author") : "익명" %></b>
+                            <% if (r.get("read") != null && !r.get("read").equals("DB") && !r.get("read").trim().isEmpty()) { %>
+                            <div class='googlechk mb-2'>
+                                <span class='googlereview'><%= r.get("read") %></span>
                             </div>
                             <% } %>
-                            <p class='card-text'>
-                                <%-- 'text' 값 null 체크 --%>
-                                <% String reviewText = r.get("text");
-                                    if (reviewText != null) {
-                                        out.print(reviewText.replaceAll("\n", "<br>"));
-                                    } else {
-                                        out.print(""); // review_content가 null일 경우 빈 문자열 출력
-                                    } %>
-                            </p>
-
-                            <hr class="my-3">
-                            <div class="text-end">
-                                <small class="text-muted">
-                                    여행지: **<%= placeName %>**
-                                    <%-- place_num이 유효할 때만 링크 표시 --%>
-                                    <% if (currentPlaceNum != null && !currentPlaceNum.trim().isEmpty() && !placeName.equals("알 수 없는 여행지")) { %>
-                                    <a href="index.jsp?main=place/detailPlace.jsp?place_num=<%= currentPlaceNum %>" class="btn btn-sm btn-outline-info ms-2">자세히 보기</a>
-                                    <% } %>
-                                </small>
+                            <div>
+                                <span class='review_writeday'><%= r.get("date") != null ? r.get("date") : "" %></span>&nbsp;&nbsp;
+                                <i class='bi bi-three-dots-vertical category' review_id='<%= r.get("author") != null ? r.get("author") : "" %>'></i>
+                                <%-- 세션 ID와 리뷰 작성자 ID 비교 --%>
+                                <% if (review_id_session != null && review_id_session.equals(r.get("author"))) { %>
+                                <div class='dropdown-menu'>
+                                    <button type='submit' class='edit-btn' review_id='<%= r.get("author") %>'>수정</button>
+                                    <button type='button' class='delete-btn' review_id='<%= r.get("author") %>'>삭제</button>
+                                </div>
+                                <% } else { %>
+                                <div class='dropdown-menu'>
+                                    <button>신고</button>
+                                </div>
+                                <% } %>
                             </div>
                         </div>
-                    </div>
-                    <% } %>
-                    <% } else { %>
-                    <div class='item'>
-                        <div class='card p-3 m-2 text-center'>
-                            <p>아직 등록된 리뷰가 없습니다.</p>
+                        <div class='star_rating2 mb-2'>
+                            <span><%= r.get("rating") != null ? r.get("rating") : "0.0" %></span>&nbsp;&nbsp;
+                            <%
+                                double doubleRating = 0.0;
+                                String ratingStr = r.get("rating");
+                                if (ratingStr != null && !ratingStr.trim().isEmpty()) {
+                                    try {
+                                        doubleRating = Double.parseDouble(ratingStr);
+                                    } catch (NumberFormatException e) {
+                                        System.err.println("Invalid rating format: " + ratingStr);
+                                    }
+                                }
+                                // 별 아이콘을 위해 int로 변환 및 반쪽 별 계산
+                                int filledStars = (int) Math.floor(doubleRating);
+                                int halfStar = (doubleRating - filledStars >= 0.5) ? 1 : 0;
+                                int emptyStars = 5 - filledStars - halfStar;
+                            %>
+                            <% for (int i = 0; i < filledStars; i++) { %>
+                            <i class='bi bi-star-fill'></i> <%-- 채워진 별 아이콘 --%>
+                            <% } %>
+                            <% if (halfStar == 1) { %>
+                            <i class='bi bi-star-half'></i> <%-- 반쪽 별 아이콘 --%>
+                            <% } %>
+                            <% for (int i = 0; i < emptyStars; i++) { %>
+                            <i class='bi bi-star'></i> <%-- 빈 별 아이콘 --%>
+                            <% } %>
+                        </div>
+                        <% String reviewPhoto = r.get("photo");
+                            if (reviewPhoto != null && !reviewPhoto.equals("null") && !reviewPhoto.trim().isEmpty()) { %>
+                        <div class='review-image-container mb-2'>
+                            <img src='save/<%= reviewPhoto %>' class='img-fluid rounded'>
+                        </div>
+                        <% } %>
+                        <p class='card-text'>
+                            <% String reviewText = r.get("text");
+                                if (reviewText != null) {
+                                    out.print(reviewText.replaceAll("\n", "<br>"));
+                                } else {
+                                    out.print(""); // review_content가 null일 경우 빈 문자열 출력
+                                } %>
+                        </p>
+
+                        <hr class="my-3">
+                        <div class="text-end">
+                            <small class="text-muted">
+                                여행지: **<%= placeName %>**
+                                <% if (currentPlaceNum != null && !currentPlaceNum.trim().isEmpty() && !placeName.equals("알 수 없는 여행지")) { %>
+                                <a href="index.jsp?main=place/detailPlace.jsp?place_num=<%= currentPlaceNum %>" class="btn btn-sm btn-outline-info ms-2">자세히 보기</a>
+                                <% } %>
+                            </small>
                         </div>
                     </div>
-                    <% } %>
                 </div>
-            </form>
-        </div>
+                <% } %>
+                <% } else { %>
+                <div class='col-12'>
+                    <div class='card p-3 m-2 text-center'>
+                        <p>아직 등록된 리뷰가 없습니다.</p>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+        </form>
     </div>
 </div>
 
-<%-- 리뷰 작성 모달 창 관련 스크립트 제거 --%>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-<%-- ModalJs.js는 모달이 없으므로 삭제 --%>
+<%-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --%>
+<%-- <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script> --%>
 <%-- <script src="Review/JavaScript/ModalJs.js"></script> --%>
 <script src="Review/JavaScript/reviewJs.js"></script>
 </body>
