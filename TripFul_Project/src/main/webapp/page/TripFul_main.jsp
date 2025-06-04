@@ -33,7 +33,7 @@
             <div class="d-flex justify-content-center py-4">
                 <div class="col-md-10">
                     <!-- 카드 내부를 flex row로 배치 -->
-                    <div class="card border-0 shadow-lg h-100 rounded-4 overflow-hidden d-flex flex-row" style="min-height: 450px;">
+                    <div class="card border-0 shadow-lg h-100 rounded-4 overflow-hidden d-flex flex-row" style="min-height: 450px; position: relative;">
                         <!-- 이미지 영역 -->
                         <div style="flex: 0 0 40%; position: relative;">
                             <img src="<%= request.getContextPath() %>/save/<%= place.getPlaceImg() %>"
@@ -44,27 +44,33 @@
                         </div>
 
                         <!-- 텍스트 및 리뷰 영역 -->
-                        <div class="card-body p-4" style="flex: 1 1 60%; overflow-y: auto;">
-                            <h5 class="card-title fw-bold text-primary"><%= place.getPlaceName() %></h5>
-                            <p class="card-text"><%= place.getPlaceContent() %></p>
-                            <p class="text-muted small">태그: <%= place.getPlaceTag() %> | 대륙: <%= place.getContinentName() %></p>
-                            <a href="index.jsp?main=place/detailPlace.jsp&place_num=<%= place.getPlaceNum() %>" class="btn btn-outline-warning mt-2">자세히 보기</a>
-
-                            <div class="bg-light p-4 mt-4 rounded-4 shadow-sm border-start border-5 border-warning">
-                                <h6 class="fw-bold mb-2"><%= place.getPlaceName() %>에 대한 여행자의 리뷰</h6>
-                                <% if (currentReview != null) {
-                                    String reviewAuthor = Optional.ofNullable(currentReview.get("author")).orElse("익명");
-                                    String reviewText = Optional.ofNullable(currentReview.get("text")).orElse("리뷰 내용 없음");
-                                %>
-                                <p class="fst-italic mb-2">
-                                    “<%= reviewText.length() > 100 ? reviewText.substring(0, 100) + "..." : reviewText %>”
-                                </p>
-                                <small class="text-muted">by <%= reviewAuthor %>님</small>
-                                <% } else { %>
-                                <p class="fst-italic mb-2">“아직 등록된 리뷰가 없습니다. 첫 리뷰를 작성해보세요!”</p>
-                                <small class="text-muted">by Tripful</small>
-                                <% } %>
+                        <div class="card-body p-4 d-flex flex-column justify-content-between" style="flex: 1 1 60%; overflow-y: auto; position: relative;">
+                            <div>
+                                <h5 class="card-title fw-bold text-primary"><%= place.getPlaceName() %></h5>
+                                <p class="card-text"><%= place.getPlaceContent() %></p>
+                                <p class="text-muted small">태그: <%= place.getPlaceTag() %> | 대륙: <%= place.getContinentName() %></p>
+                                <div class="bg-light p-4 mt-4 rounded-4 shadow-sm border-start border-5 border-warning">
+                                    <h6 class="fw-bold mb-2"><%= place.getPlaceName() %>에 대한 여행자의 리뷰</h6>
+                                    <% if (currentReview != null) {
+                                        String reviewAuthor = Optional.ofNullable(currentReview.get("author")).orElse("익명");
+                                        String reviewText = Optional.ofNullable(currentReview.get("text")).orElse("리뷰 내용 없음");
+                                    %>
+                                    <p class="fst-italic mb-2">
+                                        “<%= reviewText.length() > 100 ? reviewText.substring(0, 100) + "..." : reviewText %>”
+                                    </p>
+                                    <small class="text-muted">by <%= reviewAuthor %>님</small>
+                                    <% } else { %>
+                                    <p class="fst-italic mb-2">“아직 등록된 리뷰가 없습니다. 첫 리뷰를 작성해보세요!”</p>
+                                    <small class="text-muted">by Tripful</small>
+                                    <% } %>
+                                </div>
                             </div>
+                            <!-- 우측 하단 버튼 -->
+                            <a href="index.jsp?main=place/detailPlace.jsp&place_num=<%= place.getPlaceNum() %>"
+                               class="btn btn-outline-warning mt-2"
+                               style="position: absolute; bottom: 16px; right: 16px;">
+                                자세히 보기
+                            </a>
                         </div>
                     </div> <!-- card -->
                 </div>
