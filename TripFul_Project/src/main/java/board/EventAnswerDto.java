@@ -9,7 +9,14 @@ public class EventAnswerDto {
 	private Timestamp writeday;
 	private String event_idx;
 	private int likecount;
+	private boolean userHasLiked;
 	
+	public boolean isUserHasLiked() {
+		return userHasLiked;
+	}
+	public void setUserHasLiked(boolean userHasLiked) {
+		this.userHasLiked = userHasLiked;
+	}
 	public String getAnswer_idx() {
 		return answer_idx;
 	}
