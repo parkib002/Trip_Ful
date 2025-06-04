@@ -1,3 +1,4 @@
+<%@page import="login.SocialDto"%>
 <%@page import="org.apache.catalina.ha.backend.Sender"%>
 <%@page import="login.LoginDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -21,7 +22,7 @@
 </head>
 <body>
 <%	
-	
+		
 	session.invalidate();
 	session = request.getSession(true);
 
