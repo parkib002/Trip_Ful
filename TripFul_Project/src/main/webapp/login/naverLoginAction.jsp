@@ -1,3 +1,4 @@
+<%@page import="login.SocialDto"%>
 <%@page import="login.LoginDao"%>
 <%@page import="login.LoginDto"%>
 <%@ page import="java.net.URLEncoder"%>
@@ -11,6 +12,7 @@
 <%@ page import="org.json.simple.JSONArray"%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <%
 // --- 0. 초기 변수 설정 및 에러 메시지 초기화 ---
 String code = request.getParameter("code");
@@ -43,7 +45,7 @@ if (code == null || state == null) {
 	String clientSecret = "grEV0aBwgW"; // ★★★ 실제 Naver 클라이언트 시크릿으로 변경하세요. ★★★
 
 	// 3. 콜백 URL (Naver 개발자 센터에 등록된 URL과 일치해야 함)
-	String currentCallbackUrl = "http://localhost:8080/TripFul_Project/index.jsp?main=login/naverLoginAction.jsp";
+	String currentCallbackUrl = "http://localhost:8080/TripFul_Project/login/naverLoginAction.jsp";
 	String encodedRedirectURI = URLEncoder.encode(currentCallbackUrl, "UTF-8");
 
 	// --- 4. 액세스 토큰 요청 API 호출 ---
@@ -126,55 +128,65 @@ if (code == null || state == null) {
 				// 예: member 테이블에 신규 회원 추가, 기존 회원 소셜 계정 연결 등
 				// 세션에 로그인 정보 저장 후 메인 페이지로 리디렉션
 				LoginDao dao = new LoginDao();
-				if(dao.getMemberIdx("naver", providerId)==null){
-					
-					LoginDto dto = new LoginDto();
+				if (dao.getMemberIdx("naver", providerId) == null) {
 					memberBirth = memberBirth.replaceAll("-", "");
 					memberBirthYear = memberBirthYear.substring(2);
-					System.out.println();
-					dto.setBirth(memberBirthYear + memberBirth);
-					dto.setEmail(memberEmail);
-					dto.setName(memberName);
-					dto.setId(memberEmail.replaceAll("@.*", ""));
-					System.out.println(dto.toString());
-					dao.insertMember(dto);
-					
-					session.setAttribute("loginok", "user");
-					session.setAttribute("social","naver");
-					session.setAttribute("id",dto.getId());
-					response.sendRedirect("../index.jsp");
-					return;
-				}
-				else{
-					LoginDto dto = dao.getOneMember(dao.getIdwithIdx(dao.getMemberIdx("naver", providerId)));
-					session.setAttribute("loginok", "user");
-					session.setAttribute("social","naver");
-					session.setAttribute("id",dto.getId());
-					response.sendRedirect("../index.jsp");
-					return;
-				}
-			
-				
-				
-				
-			} else {
-				naverLoginErrorMessage = "네이버 프로필 정보가 응답에 포함되지 않았습니다.";
-			}
-		} else {
-			naverLoginErrorMessage = "프로필 정보 요청 실패 (응답 코드: " + profileResponseCode + "): "
-					+ profileRes.toString();
-		}
-	} else {
-		naverLoginErrorMessage = "액세스 토큰을 얻는 데 실패했습니다. 응답: " + res.toString();
-	}
-		} else {
-	naverLoginErrorMessage = "토큰 요청 실패 (응답 코드: " + responseCode + "): " + res.toString();
-		}
-	} catch (Exception pe) {
-		naverLoginErrorMessage = "JSON 파싱 오류: " + pe.getMessage() + ". 응답: " + pe.toString();
-		pe.printStackTrace();
-		naverLoginErrorMessage = "네이버 로그인 처리 중 예외 발생: " + pe.toString();
-		pe.printStackTrace();
-	}
+					SocialDto s_dto = new SocialDto();
+					s_dto.setSocial_provider("naver");
+					s_dto.setSocial_provider_key(providerId);
+					session.setAttribute("social", s_dto);
+%>
+<script>
+	$(opener.document).find("#tab-2").prop("checked",true);
+	$(opener.document).find("input[name='name']").val("<%=memberName%>").prop("readonly", true);
+	$(opener.document).find("input[name='email']").val("<%=memberEmail%>").prop("readonly", true);
+	$(opener.document).find("input[name='birth']").val("<%=memberBirthYear + memberBirth%>").prop("readonly", true);
+	window.close();
+</script>
+<%
+//session.setAttribute("loginok", "user");
+
+//session.setAttribute("id", dto.getId());
+//response.sendRedirect("../index.jsp");
+return;
+} else {
+LoginDto dto = dao.getOneMember(dao.getIdwithIdx(dao.getMemberIdx("naver", providerId)));
+if(dto.getAdmin()==1){
+	session.setAttribute("loginok", "admin");
+}
+else{
+	session.setAttribute("loginok", "user");
+}
+session.setAttribute("social", "naver");
+session.setAttribute("id", dto.getId());
+%>
+
+<script>
+	window.opener.document.location.href = "../index.jsp";
+	window.close();
+</script>
+
+<%
+return;
+}
+
+} else {
+naverLoginErrorMessage = "네이버 프로필 정보가 응답에 포함되지 않았습니다.";
+}
+} else {
+naverLoginErrorMessage = "프로필 정보 요청 실패 (응답 코드: " + profileResponseCode + "): " + profileRes.toString();
+}
+} else {
+naverLoginErrorMessage = "액세스 토큰을 얻는 데 실패했습니다. 응답: " + res.toString();
+}
+} else {
+naverLoginErrorMessage = "토큰 요청 실패 (응답 코드: " + responseCode + "): " + res.toString();
+}
+} catch (Exception pe) {
+naverLoginErrorMessage = "JSON 파싱 오류: " + pe.getMessage() + ". 응답: " + pe.toString();
+pe.printStackTrace();
+naverLoginErrorMessage = "네이버 로그인 처리 중 예외 발생: " + pe.toString();
+pe.printStackTrace();
+}
 }
 %>

@@ -15,7 +15,7 @@
     }
 %>
 
-<nav class="navbar navbar-light shadow px-4" style="height: 90px; position: relative; z-index: 1000;">
+<nav class="navbar navbar-light shadow px-4">
     <div class="container-fluid position-relative d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center flex-grow-1" style="min-width: 0; position: relative;">
             <button class="navbar-toggler d-block border-0 me-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu">
@@ -71,7 +71,7 @@
             <button class="btn btn-sm btn-outline-warning" onclick="location.href='index.jsp?main=login/login.jsp'">Login</button>
             <% } else { %>
             <span class="me-2 d-none d-md-inline">
-              <a href="index.jsp?main=page/myPage.jsp" class="username-link" >
+              <a href="index.jsp?main=login/MyPage.jsp" class="username-link" >
                 <strong><%= name %></strong>님
                   페이지
               </a>
@@ -81,7 +81,7 @@
         </div>
     </div>
 
-    <div class="collapse" id="mainMenu" style="position: absolute; top: 90px; left: 0; width: 100%; background-color: white; z-index: 1050;">
+    <div class="collapse" id="mainMenu" style="position: absolute; top: 90px; left: 0; background-color: white; z-index: 1050;">
         <ul class="navbar-nav px-4 py-3">
             <li class="nav-item"><a class="nav-link" href="index.jsp?main=/place/selectPlace.jsp">지역별 관광지</a></li>
             <li class="nav-item"><a class="nav-link" href="index.jsp?main=board/boardList.jsp&sub=event.jsp">이벤트</a></li>

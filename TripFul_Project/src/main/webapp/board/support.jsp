@@ -10,7 +10,7 @@
 <head>
 <meta charset="UTF-8">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<title>고객센터</title> <%-- Title 변경 --%>
+<title>고객센터</title>
 </head>
 <%
 String loginok=null;
@@ -82,7 +82,8 @@ List<BoardSupportDto> list=dao.getAllDatas(startNum, perPage);
 				if(loginok==null)
 				{%>
 					<a style="float: right; text-decoration: none; color: black;"
-					href="<%= request.getContextPath() %>/index.jsp?main=/login/login.jsp">
+					href="javascript:void(0);" 
+                    onclick="if(confirm('로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?')) { location.href='<%= request.getContextPath() %>/index.jsp?main=login/login.jsp'; } return false;">
 						<i class="bi bi-plus-square"></i>&nbsp;문의하기
 					</a>
 				<%}else{%>

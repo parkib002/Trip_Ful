@@ -12,6 +12,8 @@
 <meta charset="UTF-8">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 <title>Insert title here</title>
 <%
 	request.setCharacterEncoding("utf-8");
@@ -31,6 +33,9 @@
 	List<ReviewDto> list=dao.selectReview(num);	
 	
 	String loginok=(String)session.getAttribute("loginok");
+	
+	if (loginok == null) loginok = "";
+
 	
 %>
 <style type="text/css">
@@ -126,32 +131,92 @@ body {
     font-size: 14px;
     color: #666;
 }
+
 </style>
 </head>
 <script>
 $(function(){
 	
-	$("#like").click(function(){
-		
-		var num=$("#num").val()
-		
-		$.ajax({
+	let num="<%=num%>";
+	let loginok="<%=loginok == null ? "" : loginok%>";
+	
+	$.ajax({
+
+		type:"get",
+		url:"place/detailPlaceCountAction.jsp",
+		dataType:"json",
+		data:{"place_num":num},
+		success:function(res){
 			
-			type:"get",
-			url:"place/likeAction.jsp",
-			dataType:"json",
-			data:{"place_num":num},
-			success:function(res){
-				
-				var like=res.place_like;
-				
-				$("#likecount").text(like);
-				
-			}
-		})
+			
+			var count=res.place_count;
+			
+			$(".count").text("조회수: "+count);
+			
+		}
 		
 	})
+	
+	  // 1) 처음 로딩 시 좋아요 상태 체크
+	  if (loginok) {
+	    $.ajax({
+	      type: "get",
+	      url: "place/detailPlaceLikeAction.jsp",
+	      data: { "place_num": num, "action": "check" },
+	      dataType: "json",
+	      success: function (res) {
+	        if (res.liked) {
+	          $("#likeIcon").attr("src", "./image/places/red_heart.png");
+	        } else {
+	          $("#likeIcon").attr("src", "./image/places/white_heart.png");
+	        }
+	        if (res.place_like !== undefined) {
+	          $("#likecount").text(res.place_like);
+	        }
+	      }
+	    });
+	  } else {
+	    // 로그인 안했으면 흰 하트, 좋아요 수는 그냥 출력
+	    $("#likeIcon").attr("src", "./image/places/white_heart.png");
+	  }
+
+	  // 2) 좋아요 클릭 시 토글 호출
+	  $("#likeIcon").click(function () {
+	    if (!loginok) {
+	      alert("로그인 후 좋아요를 눌러주세요");
+	      return;
+	    }
+
+	    $.ajax({
+	      type: "get",
+	      url: "place/detailPlaceLikeAction.jsp",
+	      data: { "place_num": num },
+	      dataType: "json",
+	      success: function (res) {
+	        if (res.error) {
+	          alert(res.error);
+	          return;
+	        }
+
+	        if (res.place_like !== undefined) {
+	          $("#likecount").text(res.place_like);
+	        }
+
+	        if (res.liked) {
+	          $("#likeIcon").attr("src", "./image/places/red_heart.png");
+	        } else {
+	          $("#likeIcon").attr("src", "./image/places/white_heart.png");
+	        }
+	      },
+	      error: function (xhr, status, error) {
+	        console.error("좋아요 처리 실패:", error);
+	      }
+	    });
+	  });
+	
+
 })
+
 
   function initMap() {
     const map = new google.maps.Map(document.getElementById("map"), {
@@ -180,23 +245,59 @@ $(function(){
       }
     });
   } 
+  
+ function deletePlace(name,num){
+	 
+	 var a=confirm(name+"을(를) 정말로 삭제하시겠습니까?");
+	 
+	 if(a)
+		 location.href="index.jsp?main=place/deletePlaceAction.jsp?place_num="+num;
+ }
 </script>
 
 <script
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpVlcErlSTHrCz7Y4h3_VM8FTMkm9eXAc&libraries=places&callback=initMap"
   async defer></script>
 <body>
-<div class="container">
-        <h1 class="place-title" align="center"><%=dto.getPlace_name() %></h1>
+<div class="container" >
+        <h1 class="place-title" align="center"><%=dto.getPlace_name() %>
+        <%
+        	if("admin".equals(loginok)){
+        %>
+        
+<div class="flex gap-2" style="float: right;">
+  <!-- 수정 버튼 -->
+  <button class="flex items-center gap-1 text-white bg-blue-500 hover:bg-blue-600 text-xs px-2 py-1 rounded-md shadow-sm transition" type="button"
+   onclick="location.href='index.jsp?main=place/updatePlace.jsp?place_num=<%=num%>'">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M11 5h2m2 0h.01M12 20h.01M20.5 13.5L17 10l-6 6v4h4l5.5-5.5zM4 6h16M4 10h16M4 14h7" />
+    </svg>
+    <span>수정</span>
+  </button>
+  <!-- 삭제 버튼 -->
+  <button class="flex items-center gap-1 text-white bg-red-500 hover:bg-red-600 text-xs px-2 py-1 rounded-md shadow-sm transition" type="button"
+  onclick="deletePlace('<%=dto.getPlace_name()%>',<%=num%>)">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M6 18L18 6M6 6l12 12" />
+    </svg>
+    <span>삭제</span>
+  </button>
+</div>
+<%} %>
+        </h1>
+
+
         <div class="category-views d-flex justify-content-between align-items-center mb-2">
     	<p class="category m-0">카테고리: <%=dto.getPlace_tag() %></p>
-   	 	<p class="views m-0">조회수: <%=dto.getPlace_count() %></p>
+   	 	<p class="views m-0 count"></p>
    	 	<p class="views m-0">별점: <%=star==-1.0?"없음":star%></p>
    	 	<input type="hidden" id="num" value="<%=dto.getPlace_num()%>">
-<!-- 좋아요 아이콘과 텍스트 묶기 -->
+<!-- 좋아요 아이콘과 좋아요 수 -->
 <div class="d-flex align-items-center gap-1">
-  <img alt="좋아요" src="./image/places/white_heart.png" style="width: 25px; height: 25px;" id="like">
-  <span>좋아요: <span id="likecount"><%=dto.getPlace_like() %></span></span>
+  <img id="likeIcon" src="./image/places/white_heart.png" style="width: 25px; height: 25px; cursor: pointer;" alt="좋아요">
+  <span id="likecount"><%=dto.getPlace_like()%></span>
 </div>
 		</div>
         <div class="main-section">
