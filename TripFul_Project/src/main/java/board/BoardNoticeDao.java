@@ -195,5 +195,81 @@ public class BoardNoticeDao {
 	            db.dbClose(pstmt, conn);
 	        }
 	    }
+	    
+	    
+	 // BoardNoticeDao.java
+	 // ... (기존 메소드들은 그대로) ...
+
+	 /**
+	  * 공지사항 검색 결과의 전체 개수를 반환합니다.
+	  * @param keyword 검색어
+	  * @return 검색된 총 게시물 수
+	  */
+	 public int getSearchTotalCount(String keyword) {
+	     int total = 0;
+	     Connection conn = db.getConnection();
+	     PreparedStatement pstmt = null;
+	     ResultSet rs = null;
+	     // 제목 또는 내용에서 키워드 검색 (실제 DB 컬럼명 확인 필요)
+	     String sql = "select count(*) from tripful_notice where notice_title like ? or notice_content like ?";
+
+	     try {
+	         pstmt = conn.prepareStatement(sql);
+	         pstmt.setString(1, "%" + keyword + "%");
+	         pstmt.setString(2, "%" + keyword + "%");
+	         rs = pstmt.executeQuery();
+	         if (rs.next()) {
+	             total = rs.getInt(1);
+	         }
+	     } catch (SQLException e) {
+	         System.out.println("Notice Search Total Count Error: " + e.getMessage());
+	         e.printStackTrace();
+	     } finally {
+	         db.dbClose(rs, pstmt, conn);
+	     }
+	     return total;
+	 }
+
+	 /**
+	  * 키워드로 공지사항을 검색하고 페이징 처리된 목록을 반환합니다.
+	  * @param keyword 검색어
+	  * @param startNum 가져올 데이터의 시작 위치 (offset)
+	  * @param perPage 페이지당 보여줄 게시물 수
+	  * @return 검색된 공지사항 목록 (List<BoardNoticeDto>)
+	  */
+	 public List<BoardNoticeDto> searchNotices(String keyword, int startNum, int perPage) {
+	     List<BoardNoticeDto> list = new ArrayList<>();
+	     // 최신글이 위로 오도록 정렬 (notice_idx 또는 notice_writeday 기준)
+	     String sql = "select * from tripful_notice where notice_title like ? or notice_content like ? order by notice_idx desc limit ?, ?";
+	     Connection conn = db.getConnection();
+	     PreparedStatement pstmt = null;
+	     ResultSet rs = null;
+
+	     try {
+	         pstmt = conn.prepareStatement(sql);
+	         pstmt.setString(1, "%" + keyword + "%");
+	         pstmt.setString(2, "%" + keyword + "%");
+	         pstmt.setInt(3, startNum);
+	         pstmt.setInt(4, perPage);
+	         rs = pstmt.executeQuery();
+	         while (rs.next()) {
+	             BoardNoticeDto dto = new BoardNoticeDto();
+	             dto.setNotice_idx(rs.getString("notice_idx"));
+	             dto.setNotice_title(rs.getString("notice_title"));
+	             // dto.setNotice_content(rs.getString("notice_content")); // 목록에서는 보통 제목만
+	             dto.setNotice_writer(rs.getString("notice_writer"));
+	             dto.setNotice_writeday(rs.getTimestamp("notice_writeday"));
+	             dto.setNotice_readcount(rs.getInt("notice_readcount"));
+	             // 필요한 다른 필드들도 설정
+	             list.add(dto);
+	         }
+	     } catch (SQLException e) {
+	         System.out.println("Search Notices Error: " + e.getMessage());
+	         e.printStackTrace();
+	     } finally {
+	         db.dbClose(rs, pstmt, conn);
+	     }
+	     return list;
+	 }
 
 }

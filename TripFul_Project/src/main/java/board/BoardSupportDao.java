@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -307,4 +308,88 @@ public class BoardSupportDao {
         }
         return success;
     }
+    
+ // BoardSupportDao.java
+ // ... (기존 getTotalCount, getMaxNum, updateRestep, insertReboard, getData, updateReadCount, getAllDatas, getRepliesByRegroup, updateSupport, deleteSupport 메소드들은 그대로 둡니다) ...
+
+     // --- 통합 검색용 메소드 (수정된 부분) ---
+     /**
+      * 고객센터(Q&A) 검색 결과의 전체 개수를 반환합니다.
+      * @param keyword 검색어
+      * @return 검색된 총 게시물 수
+      */
+     public int getSearchSupportTotalCount(String keyword) {
+         int total = 0;
+         Connection conn = db.getConnection();
+         PreparedStatement pstmt = null;
+         ResultSet rs = null;
+         // qna_title 또는 qna_content에서 키워드 검색
+         String sql = "select count(*) from tripful_qna where qna_title like ? or qna_content like ?"; // 테이블명 및 컬럼명 수정
+
+         try {
+             pstmt = conn.prepareStatement(sql);
+             pstmt.setString(1, "%" + keyword + "%");
+             pstmt.setString(2, "%" + keyword + "%");
+             rs = pstmt.executeQuery();
+             if (rs.next()) {
+                 total = rs.getInt(1);
+             }
+         } catch (SQLException e) {
+             System.out.println("Support Search Total Count Error: " + e.getMessage());
+             e.printStackTrace();
+         } finally {
+             db.dbClose(rs, pstmt, conn);
+         }
+         return total;
+     }
+
+     /**
+      * 키워드로 고객센터(Q&A) 게시물을 검색하고 페이징 처리된 목록을 반환합니다.
+      * 검색 결과에는 원글과 답글이 섞여 나올 수 있으며, 정렬은 Q&A 특성에 맞게 regroup, restep 사용.
+      * @param keyword 검색어
+      * @param startNum 가져올 데이터의 시작 위치 (offset)
+      * @param perPage 페이지당 보여줄 게시물 수
+      * @return 검색된 Q&A 목록 (List<BoardSupportDto>)
+      */
+     public List<BoardSupportDto> searchSupport(String keyword, int startNum, int perPage) {
+         List<BoardSupportDto> list = new ArrayList<>(); // 반환 타입에 맞게 ArrayList 사용 가능
+         // 정렬 순서: 원글(regroup) 최신순(DESC), 같은 원글 내에서는 답글(restep) 순서대로(ASC)
+         String sql = "select * from tripful_qna where qna_title like ? or qna_content like ? order by regroup desc, restep asc limit ?,?"; // 테이블명 및 정렬 수정
+         Connection conn = db.getConnection();
+         PreparedStatement pstmt = null;
+         ResultSet rs = null;
+
+         try {
+             pstmt = conn.prepareStatement(sql);
+             pstmt.setString(1, "%" + keyword + "%");
+             pstmt.setString(2, "%" + keyword + "%");
+             pstmt.setInt(3, startNum);
+             pstmt.setInt(4, perPage);
+             rs = pstmt.executeQuery();
+             while (rs.next()) {
+                 BoardSupportDto dto = new BoardSupportDto(); // BoardSupportDto 사용
+                 dto.setQna_idx(rs.getString("qna_idx"));
+                 dto.setQna_category(rs.getString("qna_category"));
+                 dto.setQna_title(rs.getString("qna_title"));
+                 // dto.setQna_content(rs.getString("qna_content")); // 목록에서는 보통 제목만, 필요시 주석 해제
+                 dto.setQna_writer(rs.getString("qna_writer"));
+                 dto.setQna_img(rs.getString("qna_img"));
+                 dto.setQna_private(rs.getString("qna_private"));
+                 dto.setQna_writeday(rs.getTimestamp("qna_writeday"));
+                 dto.setQna_readcount(rs.getInt("qna_readcount"));
+                 dto.setRegroup(rs.getInt("regroup"));
+                 dto.setRestep(rs.getInt("restep"));
+                 dto.setRelevel(rs.getInt("relevel"));
+                 list.add(dto);
+             }
+         } catch (SQLException e) {
+             System.out.println("Search Support Error: " + e.getMessage()); // 에러 메시지 수정
+             e.printStackTrace();
+         } finally {
+             db.dbClose(rs, pstmt, conn);
+         }
+         return list;
+     }
+     
+     
 }

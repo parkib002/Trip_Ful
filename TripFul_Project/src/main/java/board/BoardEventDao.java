@@ -196,5 +196,76 @@ public class BoardEventDao {
 		        }
 		    }
 		    
-				
+		
+		    
+		 // --- 통합 검색용 메소드 추가 ---
+		    /**
+		     * 이벤트 검색 결과의 전체 개수를 반환합니다.
+		     * @param keyword 검색어
+		     * @return 검색된 총 이벤트 수
+		     */
+		    public int getSearchEventTotalCount(String keyword) {
+		        int total = 0;
+		        Connection conn = db.getConnection();
+		        PreparedStatement pstmt = null;
+		        ResultSet rs = null;
+		        String sql = "select count(*) from tripful_event where event_title like ? or event_content like ?";
+
+		        try {
+		            pstmt = conn.prepareStatement(sql);
+		            pstmt.setString(1, "%" + keyword + "%");
+		            pstmt.setString(2, "%" + keyword + "%");
+		            rs = pstmt.executeQuery();
+		            if (rs.next()) {
+		                total = rs.getInt(1);
+		            }
+		        } catch (SQLException e) {
+		            System.out.println("Event Search Total Count Error: " + e.getMessage());
+		            e.printStackTrace();
+		        } finally {
+		            db.dbClose(rs, pstmt, conn);
+		        }
+		        return total;
+		    }
+
+		    /**
+		     * 키워드로 이벤트를 검색하고 페이징 처리된 목록을 반환합니다.
+		     * @param keyword 검색어
+		     * @param startNum 가져올 데이터의 시작 위치 (offset)
+		     * @param perPage 페이지당 보여줄 게시물 수
+		     * @return 검색된 이벤트 목록 (List<BoardEventDto>)
+		     */
+		    public List<BoardEventDto> searchEvents(String keyword, int startNum, int perPage) {
+		        List<BoardEventDto> list = new ArrayList<>();
+		        String sql = "select * from tripful_event where event_title like ? or event_content like ? order by event_idx desc limit ?,?";
+		        Connection conn = db.getConnection();
+		        PreparedStatement pstmt = null;
+		        ResultSet rs = null;
+
+		        try {
+		            pstmt = conn.prepareStatement(sql);
+		            pstmt.setString(1, "%" + keyword + "%");
+		            pstmt.setString(2, "%" + keyword + "%");
+		            pstmt.setInt(3, startNum);
+		            pstmt.setInt(4, perPage);
+		            rs = pstmt.executeQuery();
+		            while (rs.next()) {
+		                BoardEventDto dto = new BoardEventDto();
+		                dto.setEvent_idx(rs.getString("event_idx"));
+		                dto.setEvent_title(rs.getString("event_title"));
+		                // dto.setEvent_content(rs.getString("event_content")); // 필요시
+		                dto.setEvent_writer(rs.getString("event_writer"));
+		                dto.setEvent_writeday(rs.getTimestamp("event_writeday"));
+		                dto.setEvent_readcount(rs.getInt("event_readcount"));
+		                dto.setEvent_img(rs.getString("event_img"));
+		                list.add(dto);
+		            }
+		        } catch (SQLException e) {
+		            System.out.println("Search Events Error: " + e.getMessage());
+		            e.printStackTrace();
+		        } finally {
+		            db.dbClose(rs, pstmt, conn);
+		        }
+		        return list;
+		    }
 }
