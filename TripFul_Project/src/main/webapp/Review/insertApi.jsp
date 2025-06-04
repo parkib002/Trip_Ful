@@ -61,7 +61,9 @@
              date = sdf.format(d);
          }
          apilist.put("date", date);
-       	 apilist.put("photo", "null");
+       	 apilist.put("photo1", "null");
+         apilist.put("photo2", "null");
+         apilist.put("photo3", "null");
          apilist.put("read", "Google");
          //api 리뷰 리스트 병합 리스트에 추가
          merged.add(apilist);    // Google 리뷰
@@ -79,8 +81,28 @@
         review.put("author", map.get("review_id"));	
         review.put("rating", map.get("review_star"));
         review.put("text", map.get("review_content"));       
-        review.put("date", reviewData);       
-        review.put("photo", map.get("review_img"));
+        review.put("date", reviewData);               
+        
+        String review_img=map.get("review_img");
+        if(review_img!=null)
+        {
+        	String [] review_imgs=review_img.split(",");
+        	for(int i=0;i<review_imgs.length;i++)
+        	{
+        		if(review_imgs.length>i)
+        		{
+        			review.put("photo"+(i+1), review_imgs[i].trim());
+        		}else{
+        			review.put("photo"+(i+1),"");
+        		}
+        	}
+        }else{
+        	review.put("photo1", "");
+            review.put("photo2", "");
+            review.put("photo3", "");
+        }
+        
+        
         review.put("read","DB");
         review.put("review_idx", map.get("review_idx"));
         merged.add(review);

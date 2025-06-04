@@ -40,7 +40,7 @@
 	String loginok=(String)session.getAttribute("loginok");
 	
 	//관광지 이름 얻기
-	String place_name=rdao.getPlaceName(review_id);	
+	String place_name=rdao.getPlaceName(place_num);	
 	
 	//관광지 이름에 해당하는 리뷰리스트
 	List<HashMap<String,String>> list=rdao.getPlaceList(place_name);
@@ -52,16 +52,10 @@ $(function() {
 	   $("#modalBtn").click(function() {	  
 		   
 		// 폼 초기화 로직
-		$("#modalform")[0].reset(); // 폼 필드 초기화
-		
-		// 버튼 텍스트를 '게시'로 변경
-	    submitReviewBtn.text("게시");
-		$("#file").val(""); //img 값 초기화
-		$("#review_star").val(0); // 별점 값 0으로 초기화
-		$("#myModal .star_rating .star").removeClass('on'); // 별점 UI 초기화
-		$("#show").find(".img-wrapper").remove(); // 이미지 미리보기 제거
-		$(".btn-upload").show(); // 이미지 업로드 버튼 다시 표시
-		   
+			if(typeof resetModalForm=="function")
+		   {
+				resetModalForm();
+		   }
 		if(<%=loginok!=null%>){
 			openModal();
 		}else{
@@ -81,6 +75,7 @@ $(function() {
 			          }
 			        })
 		}
+		 
 	});  	   	
 	   loadReviews();
 });
@@ -88,6 +83,7 @@ $(function() {
 function loadReviews() {
 	var place_num="<%=place_num%>";
 	var review_id="<%=review_id%>";
+	var loginok="<%=loginok%>";
 	//console.log(place_num);
 	$.ajax({
 		type:"post",
@@ -97,13 +93,14 @@ function loadReviews() {
 		success:function(res){
 			 var carouselItemsHtml = ""; // 각 카드를 직접 여기에 넣음
 	            var reviews = res.reviews; // 리뷰 리스트
+	            var totCnt=0;
+                var totStar = 0;
+                var starCounts = { "5": 0, "4": 0, "3": 0, "2": 0, "1": 0 }; // 각 별점별 개수 저장
 	            
 	            if (reviews && reviews.length > 0) { // 리뷰 데이터가 있는지 확인
+	            	var totCnt = reviews.length;
 	            	
-	            	var carouselItemsHtml = "";
-	                var totCnt = reviews.length;
-	                var totStar = 0;
-	                var starCounts = { '5': 0, '4': 0, '3': 0, '2': 0, '1': 0 }; // 각 별점별 개수 저장
+	                
 	                
 	                reviews.forEach(function(r){	                   
 
@@ -121,7 +118,7 @@ function loadReviews() {
 	                    reviewCard += "<div class='dropdown-menu'>";
 
 	                    //console.log(r.author, review_id);
-	                    				if(r.author == review_id || review_id=="adminTripful" && r.read=="DB")
+	                    				if(r.author == review_id || loginok=="admin" && r.read=="DB")
 	                    					{
 	                    					reviewCard += "<button type='button' class='delete-btn' review_id='" + r.author + "' review_idx='"+r.review_idx+"'>삭제</button>";               			        
 	                    			        
@@ -137,6 +134,8 @@ function loadReviews() {
 	                    reviewCard += "<div class='star_rating2 mb-2'>";
 	                    reviewCard += "<span>" + r.rating + "</span>&nbsp;&nbsp;";
 						reviewCard += "<input type='hidden' id='rating' name='rating' value='"+r.rating+"'>"
+						
+						
 	                    // 별점 아이콘 생성
 	                    for (var i = 0; i < Number(r.rating); i++) {
 
@@ -147,12 +146,20 @@ function loadReviews() {
 	                        reviewCard += "<span class='rating off'></span>"; // 비활성 별
 	                    }
 	                    reviewCard += "</div>";
-
-	                    // 리뷰 이미지 (사진이 있을 경우에만 추가)
-	                    if (r.photo !== "null" && r.photo !== "") {
-	                        reviewCard += "<div class='review-image-container mb-2'>";
-	                        reviewCard += "<img src='save/" + r.photo + "' class='photo' photo='"+r.photo+"'>";
-	                        reviewCard += "</div>";
+						
+	                    
+	                    
+	                    var photos = [];
+	                    if (r.photo1 && r.photo1 !== "null" && r.photo1 !== "") photos.push(r.photo1);
+	                    if (r.photo2 && r.photo2 !== "null" && r.photo2 !== "") photos.push(r.photo2);
+	                    if (r.photo3 && r.photo3 !== "null" && r.photo3 !== "") photos.push(r.photo3);
+	                    
+	                    if (photos.length > 0) {
+	                        photos.forEach(function(photoUrl) {
+	                            reviewCard += "<div class='img-con mb-2'>";
+	                            reviewCard += "<img src='save/" + photoUrl + "' class='photo' photo='"+photoUrl+"'>";
+	                            reviewCard += "</div>";
+	                        });
 	                    }
 	                    
 
@@ -170,42 +177,35 @@ function loadReviews() {
 	                    carouselItemsHtml += reviewCard;
 	                    
 	                    // 별점 통계 계산
-	                    totStar += r.rating;
-	                    starCounts[r.rating]++; // 해당 별점 개수 증가
+	                    totStar += parseFloat(r.rating);
+	                    starCounts[parseFloat(r.rating)]++; // 해당 별점 개수 증가
 	                });
+	              
 	            } else {
 	                // 리뷰가 없을 경우 대체 메시지
-	                carouselInnerHtml = "";
-	                carouselInnerHtml += "<div class='item'>";
-	                carouselInnerHtml += "    <div class='card p-3 m-2 text-center'>";
-	                carouselInnerHtml += "        <p>아직 등록된 리뷰가 없습니다.</p>";
-	                carouselInnerHtml += "    </div>";
-	                carouselInnerHtml += "</div>";
-	            }
-	            
+	                carouselItemsHtml = "";
+	                carouselItemsHtml += "<div class='item'>";
+	                carouselItemsHtml += "    <div class='card p-3 m-2 text-center'>";
+	                carouselItemsHtml += "        <p>아직 등록된 리뷰가 없습니다.</p>";
+	                carouselItemsHtml += "    </div>";
+	                carouselItemsHtml += "</div>";
+	            }	           
 	            // ⭐⭐⭐ 여기부터 별점 통계 진행 바 업데이트 로직 ⭐⭐⭐
                 var avgRating = totCnt > 0 ? (totStar / totCnt).toFixed(1) : 0.0;
                 $("#avgRating").text(avgRating);
                 $("#totReview").text(totCnt);
 
                 for (let i = 5; i >= 1; i--) {
-                    var percentage = totCnt > 0 ? (starCounts[i] / totCnt * 100).toFixed(0) : 0;
+                    var percentage = totCnt > 0 ? (starCounts[i] / totCnt * 100).toFixed(1) : 0.0;
                     $('.progress-bar.' + getStarClass(i)).css('width', percentage + '%');
-                    $('.progress-bar.' + getStarClass(i)).closest('.rating-row').find('.rating-percentage').text(percentage + '%');
+                    $('.progress-bar.' + getStarClass(i)).closest('.rating-row').find('.rating-percentage').text(percentage + "% ("+starCounts[i]+")");
                 }
-	            
 
 	        	 // 기존 캐러셀 파괴 및 새 HTML 삽입 후 Owl Carousel 초기화
 	            var owl = $('#reviewCarousel');
 	            if (owl.data('owl.carousel')) { // Owl Carousel이 이미 초기화되어 있다면
 	                owl.owlCarousel('destroy'); // 파괴	
-	                $('#avgRating').text('0.0');
-	                $('#totReview').text('0');
-	                // 모든 진행 바 0%로 초기화
-	                for (let i = 5; i >= 1; i--) {
-	                    $('.progress-bar.' + getStarClass(i)).css('width', '0%');
-	                    $('.progress-bar.' + getStarClass(i)).closest('.rating-row').find('.rating-percentage').text('0%');
-	                }
+	                 
 	            }
 	            owl.html(carouselItemsHtml); // HTML 내용 업데이트
 
@@ -236,11 +236,28 @@ function loadReviews() {
 	        console.error("AJAX 실패:", status, error);
 	        console.log("응답 텍스트:", xhr.responseText);
 	        alert("리뷰 데이터를 불러오는 중 오류가 발생했습니다.");
+	  	    // ⭐ 오류 시에도 통계 초기화 ⭐
+            $('#avgRating').text('0.0');
+            $('#totReview').text('0');
+            for (let i = 5; i >= 1; i--) {
+                $('.progress-bar.' + getStarClass(i)).css('width', '0%');
+                $('.progress-bar.' + getStarClass(i)).closest('.rating-row').find('.rating-percentage').text('0%');
+            }
 	    }   
 	});	
-	
-}	
-	
+}   
+//별점 클래스명을 반환하는 헬퍼 함수
+function getStarClass(star) {
+    switch (star) {
+        case 5: return 'five-star';
+        case 4: return 'four-star';
+        case 3: return 'three-star';
+        case 2: return 'two-star';
+        case 1: return 'one-star';
+        default: return '';
+    }
+
+}
 
 </script>
 </head>
@@ -293,12 +310,11 @@ function loadReviews() {
 </div>
 	
 	<div class="container mt-3">
-		<form class="updatefrm" enctype="multipart/form-data" >
-		
+			
 			<div id="reviewCarousel" class="owl-carousel owl-theme">  
 								
 			</div>			
-		</form>
+		
 	</div>
 </div>
 	
@@ -313,16 +329,15 @@ function loadReviews() {
 	<div id="myModal" class="modal">
 		<form id="modalform" class="modalfrm" enctype="multipart/form-data">			
 			<div align="center" class="modal-head">
-			<input type="hidden" name="place_num" value="<%=place_num%>">
-			<input type="hidden" name="review_idx" value="">
-			<input type="hidden" name="photo" value="">
+				<input type="hidden" name="place_num" value="<%=place_num%>">
+				<input type="hidden" name="review_idx" value="">			
 				<h4><%=place_name %></h4>
+				<br>
 			</div>
 			<div class="modal-content">
 				<table>
-					<tr>
-						
-						<td>
+					<tr>						
+						<td class="review_id">
 						<input type="hidden" name="review_id" value="<%=review_id%>">
 						<b><%=review_id %></b><br> <br>
 						</td>
@@ -344,11 +359,28 @@ function loadReviews() {
 					</tr>
 					<tr>
 						<td>
-							<div id="show" >
-								<label class="btn-upload">
-									<i class="bi bi-camera-fill camera"></i>
-									<input type="file" name="review_img" id="file">
-								</label>
+							<div class="upload-btns">
+								<div id="show1"  class="img-con">
+									<label class="btn-upload">
+										<i class="bi bi-camera-fill camera"></i>
+										<input type="file" name="review_img1" id="file1" class="review_img">
+									</label>
+									<input type="hidden" name="photo1" value="" class="upload_img">
+								</div>
+								<div id="show2" class="img-con" >
+									<label class="btn-upload">
+										<i class="bi bi-camera-fill camera"></i>
+										<input type="file" name="review_img2" id="file2" class="review_img">
+									</label>
+									<input type="hidden" name="photo2" value="" class="upload_img">
+								</div>
+								<div id="show3"class="img-con" >
+									<label class="btn-upload">
+										<i class="bi bi-camera-fill camera"></i>
+										<input type="file" name="review_img3" id="file3" class="review_img">
+										<input type="hidden" name="photo3" value="" class="upload_img">
+									</label>
+								</div>
 							</div>
 							<br><br>
 						</td>
@@ -362,9 +394,9 @@ function loadReviews() {
 				
 			</div>
 		</form>
-	</div>
-	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	</div>	
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+	 
 	 <script src="Review/JavaScript/ModalJs.js"></script>
 	 <script src="Review/JavaScript/reviewListJs.js"></script>
 </body>

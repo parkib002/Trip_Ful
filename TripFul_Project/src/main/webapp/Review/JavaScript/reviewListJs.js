@@ -48,16 +48,3 @@ $(document).on("click", ".delete-btn", function(){
 				        });
 });
 
-
-// 별점 클래스명을 반환하는 헬퍼 함수
-function getStarClass(star) {
-    switch (star) {
-        case 5: return 'five-star';
-        case 4: return 'four-star';
-        case 3: return 'three-star';
-        case 2: return 'two-star';
-        case 1: return 'one-star';
-        default: return '';
-    }
-}
-

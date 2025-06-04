@@ -5,7 +5,7 @@ var closeBtn = $("#closeBtn");
 var submitReviewBtn = $("#btn-write"); // #btn-write ID를 가진 버튼이 '게시'/'수정' 역할
 
 // 마우스가 눌렸을 때 (mousedown) 모달 내에 있었는지 추적하는 변수
-var mouseEvent = false;
+let mouseEvent = false;
 
 // --- 공통 함수들 ---
 
@@ -36,8 +36,13 @@ function resetModalForm() {
     $("#modalform")[0].reset(); // 폼 필드 초기화
     $("#review_star").val(0); // 별점 값 0으로 초기화
     $("#myModal .star_rating .star").removeClass('on'); // 별점 UI 초기화 (모든 별 'on'클래스 제거)
-    $("#show").find(".img-wrapper").remove(); // 이미지 미리보기 제거
-    $(".btn-upload").show(); // 이미지 업로드 버튼 다시 표시
+    $(".img-con").find(".img-wrapper").remove(); // 이미지 미리보기 제거
+    $(".img-con").find(".btn-upload").show(); // 이미지 업로드 버튼 다시 표시	
+	
+
+	// 모든 hidden photo input 초기화
+	$(".upload_img").val("");
+	
     submitReviewBtn.text("게시"); // 버튼 텍스트를 '게시'로 설정
     $("input[name='review_idx']").val(""); // review_idx 숨김 필드 초기화
     $(".review_content").val(""); // textarea 내용도 초기화 (reset()으로 안될 수 있음)
@@ -66,31 +71,25 @@ function updateModalData(reviewItem) {
 
     var getcontent = reviewItem.find("p.card-text").text();
     $(".review_content").val(getcontent); // textarea에 내용 채우기
-
-    var getimg = reviewItem.find("img.photo").attr("src"); // 이미지값 가져오기
-    var btnUpload = $(".btn-upload");
-    var showContainer = $("#show");
-	var fileName = getimg ? getimg.substring(getimg.lastIndexOf('/') + 1) : "";
 	
-	//console.log(fileName);
-	}
-	/*modalBtn.click(function() {
-			toggleModal();
-		});*/
-
-	
-    showContainer.find(".img-wrapper").remove(); // 기존 이미지 미리보기 삭제
-    if (getimg && getimg !== "null" && getimg !== "undefined" && getimg !== "") { // 이미지 유효성 검사
-        btnUpload.hide();
-        
-        showContainer.append("<div class='img-wrapper'><img id='showimg' src='" + getimg + "'><i class='bi bi-x img-icon'></i></div>");
-		$("input[name='photo']").val(fileName);
-    } else {
-        btnUpload.show(); // 이미지가 없으면 업로드 버튼 표시
-		$("input[name='photo']").val("");
-    }
 	
 
+	var photo= reviewItem.find(".photo");
+	photo.each(function(idx){
+		if(idx<3){
+			var getSrc=$(this).attr("src");
+			if(getSrc && getSrc!=null && getSrc!="undefined" && getSrc!=""){
+				var currentCon=$("#show"+(idx+1));
+				var fileName= getSrc.substring(getSrc.lastIndexOf("/")+1);
+				currentCon.find(".btn-upload").hide();
+				currentCon.append("<div class='img-wrapper'><img id='showimg' src='" + getSrc + "'><i class='bi bi-x img-icon'></i></div>");
+				currentCon.find("input[name='photo" + (idx + 1) + "']").val(fileName);
+			}
+			
+		}
+	});
+	
+}
 
 
 // --- 이벤트 핸들러 ---
@@ -143,17 +142,26 @@ submitReviewBtn.click(function(e) {
 });
 
 // 마우스가 눌렸을 때 (mousedown) 모달 내에 있었는지 여부 추적
-$(modal).mousedown(function() {
-    mouseEvent = true;
-});
-// 마우스가 떼어졌을 때 (mouseup) 모달 내에 있었는지 여부 초기화
-$(modal).mouseup(function() {
-    mouseEvent = false;
+$(modal).mousedown( function(e) {
+    // 클릭된 요소가 모달(회색 배경) 자신일 때만 mouseEvent를 true로 설정
+    // 즉, 모달 콘텐츠 내부를 클릭하면 mouseEvent는 false로 유지됩니다.
+    if ($(e.target).is(modal)) {
+        mouseEvent = true;
+    } else {
+        mouseEvent = false;
+    }
 });
 
-$(window).click(function(event) {
+//stopPropagation()메서드로 이벤트가 부모 요소로 전파되는 것을 막기
+$('#myModal .modal-content').mousedown( function(e) {
+    e.stopPropagation(); 
+});
+
+
+$(window).click(function(e) {
+	
     // 모달의 검은색 배경 부분이 클릭된 경우 닫히도록 하는 코드
-    if ($(event.target).is(modal) && !mouseEvent) {
+    if ($(e.target).is(modal) && !mouseEvent) {
         closeModalAndRefresh();
     }
 });
@@ -173,14 +181,23 @@ $(".star_rating .star").click(function() {
 });
 
 // 파일 선택 이벤트
-$("#file").change(function() {
-    const file = this.files[0];
+$(".review_img").change(function() {
+
+    var file = this.files[0];
+	var currentImg=$(this);
+	var currentCon=currentImg.closest(".img-con");
+	var btnUpload = currentCon.find('.btn-upload');
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
-            $("#show").find(".img-wrapper").remove();
-            $(".btn-upload").hide();
-            $("#show").append("<div class='img-wrapper'><img id='showimg' src='" + e.target.result + "'><i class='bi bi-x img-icon'></i></div>");
+		
+        reader.onload = function(e) {			 
+			
+            currentCon.find(".img-wrapper").remove();
+            btnUpload.hide();
+            currentCon.append("<div class='img-wrapper'><img id='showimg' src='" + e.target.result + "'><i class='bi bi-x img-icon'></i></div>");
+			var inputName=currentImg.attr("name").replace("review_img", "photo");
+			
+			$("input[name='"+inputName+"']").val(file.name);
         };
         reader.readAsDataURL(file);
     }
@@ -188,15 +205,17 @@ $("#file").change(function() {
 
 // 이미지 클릭 시 파일 선택 다시 열기
 $(document).on("click", "#showimg", function() {
-    $("#file").click();
+	var currentCon=$(this).closest(".img-con");
+    currentCon.find(".review_img").click();
 });
 
 // 이미지 삭제 아이콘 클릭 시
 $(document).on("click", ".img-icon", function(e) {
     e.stopPropagation();
-    $(".img-wrapper").hide();
-    $(".btn-upload").show();
-	$("input[name='photo']").val("");
+	var currentCon=$(this).closest(".img-con");
+    currentCon.find(".img-wrapper").hide();
+    currentCon.find(".btn-upload").show();
+	currentCon.find(".upload_img").val("");
 });
 
 

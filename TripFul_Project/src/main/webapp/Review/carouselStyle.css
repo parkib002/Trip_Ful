@@ -1,11 +1,13 @@
 @charset "UTF-8";
 
+
+
 /* 캐러셀 내 카드 스타일 (Bootstrap 기본 카드 외 추가 스타일) */
 .item .card {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    min-height: 400px; /* 카드 최소 높이 설정 (내용이 적을 때 보기 좋게) */
+    min-height: 420px; /* 카드 최소 높이 설정 (내용이 적을 때 보기 좋게) */
     display: flex;
     flex-direction: column;
     
@@ -252,16 +254,8 @@ i.category:hover {
     transition: width 0.5s ease-in-out; /* 너비 변경 시 애니메이션 */
 }
 
-/* 각 별점별로 다른 색상을 원한다면 추가 */
-.progress-bar.five-star { background-color: #28a745; /* 초록색 */ }
-.progress-bar.four-star { background-color: #17a2b8; /* 하늘색 */ }
-.progress-bar.three-star { background-color: #ffc107; /* 노란색 */ }
-.progress-bar.two-star { background-color: #fd7e14; /* 주황색 */ }
-.progress-bar.one-star { background-color: #dc3545; /* 빨간색 */ }
-
-
 .rating-percentage {
-    width: 40px; /* 퍼센트 텍스트의 너비 */
+    width: 120px; /* 퍼센트 텍스트의 너비 */
     text-align: right;
     font-size: 0.9em;
     color: #555;
