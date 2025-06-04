@@ -173,7 +173,7 @@
                     <div class="card-icon mb-3"><i class="bi bi-geo-alt-fill"></i></div>
                     <h5 class="card-title">여행지 관리</h5>
                     <p class="card-text text-muted small mb-3">등록된 여행지를 관리합니다.</p>
-                    <a href="../place/insertPlace.jsp" class="btn btn-primary w-100">이동</a>
+                    <a href="index.jsp?main=place/selectPlace.jsp" class="btn btn-primary w-100">이동</a>
                 </div>
             </div>
         </div>
@@ -183,7 +183,7 @@
                     <div class="card-icon mb-3"><i class="bi bi-chat-left-text-fill"></i></div>
                     <h5 class="card-title">리뷰 관리</h5>
                     <p class="card-text text-muted small mb-3">사용자 리뷰를 관리합니다.</p>
-                    <a href="index.jsp?main=admin/reviewManage.jsp" class="btn btn-primary w-100">이동</a>
+                    <a href="index.jsp?main=Review/allReviews.jsp" class="btn btn-primary w-100">이동</a>
                 </div>
             </div>
         </div>
@@ -203,7 +203,7 @@
                     <div class="card-icon mb-3"><i class="bi bi-megaphone-fill"></i></div>
                     <h5 class="card-title">공지사항 관리</h5>
                     <p class="card-text text-muted small mb-3">공지사항을 등록하고 수정합니다.</p>
-                    <a href="index.jsp?main=admin/noticeManage.jsp" class="btn btn-primary w-100">이동</a>
+                    <a href="index.jsp?main=board/boardList.jsp&sub=notice.jsp" class="btn btn-primary w-100">이동</a>
                 </div>
             </div>
         </div>

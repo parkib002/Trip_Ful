@@ -4,7 +4,10 @@
 <%
     String myid = null;
     String name = null;
+    String loginok = null;
+
     if (session.getAttribute("loginok") != null) {
+        loginok = (String) session.getAttribute("loginok");
         myid = (String) session.getAttribute("id");
 
         if (myid != null) {
@@ -71,11 +74,14 @@
             <button class="btn btn-sm btn-outline-warning" onclick="location.href='index.jsp?main=login/login.jsp'">Login</button>
             <% } else { %>
             <span class="me-2 d-none d-md-inline">
-              <a href="index.jsp?main=login/MyPage.jsp" class="username-link" >
-                <strong><%= name %></strong>님
-                  페이지
-              </a>
-            </span>
+                    <a href="index.jsp?main=<%=
+                        "admin".equals(loginok)
+                        ? "page/adminMain.jsp"
+                        : "login/MyPage.jsp"
+                    %>" class="username-link">
+                        <strong><%= name %></strong>님 페이지
+                    </a>
+                </span>
             <button class="btn btn-sm btn-outline-danger" onclick="location.href='login/logoutAction.jsp'">Logout</button>
             <% } %>
         </div>
