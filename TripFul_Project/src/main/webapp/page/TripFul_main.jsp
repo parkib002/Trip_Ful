@@ -78,7 +78,7 @@
                 <!-- 리뷰 -->
                 <div class="col-md-6">
                     <div class="bg-light p-4 rounded-4 shadow-sm border-start border-5 border-warning h-100 d-flex flex-column justify-content-center">
-                        <h6 class="fw-bold mb-2"><%= place.getPlace_name() %>에 대한 여행자의 리뷰</h6>
+                        <h6 class="fw-bold mb-2"><%= place.getPlaceName() %>에 대한 여행자의 리뷰</h6>
                         <p class="fst-italic mb-2">“정말 인상적인 장소였습니다. 추천해요!”</p>
                         <small class="text-muted">by 여행자</small>
             </div>
