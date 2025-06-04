@@ -58,7 +58,7 @@
 		if(chk!=null){
 			session.setAttribute("rememberId", "ok");
 		}
-		response.sendRedirect("../index.jsp");
+		response.sendRedirect("../page/adminMain.jsp");
 
 	}
 %>
