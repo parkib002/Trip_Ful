@@ -89,12 +89,14 @@ public class ReviewDao {
 		return Place_code;
 	}
 	
+	
+	
 	//관광지 전체리스트
 	public List<HashMap<String, String>> getPlaceList(String place_num)
 	{
 		String sql="select r.review_idx, r.review_id, r.review_content, r.review_img, r.review_star, r.review_writeday, p.place_num "
 				+ "from tripful_review r,tripful_place p "
-				+ "where r.place_num=p.place_num and p.place_num=?";
+				+ "where r.place_num=p.place_num and p.place_num=? order by review_idx desc";
 		
 		List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
 		
@@ -132,6 +134,81 @@ public class ReviewDao {
 		return list;
 	}
 	
+
+	//리뷰 1개의 데이타 
+
+	public ReviewDto getOneData(String review_idx) {
+		ReviewDto dto=new ReviewDto();
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql="select * from tripful_review where review_idx=?";
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, review_idx);
+			rs=pstmt.executeQuery();
+			if(rs.next())
+			{
+				dto.setReview_idx(rs.getString("review_idx"));
+				dto.setReview_id(rs.getString("review_id"));
+				dto.setReview_content(rs.getString("review_content"));
+				dto.setReview_img(rs.getString("review_img"));
+				dto.setReview_star(rs.getDouble("review_star"));
+				dto.setReview_writeday(rs.getTimestamp("review_writeday"));
+				dto.setPlace_num(rs.getString("place_num"));
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dto;
+		
+	}
+	
+
+	//리뷰 업데이트
+	public void updateReview(ReviewDto dto)
+	{
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		String sql="update tripful_review set review_content=?, review_img=?, review_star=? where review_idx=?";
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getReview_content());
+			pstmt.setString(2, dto.getReview_img());
+			pstmt.setDouble(3, dto.getReview_star());
+			pstmt.setString(4, dto.getReview_idx());
+			pstmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(pstmt, conn);
+		}
+		
+	}
+	
+	//리뷰 삭제
+	public void deleteReview(String review_idx)
+	{
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		String sql="delete from tripful_review where review_idx=?";
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, review_idx);
+			pstmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(pstmt, conn);
+		}		
+	}
+	
+
 	public double getAverageRatingByPlace(String place_num) {
 	    
 			Connection conn=db.getConnection();

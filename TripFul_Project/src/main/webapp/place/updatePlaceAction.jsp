@@ -8,17 +8,7 @@
 <%@page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy"%>
 <%@page import="com.oreilly.servlet.MultipartRequest"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-<title>Insert title here</title>
-</head>
-<body>
+
 <%
 String realPath = getServletContext().getRealPath("/save");
 int uploadSize = 1024 * 1024 * 10;
@@ -33,16 +23,18 @@ try {
     String continentname = multi.getParameter("continent_name");
     String tag = multi.getParameter("place_tag");
     String content = multi.getParameter("place_content");
+    String num = multi.getParameter("num");
 
     StringBuilder imgUrlBuilder = new StringBuilder();
 
-    Pattern imgPattern = Pattern.compile("<img[^>]+src\\s*=\\s*\"(data:image/[^;]+;base64,[^\"]+)\"[^>]*>");
-    Matcher matcher = imgPattern.matcher(content);
+    // 1. base64 이미지 찾기 & 파일 저장
+    Pattern base64Pattern = Pattern.compile("<img[^>]+src\\s*=\\s*\"(data:image/[^;]+;base64,[^\"]+)\"[^>]*>");
+    Matcher base64Matcher = base64Pattern.matcher(content);
 
     StringBuffer contentBuffer = new StringBuffer();
 
-    while (matcher.find()) {
-        String base64Image = matcher.group(1);
+    while (base64Matcher.find()) {
+        String base64Image = base64Matcher.group(1);
         String[] base64Data = base64Image.split(",");
         if (base64Data.length > 1) {
             byte[] imageBytes = Base64.getDecoder().decode(base64Data[1]);
@@ -58,11 +50,30 @@ try {
             if (imgUrlBuilder.length() > 0) imgUrlBuilder.append(",");
             imgUrlBuilder.append(savePath);
         }
-        matcher.appendReplacement(contentBuffer, "");  // 이미지 태그 제거
+        // base64 이미지 태그는 삭제 (빈 문자열로 교체)
+        base64Matcher.appendReplacement(contentBuffer, "");
     }
-    matcher.appendTail(contentBuffer);
-    content = contentBuffer.toString(); // 이미지 태그 제거된 텍스트
+    base64Matcher.appendTail(contentBuffer);
+    String contentWithoutBase64 = contentBuffer.toString();
 
+    // 2. 기존 'save/...' 경로 가진 <img> 태그에서 이미지 경로 추출
+    Pattern saveImgPattern = Pattern.compile("<img[^>]+src\\s*=\\s*\"(save/[^\"]+)\"[^>]*>", Pattern.CASE_INSENSITIVE);
+    Matcher saveImgMatcher = saveImgPattern.matcher(contentWithoutBase64);
+
+    contentBuffer = new StringBuffer();
+
+    while (saveImgMatcher.find()) {
+        String imgSrc = saveImgMatcher.group(1);
+        if (imgUrlBuilder.length() > 0) imgUrlBuilder.append(",");
+        imgUrlBuilder.append(imgSrc);
+        // <img> 태그는 제거
+        saveImgMatcher.appendReplacement(contentBuffer, "");
+    }
+    saveImgMatcher.appendTail(contentBuffer);
+
+    String finalContent = contentBuffer.toString();
+
+    // 3. DTO 세팅
     PlaceDto dto = new PlaceDto();
     dto.setPlace_name(pname);
     dto.setPlace_addr(paddr);
@@ -70,20 +81,17 @@ try {
     dto.setCountry_name(countryname);
     dto.setContinent_name(continentname);
     dto.setPlace_tag(tag);
-    dto.setPlace_content(content);
+    dto.setPlace_content(finalContent); // img 태그 모두 제거된 HTML
     dto.setPlace_img(imgUrlBuilder.length() > 0 ? imgUrlBuilder.toString() : "");
+    dto.setPlace_num(num);
 
     PlaceDao dao = new PlaceDao();
-    dao.insertPlace(dto);
-    
-    response.sendRedirect("../index.jsp?main=place/selectPlace.jsp");
-    return;
+    dao.updatePlace(dto);
 
 } catch (Exception e) {
     e.printStackTrace();
     out.println("오류 발생: " + e.getMessage());
 }
-
 %>
-</body>
-</html>
+
+

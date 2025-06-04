@@ -1,25 +1,27 @@
+<%@page import="place.PlaceDto"%>
+<%@page import="place.PlaceDao"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List" %>
-<%@ page import="main.MainPlaceDao" %>
-<%@ page import="main.MainPlaceDto" %>
+<%@ page import="place.PlaceDao" %>
+<%@ page import="place.PlaceDto" %>
 <%@ page import="java.util.stream.Collectors" %>
 
 <%
     String keyword = request.getParameter("keyword");
     if(keyword == null) keyword = "";
 
-    MainPlaceDao dao = new MainPlaceDao();  // dao 선언, 생성 반드시 필요!
+    PlaceDao dao = new PlaceDao();  // dao 선언, 생성 반드시 필요!
 
-    List<MainPlaceDto> allPlaces = dao.getRandomPlaces(100);
-    List<MainPlaceDto> filtered;
+    List<PlaceDto> allPlaces = dao.getRandomPlaces(100);
+    List<PlaceDto> filtered;
 
     if(keyword.trim().isEmpty()) {
         filtered = allPlaces; // 검색어 없으면 전체 출력
     } else {
         String lowerKeyword = keyword.toLowerCase();
         filtered = allPlaces.stream()
-                .filter(dto -> dto.getPlaceName().toLowerCase().contains(lowerKeyword) ||
-                        dto.getCountryName().toLowerCase().contains(lowerKeyword))
+                .filter(dto -> dto.getPlace_name().toLowerCase().contains(lowerKeyword) ||
+                        dto.getCountry_name().toLowerCase().contains(lowerKeyword))
                 .collect(Collectors.toList());
     }
 %>
@@ -51,16 +53,18 @@
     <div class="alert alert-warning">검색 결과가 없습니다.</div>
     <% } else { %>
     <div class="row row-cols-1 row-cols-md-3 g-4 search">
-        <% for (MainPlaceDto dto : filtered) { 
-        String [] img=dto.getPlaceImg().split(",");%>
+        <% for (PlaceDto dto : filtered) { 
+        String [] img=dto.getPlace_img().split(",");%>
         <div class="col">
-        	<input type="hidden" class="place_num" value="<%=dto.getPlaceNum()%>">
+        	<input type="hidden" class="place_num" value="<%=dto.getPlace_num()%>">
             <div class="card h-100">
-                <img src="./<%= img[0] %>" class="card-img-top" alt="<%= dto.getPlaceName() %>">
+                <img src="./<%= img[0] %>" class="card-img-top" alt="<%= dto.getPlace_name() %>">
                 <div class="card-body">
-                    <h5 class="card-title"><%= dto.getPlaceName() %></h5>
-                    <p class="card-text text-muted">국가: <%= dto.getCountryName() %></p>
-                    <p class="card-text"><%= dto.getPlaceContent().length() > 100 ? dto.getPlaceContent().substring(0, 100) + "..." : dto.getPlaceContent() %></p>
+                    <h5 class="card-title"><%= dto.getPlace_name() %></h5>
+                    <p class="card-text text-muted">국가: <%= dto.getCountry_name() %></p>
+                    <p class="card-text text-muted">조회수: <%= dto.getPlace_count() %></p>
+                    <p class="card-text text-muted">좋아요: <%= dto.getPlace_like() %></p>
+                    <p class="card-text"><%= dto.getPlace_content().length() > 100 ? dto.getPlace_content().substring(0, 100) + "..." : dto.getPlace_content() %></p>
                 </div>
             </div>
         </div>

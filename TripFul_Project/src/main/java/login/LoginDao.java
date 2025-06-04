@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -23,7 +22,7 @@ public class LoginDao {
 		try {
 			String salt = null;
 			String hash_pw = null;
-			if(dto.getPw()!=null) {
+			if (dto.getPw() != null) {
 				salt = BCrypt.gensalt();
 				hash_pw = BCrypt.hashpw(dto.getPw(), salt);
 			}
@@ -166,7 +165,7 @@ public class LoginDao {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
 			String salt = this.getSalt(id);
-			if(salt.equals("")) {
+			if (salt.equals("")) {
 				return flag;
 			}
 			String hash_pw = BCrypt.hashpw(pw, salt);
@@ -205,9 +204,9 @@ public class LoginDao {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, pw);
 			pstmt.setString(2, id);
-			
+
 			pstmt.execute();
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -215,113 +214,141 @@ public class LoginDao {
 			db.dbClose(pstmt, conn);
 		}
 	}
-	
+
 	public LoginDto getOneMember(String id) {
 		LoginDto dto = new LoginDto();
-		
+
 		Connection conn = db.getConnection();
 		PreparedStatement pstmt = null;
-		ResultSet rs= null;
-		
+		ResultSet rs = null;
+
 		String sql = "select * from tripful_member where id = ?";
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
+				dto.setIdx(rs.getString("idx"));
 				dto.setId(id);
 				dto.setEmail(rs.getString("email"));
 				dto.setBirth(rs.getString("birth"));
 				dto.setName(rs.getString("name"));
+				dto.setAdmin(rs.getInt("admin"));
 			}
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {db.dbClose(rs, pstmt, conn);}
-		
-		
-		return dto;
-	}
-	
-	public String getSalt(String id) {
-		String salt = "";
-		
-		Connection conn = db.getConnection();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
-		String sql = "select salt from tripful_member where id=?";
-		
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, id);
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				salt = rs.getString("salt");
-			}
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			db.dbClose(rs, pstmt, conn);
 		}
-		
-		//System.out.println(salt);
+
+		return dto;
+	}
+
+	public String getSalt(String id) {
+		String salt = "";
+
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		String sql = "select salt from tripful_member where id=?";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				salt = rs.getString("salt");
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+
+		// System.out.println(salt);
 		return salt;
 	}
-	
+
 	public String getMemberIdx(String provider, String key) {
 		String m_idx = null;
 		Connection conn = db.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = "select member_idx from tripful_social_member where social_provider = ? and social_provider_key = ?";
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, provider);
 			pstmt.setString(2, key);
-			
+
 			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				m_idx = rs.getString("member_idx");
 			}
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {db.dbClose(rs, pstmt, conn);}
-		
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+
 		return m_idx;
 	}
-	
+
 	public String getIdwithIdx(String idx) {
 		String id = null;
 		Connection conn = db.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
+
 		String sql = "select id from tripful_member where idx=?";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, idx);
 			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				id = rs.getString("id");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {db.dbClose(rs, pstmt, conn);}
-		
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+
 		return id;
 	}
 
+	public void insertSocialMem(SocialDto s_dto) {
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+
+		String sql = "insert into tripful_social_member values(null, ?, ?, ?)";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, s_dto.getMember_idx());
+			pstmt.setString(2, s_dto.getSocial_provider());
+			pstmt.setString(3, s_dto.getSocial_provider_key());
+			
+			pstmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.dbClose(pstmt, conn);
+		}
+
+	}
 }
