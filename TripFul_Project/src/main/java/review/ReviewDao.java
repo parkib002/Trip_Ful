@@ -13,7 +13,7 @@ import mysql.db.DbConnect;
 
 public class ReviewDao {
 	DbConnect db=new DbConnect();
-	
+
 	//insertReview
 	public void insertReview(ReviewDto dto) {
 		Connection conn=db.getConnection();
@@ -28,7 +28,7 @@ public class ReviewDao {
 			pstmt.setDouble(4, dto.getReview_star());
 			pstmt.setString(5, dto.getPlace_num());
 			pstmt.execute();
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -155,7 +155,77 @@ public class ReviewDao {
 	    }finally {
 			db.dbClose(rs, pstmt, conn);
 		}
-	    return avg;
+		return avg;
+	}
+
+	// 모든 리뷰를 가져오는 메서드: getPlaceList와 동일한 HashMap 키를 사용하도록 수정
+	public List<HashMap<String, String>> getAllReviews() {
+		List<HashMap<String, String>> list = new ArrayList<>();
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			// 테이블 이름을 'tripful_review'로 변경하고, select하는 컬럼명도 정확히 맞춰줍니다.
+			// review_read_type이 없다면 쿼리에서 제거하거나, DB에 추가해야 합니다.
+			String sql = "SELECT review_idx, review_id, review_content, review_img, review_star, review_writeday, place_num " +
+					"FROM tripful_review ORDER BY review_writeday DESC";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				HashMap<String, String> map = new HashMap<>();
+				map.put("review_num", rs.getString("review_idx")); // review_idx를 review_num으로 매핑
+				map.put("author", rs.getString("review_id"));       // review_id를 author로 매핑
+				map.put("rating", rs.getString("review_star"));     // review_star를 rating으로 매핑
+				map.put("text", rs.getString("review_content"));    // review_content를 text로 매핑
+				map.put("photo", rs.getString("review_img"));       // review_img를 photo로 매핑
+				map.put("date", rs.getString("review_writeday"));   // review_writeday를 date로 매핑\
+				map.put("place_num", rs.getString("place_num"));
+				// 'review_read_type' 컬럼이 'tripful_review' 테이블에 없거나 필요 없다면 이 줄은 삭제하세요.
+				// map.put("read", rs.getString("review_read_type"));
+
+				list.add(map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		return list;
+	}
+
+
+	public HashMap<String, String> getLatestReviewForPlace(String place_num) {
+		HashMap<String, String> review = null; // review 라는 이름의 HashMap 사용
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT review_idx, review_id, review_content, review_img, review_star, review_writeday, place_num " +
+				"FROM tripful_review WHERE place_num = ? ORDER BY review_writeday DESC LIMIT 1";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, place_num);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				review = new HashMap<>(); // 여기서 review 객체 초기화
+				review.put("review_num", rs.getString("review_idx"));
+				review.put("author", rs.getString("review_id"));
+				review.put("rating", rs.getString("review_star"));
+				// *** 이 부분입니다! review.put("text", ...); 로 수정해주세요. ***
+				review.put("text", rs.getString("review_content"));
+				review.put("photo", rs.getString("review_img"));
+				review.put("date", rs.getString("review_writeday"));
+				review.put("place_num", rs.getString("place_num"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		return review;
 	}
 
 }

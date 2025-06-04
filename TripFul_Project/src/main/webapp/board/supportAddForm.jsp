@@ -56,15 +56,14 @@
 </head>
 <body>
 <%
-    // 로그인 정보 가져오기
-    String loginok = (String)session.getAttribute("loginok");
-    String userId = (String)session.getAttribute("id");
+//로그인 정보 가져오기
+String userId = (String)session.getAttribute("id"); // 실제 사용자 ID 세션 속성명 사용
 
-    // 로그인이 안되어있으면 로그인 페이지로 이동
-    if (loginok == null || !"admin".equals(loginok) || userId == null) {
-        response.sendRedirect(request.getContextPath() + "../index.jsp?main=login/loginForm.jsp"); // 로그인 폼 경로에 맞게 수정
-        return;
-    }
+// 로그인이 안되어있으면 로그인 페이지로 이동 (userId가 null이거나 비어있으면)
+if (userId == null || userId.trim().isEmpty()) {
+    response.getWriter().println("<script>alert('로그인이 필요한 서비스입니다.'); location.href='" + request.getContextPath() + "/index.jsp?main=login/login.jsp';</script>");
+    return;
+}
 %>
 <br><br><br>
 <div class="support-header">
