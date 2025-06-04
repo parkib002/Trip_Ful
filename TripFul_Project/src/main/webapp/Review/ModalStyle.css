@@ -24,7 +24,7 @@
 	align-items: center;
 }
 
-.modalfrm {
+.modalfrm , .upmodalfrm {
 	/* 스타일 - customize */
 	max-width: 600px;
 	width: 100%;
@@ -46,28 +46,41 @@
 	pointer-events: auto;
 }
 
-.modal.show .modalfrm {
+.modal.show .modalfrm, .modal.show .upmodalfrm {
 	/* 모달이 열렸을 때 보여지게 하는 코드 */
 	opacity: 1;
 	transform: scale(1);
 }
 
-.close, .save {
+.close, .save , .update{
 	color: #aaa;
-	float: right;
+	float: right;	
 	font-size: 28px;
 	font-weight: bold;
 	cursor: pointer;
+	margin-left: 5px;
 }
 
-.close:hover, .save:hover {
+.close:hover, .save:hover ,.update:hover{
 	color: black;
+}
+
+/* 관광지 이름 */
+.modal-head h4{
+	font-size: 27pt;
+	margin: 10px;
+}
+
+/* 유저아이디 */
+.review_id b{
+	font-size:18pt;
 }
 
 .modal-foot {
 	position: fixed;
-	bottom: 0px;
-	right: 0px;
+	bottom: 5px;
+	right: 5px;
+	
 }
 
 /* 작성, 취소 버튼 스타일 */
@@ -103,22 +116,22 @@
 }
 
 .star_rating .star{
-	width: 25px;
-	height: 25px;
+	width: 30px;
+	height: 30px;
 	margin-right: 10px;
 	display: inline-block;
-	background-image: url("../review_image/icons8-star-filled-40.png");
+	background-image: url("../review_image/star3.png");
 	background-repeat: no-repeat;
 	background-size: 100%;
 	box-sizing: border-box;
 }
 
 .star_rating .star.on{
-	width: 25px;
-	height: 25px;
+	width: 30px;
+	height: 30px;
 	margin-right: 10px;
 	display: inline-block;
-	background-image: url("../review_image/icons8-채워진-스타-48.png");
+	background-image: url("../review_image/star4.png");
 	background-repeat: no-repeat;
 	background-size: 100%;
 	box-sizing: border-box;
@@ -128,37 +141,49 @@
 	width: 100%;
 	border-radius: 10px;
 	resize: none;
-	height: 150px;
+	height: 250px;
 	margin: 10px 0px 10px;
+	padding: 10px;
+}
+.modal-content{
+	height: 600px;
+	padding: 5px;
 	
 }
+
 
 .review_content:focus {
 	outline-color: #5877f9;
 }
 /* 파일 인풋 버튼 스타일 */
-.btn-upload {
-	padding: 8px 15px 8px 15px;
-	min-width: 150px;
-	height: 150px;
-	background: #fff;
-	color: #5877f9;
-	border: 1px solid #5877f9;
-	border-radius: 10px;
-	font-weight: 500;
-	font-size: 25px;
-	float: left;
-	margin: 5px;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center; 	
+.upload-btns{
+	display: flex;    
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0px 5px 0px 5px;
+}
+.btn-upload {		
+	padding: 8px 15px; /* 상하 8px, 좌우 15px */
+    width: 150px; /* 고정 너비 (min-width 대신) */
+    height: 150px; /* 고정 높이 */
+    background: #fff;
+    color: #5877f9;
+    border: 1px solid #5877f9;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 25px;  
+    margin: 5px; /* 각 버튼 주변에 5px 여백 */
+    cursor: pointer;
+    display: inline-flex; /* 인라인 블록처럼 작동하면서 내부 정렬 가능 */
+    align-items: center; /* 내부 아이콘/텍스트 세로 중앙 정렬 */
+    justify-content: center; /* 내부 아이콘/텍스트 가로 중앙 정렬 */
+    box-sizing: border-box; 
 }
 .btn-upload:hover { 
 	background : #5877f9;
 	color: #fff;
 	}
-#file {
+.upload-btns .review_img {
 	display: none;
 }
 
@@ -187,6 +212,7 @@
 .img-wrapper {
   position: relative;
   display: inline-block;
+  cursor: pointer;
 }
 
 .img-icon {
