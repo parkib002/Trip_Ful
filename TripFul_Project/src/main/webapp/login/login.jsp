@@ -67,7 +67,7 @@ if (session.getAttribute("id") != null) {
 				//로그인 페이지
 				%>
 				<div class="sign-in-htm">
-					<form action="/login/loginAction.jsp" method="post"
+					<form action="<%=request.getContextPath() %>/login/loginAction.jsp" method="post"
 						onsubmit="return chkSignIn()">
 						<div class="group">
 							<label for="user" class="label">아이디</label> <input id="user"

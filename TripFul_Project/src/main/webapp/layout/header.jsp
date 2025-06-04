@@ -71,7 +71,7 @@
             <button class="btn btn-sm btn-outline-warning" onclick="location.href='index.jsp?main=login/login.jsp'">Login</button>
             <% } else { %>
             <span class="me-2 d-none d-md-inline">
-              <a href="index.jsp?main=page/myPage.jsp" class="username-link" >
+              <a href="index.jsp?main=login/MyPage.jsp" class="username-link" >
                 <strong><%= name %></strong>님
                   페이지
               </a>
