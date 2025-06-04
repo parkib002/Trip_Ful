@@ -32,15 +32,19 @@
         <div class="carousel-item <%= activeClass %>">
             <div class="d-flex justify-content-center py-4">
                 <div class="col-md-10">
-                    <div class="card border-0 shadow-lg h-100 rounded-4 overflow-hidden">
-                        <div class="position-relative">
-                            <img src="<%= request.getContextPath() %>/images/<%= place.getPlaceImg() %>"
-                                 class="card-img-top object-fit-cover"
-                                 style="height: 450px; width: 100%; filter: brightness(90%);"
-                                 alt="<%= place.getPlaceName() %>">
-                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-25"></div>
+                    <!-- 카드 내부를 flex row로 배치 -->
+                    <div class="card border-0 shadow-lg h-100 rounded-4 overflow-hidden d-flex flex-row" style="min-height: 450px;">
+                        <!-- 이미지 영역 -->
+                        <div style="flex: 0 0 40%; position: relative;">
+                            <img src="<%= request.getContextPath() %>/save/<%= place.getPlaceImg() %>"
+                                 class="object-fit-cover h-100 w-100"
+                                 alt="<%= place.getPlaceName() %>"
+                                 style="filter: brightness(90%);">
+                            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.25);"></div>
                         </div>
-                        <div class="card-body p-4">
+
+                        <!-- 텍스트 및 리뷰 영역 -->
+                        <div class="card-body p-4" style="flex: 1 1 60%; overflow-y: auto;">
                             <h5 class="card-title fw-bold text-primary"><%= place.getPlaceName() %></h5>
                             <p class="card-text"><%= place.getPlaceContent() %></p>
                             <p class="text-muted small">태그: <%= place.getPlaceTag() %> | 대륙: <%= place.getContinentName() %></p>
@@ -62,7 +66,7 @@
                                 <% } %>
                             </div>
                         </div>
-                    </div>
+                    </div> <!-- card -->
                 </div>
             </div>
         </div>
