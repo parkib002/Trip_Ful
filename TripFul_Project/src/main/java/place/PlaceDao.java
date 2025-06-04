@@ -116,15 +116,32 @@ public class PlaceDao {
 	    return list;
 	}
 	
-	public List<PlaceDto> selectContinentPlaces(String continent) {
+	public List<PlaceDto> selectContinentPlaces(String continent, String sort) {
 	    List<PlaceDto> list = new Vector<>();
 
-	    String sql = "SELECT p.*, " +
-	                 "       (SELECT ROUND(AVG(r.review_star), 1) FROM tripful_review r WHERE r.place_num = p.place_num) AS avg_rating " +
-	                 "FROM tripful_place p " +
-	                 "WHERE p.continent_name = ? " +
-	                 "ORDER BY p.place_name ASC";
+	    String orderBy = "p.place_count DESC"; // 기본: 조회순 내림차순
+	    if ("rating".equals(sort)) {
+	        orderBy = "avg_rating IS NULL, avg_rating DESC";
+	    } else if ("likes".equals(sort)) {
+	        orderBy = "p.place_like DESC";
+	    } else if ("name".equals(sort)) {
+	        orderBy = "p.place_name ASC";
+	    } else if ("views".equals(sort)) {
+	        orderBy = "p.place_count DESC";
+	    }
 
+	    System.out.println("selectContinentPlaces orderBy: " + orderBy);  // 여기 꼭 찍어보기
+
+	    String sql = "SELECT p.*, avg_rating_table.avg_rating " +
+	             "FROM tripful_place p " +  // <-- 여기에 공백 반드시 넣기
+	             "LEFT JOIN ( " +
+	             "  SELECT place_num, ROUND(AVG(review_star), 1) AS avg_rating " +
+	             "  FROM tripful_review " +
+	             "  GROUP BY place_num " +
+	             ") avg_rating_table ON p.place_num = avg_rating_table.place_num " +
+	             "WHERE p.continent_name = ? " +
+	             "ORDER BY " + orderBy; // ⭐ 여기를 고정된 쿼리 대신 동적 변수로 변경
+	    
 	    try (Connection conn = db.getConnection();
 	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -138,8 +155,8 @@ public class PlaceDao {
 	                dto.setCountry_name(rs.getString("country_name"));
 	                dto.setPlace_img(rs.getString("place_img"));
 	                dto.setPlace_name(rs.getString("place_name"));
-	                dto.setPlace_count(rs.getInt("place_count")); // 조회수 추가
-	                dto.setPlace_like(rs.getInt("place_like"));   // 좋아요 추가
+	                dto.setPlace_count(rs.getInt("place_count")); // 조회수
+	                dto.setPlace_like(rs.getInt("place_like"));   // 좋아요
 	                dto.setAvg_rating(rs.getDouble("avg_rating")); // 별점
 
 	                list.add(dto);
@@ -494,7 +511,6 @@ public class PlaceDao {
 	            dto.setContinent_name(rs.getString("continent_name"));
 	            dto.setPlace_addr(rs.getString("place_addr"));
 	            dto.setPlace_like(rs.getInt("place_like"));
-	            dto.setAvg_rating(rs.getDouble("avg_rating")); // ⭐ 별점 추가
 
 	            list.add(dto);
 	        }
@@ -506,6 +522,8 @@ public class PlaceDao {
 
 	    return list;
 	}
+	
+	
 	
 
 }

@@ -60,7 +60,6 @@
                 <div class="card-body">
                     <h5 class="card-title"><%= dto.getPlace_name() %></h5>
                     <p class="card-text text-muted">국가: <%= dto.getCountry_name() %></p>
-                    <p class="card-text text-muted">별점: <%= dto.getAvg_rating() %></p>
                     <p class="card-text text-muted">조회수: <%= dto.getPlace_count() %></p>
                     <p class="card-text text-muted">좋아요: <%= dto.getPlace_like() %></p>
                     <p class="card-text"><%= dto.getPlace_content().length() > 100 ? dto.getPlace_content().substring(0, 100) + "..." : dto.getPlace_content() %></p>

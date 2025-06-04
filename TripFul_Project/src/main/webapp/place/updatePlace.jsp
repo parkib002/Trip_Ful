@@ -98,27 +98,65 @@
 
 <body>
 
-  <h2>수정할 관광지를 검색하세요</h2>
-  <input id="autocomplete" type="text" placeholder="수정할 관광지를 검색하세요" style="width: 300px;" />
-  <button onclick="searchPlace()">검색</button>
-  <button onclick="savePlace()">추가</button>
+<h2 class="mb-3 text-center">수정할 관광지를 검색하세요</h2>
 
-  <div id="map"></div>
-  
-  <form method="post" action="place/updatePlaceAction.jsp" enctype="multipart/form-data">
- <div id="place-info" style="margin-top:20px;">
-  <strong>선택된 장소 정보:</strong><br>
-  <input type="hidden" name="num" value="<%=num%>"> 
-  이름: <input type="text" id="output-name" name="place_name" value="<%=dto.getPlace_name()%>"><br>
-  주소: <input type="text" id="output-address" name="place_address" value="<%=dto.getPlace_addr()%>"><br>
-  Place ID: <input type="text" id="output-placeid" name="place_id" value="<%=dto.getPlace_code()%>"><br>
-  나라: <input type="text" name="country_name" value="<%=dto.getCountry_name()%>"><br>
-  대륙(영어): <input type="text" name="continent_name" value="<%=dto.getContinent_name()%>"><br>
-  카테고리: <input type="text" name="place_tag" value="<%=dto.getPlace_tag()%>">
-  <textarea id="summernote" name="place_content"></textarea>
-  <button type="submit">제출</button>
+<div class="d-flex justify-content-center mb-3" style="gap:10px; align-items:center;">
+  <input id="autocomplete" type="text" class="form-control" placeholder="수정할 관광지를 검색하세요" style="max-width: 300px;" />
+  <button type="button" class="btn btn-primary" onclick="searchPlace()">검색</button>
+  <button type="button" class="btn btn-success" onclick="savePlace()">추가</button>
 </div>
-</form>
+
+<div id="map" style="height: 400px; width: 100%; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;"></div>
+
+<div class="d-flex justify-content-center">
+  <form method="post" action="place/updatePlaceAction.jsp" enctype="multipart/form-data" style="width: 100%; max-width: 800px;">
+    <div id="place-info" class="card p-3">
+      <h5 class="mb-3 text-center">선택된 장소 정보</h5>
+      
+      <input type="hidden" name="num" value="<%=num%>">
+
+      <div class="row gx-3 gy-2">
+        <div class="col-md-6">
+          <label for="output-name" class="form-label fw-semibold">이름</label>
+          <input type="text" id="output-name" name="place_name" value="<%=dto.getPlace_name()%>" class="form-control" required>
+        </div>
+
+        <div class="col-md-6">
+          <label for="output-address" class="form-label fw-semibold">주소</label>
+          <input type="text" id="output-address" name="place_address" value="<%=dto.getPlace_addr()%>" class="form-control" required>
+        </div>
+
+        <div class="col-md-6">
+          <label for="output-placeid" class="form-label fw-semibold">Place ID</label>
+          <input type="text" id="output-placeid" name="place_id" value="<%=dto.getPlace_code()%>" class="form-control" required>
+        </div>
+
+        <div class="col-md-6">
+          <label for="country_name" class="form-label fw-semibold">나라</label>
+          <input type="text" id="country_name" name="country_name" value="<%=dto.getCountry_name()%>" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+          <label for="continent_name" class="form-label fw-semibold">대륙 (영어)</label>
+          <input type="text" id="continent_name" name="continent_name" value="<%=dto.getContinent_name()%>" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+          <label for="place_tag" class="form-label fw-semibold">카테고리</label>
+          <input type="text" id="place_tag" name="place_tag" value="<%=dto.getPlace_tag()%>" class="form-control" placeholder="예: 관광, 문화, 자연">
+        </div>
+
+        <div class="col-12">
+          <label for="summernote" class="form-label fw-semibold">관광지 설명</label>
+          <textarea id="summernote" name="place_content" class="form-control"><%=dto.getPlace_content() != null ? dto.getPlace_content() : "" %></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-3">수정</button>
+    </div>
+  </form>
+</div>
+
 
 
   <script>

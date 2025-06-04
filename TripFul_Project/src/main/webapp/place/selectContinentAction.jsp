@@ -9,8 +9,11 @@
 
 <%
   String continent = request.getParameter("continent");
-  PlaceDao dao = new PlaceDao();
-  List<PlaceDto> list = dao.selectContinentPlaces(continent);
+String sort = request.getParameter("sort");
+if (sort == null) sort = "views";
+
+PlaceDao dao = new PlaceDao();
+List<PlaceDto> list = dao.selectContinentPlaces(continent, sort);
 
   Map<String, JSONArray> map = new HashMap<>();
   for (PlaceDto dto : list) {
@@ -30,6 +33,6 @@
   for (String country : map.keySet()) {
     result.put(country, map.get(country));
   }
-
+  System.out.println("정렬 기준: " + sort);
   out.print(result.toString());
 %>
