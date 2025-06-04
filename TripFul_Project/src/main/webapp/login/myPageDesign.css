@@ -1,0 +1,167 @@
+@charset "UTF-8";
+/* 노멀라이즈 시작 */
+body, ul, li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+/* 노멀라이즈 끝 */
+
+/* 커스텀 시작 */
+
+/* 사이드바 시작 */
+:root {
+  --side-bar-width: 230px;
+  --side-bar-height: 35vh;
+  --side-bar-top-position: 15vh; /* 사이드바의 상단 위치를 명시적으로 지정 (예: 화면 높이의 15%) */
+                                 /* 기존 calc((100vh - var(--side-bar-height)) / 5) 계산 결과와 유사하게 설정 또는 원하는 값으로 조절 */
+  --icon-visible-area-width: 55px; /* 아이콘 보이는 영역 너비 (아이콘 23px + 좌우여백 15px*2 = 53px 이므로 55px 정도) */
+}
+
+.side-bar {
+  position: fixed;
+  /* margin-top 대신 top 속성 사용으로 수직 위치 명확히 지정 */
+  top: var(--side-bar-top-position);
+  left: 0;
+  width: var(--side-bar-width);
+  min-height: var(--side-bar-height);
+  background-color: #C4DFDF;
+  transform: translateX(calc(-100% + var(--icon-visible-area-width))); /* 초기 숨김 */
+  transition: transform 0.5s ease-in-out;
+  z-index: 1000;
+  overflow: hidden; /* 내용이 넘칠 경우 숨김 (선택 사항이지만, 초기 상태에서 메뉴가 보이지 않도록 도움) */
+  border-radius: 10px;
+}
+
+.side-bar:hover {
+  transform: translateX(0); /* 호버 시 나타남 */
+}
+
+/* --- 아이콘 스타일 수정 --- */
+.side-bar__icon-box {
+  display: flex;
+  justify-content: flex-end; /* 아이콘을 오른쪽으로 정렬 */
+  width: 100%; /* 중요: 아이콘 박스가 사이드바의 (보이는) 너비 전체를 차지하도록 */
+  /* height 및 align-items 제거: 아이콘 크기에 맞게 자연스럽게 높이 조절 */
+  box-sizing: border-box; /* padding, border가 width, height에 포함되도록 */
+}
+
+.side-bar__icon-1 { /* 햄버거 아이콘 컨테이너 */
+  position: relative;
+  width: 23px;
+  height: 17px;
+  /* margin-top, margin-bottom을 개별적으로 주거나, margin을 상하 좌우로 설정 */
+  margin: 20px 15px; /* 상하 20px, 좌우 15px 여백 */
+                     /* 이 여백으로 인해 아이콘이 보이는 영역의 가장자리에 붙지 않고 적절히 위치함 */
+  cursor: pointer;
+}
+
+/* 햄버거 아이콘의 각 줄 스타일 (기존과 동일하게 유지) */
+.side-bar__icon-1 > div {
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  background-color: #2F4F4F;
+  border-radius: 1px;
+  left: 0;
+}
+
+.side-bar__icon-1 > div:nth-of-type(1) {
+  top: 0;
+}
+
+.side-bar__icon-1 > div:nth-of-type(2) {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.side-bar__icon-1 > div:nth-of-type(3) {
+  bottom: 0;
+}
+/* --- 아이콘 스타일 수정 끝 --- */
+
+
+/* 메뉴 스타일 (기존 유지) */
+.side-bar ul > li > a ,
+.side-bar ul > li > span {
+  display: block;
+  color: #2F4F4F;
+  font-size: 1.4rem;
+  font-weight: bold;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  padding-left: 30px;
+  transition: .5s;
+}
+
+.side-bar > ul > li {
+  position: relative;
+}
+
+.side-bar ul > li:hover > a {
+  background-color: #E3F4F4;
+  border-bottom: 1px solid #999;
+}
+
+.side-bar > ul ul {
+  display: block;
+  position: relative;
+  background-color: #C4DFDF;
+  padding-left: 0;
+}
+
+.side-bar > ul ul li a {
+  font-size: 1.8rem;
+  font-weight: normal;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 65px;
+  background-color: transparent;
+  border-bottom: none;
+  font-family : 'Nanum Pen Script';
+}
+
+.side-bar > ul ul li:hover > a {
+  background-color: #E3F4F4;
+  border-bottom: none;
+}
+/* 사이드바 끝 */
+/* 커스텀 끝 */
+
+/* 스크롤 테스트용 body 스타일 */
+body {
+  height: 5000px;
+  margin: 0;
+  padding: 0;
+  background-color: #F0F4F8;
+}
+
+.MyInfo, .MyReview, .WishList{
+	border :2px black solid;
+	box-shadow: gray 10px 10px 10px;
+	border-radius: 50px;
+	padding : 30px;
+	margin-top : 30px;
+	padding-bottom: 50px;
+	font-family: 'Nanum Pen Script';
+}
+
+.MyInfo>h1, .MyReview>h1, .WishList>h1{
+	font-weight: bold;
+}
+
+.MyInfo li{
+	font-size: 2em;
+	padding-left: 10px;
+}
+
+.update-btn{
+	float: right;
+	padding-right: 20px;
+	padding-bottom: 20px;
+}

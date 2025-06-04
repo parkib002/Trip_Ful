@@ -1,17 +1,20 @@
 package login;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Timestamp;
 
-import mysql.db.DbConnect;
+import java.sql.Timestamp;
 
 public class LoginDto {
 	
-	private String id, pw, name, email, birth, hash_pw, salt;
+	private String id, pw, name, email, birth, hash_pw, salt, idx;
 	private int admin;
 	private Timestamp joindate;
 		
+	public String getIdx() {
+		return idx;
+	}
+	public void setIdx(String idx) {
+		this.idx = idx;
+	}
 	public String getHash_pw() {
 		return hash_pw;
 	}

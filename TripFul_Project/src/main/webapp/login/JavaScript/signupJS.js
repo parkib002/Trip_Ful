@@ -13,13 +13,17 @@ function chkSignUp() {
 	}
 }
 
-function chkSignIn(){
-	if ($(".sign-in-html").children().find("label").hasClass("error")){
+function chkSignIn() {
+	if ($(".sign-in-html").children().find("label").hasClass("error")) {
 		return false;
 	}
 	else {
 		return true;
 	}
+}
+
+function naverSign(apiURL) {
+	window.open(apiURL, "NaverLogin", "width=500, height=800, top=200, left=700, resizable=no, scrollbars=no");
 }
 
 
@@ -28,7 +32,7 @@ $("#id").keyup(function() {
 	var inputId = $("#id");
 	$.ajax({
 		type: "get",
-		url: "./checkDuplication.jsp",
+		url: "./login/checkDuplication.jsp",
 		data: { "id": inputId.val() },
 		dataType: "html",
 		success: function(res) {
@@ -109,9 +113,7 @@ $("#birth").keyup(function() {
 			$(this).siblings(".label").removeClass("error");
 		}
 	}
-	
-	function googleHandle(){
-		alert("로그인 됬나?");
-	}
+
+
 
 })
