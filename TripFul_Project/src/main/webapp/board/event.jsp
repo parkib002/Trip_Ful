@@ -1,3 +1,6 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="board.BoardEventDto"%>
+<%@page import="java.util.List"%>
 <%@page import="board.BoardEventDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -10,11 +13,23 @@
 </head>
 <%
 BoardEventDao dao=new BoardEventDao();
-String loginok=(String)session.getAttribute("loginok");
+
+String loginok=null;
+String id=null;
+
+//세션에서 id 값을 가져올 때 null 체크 추가 (NPE 방지)
+if( session.getAttribute("loginok")!=null)
+{
+	loginok=(String)session.getAttribute("loginok");
+	if(session.getAttribute("id") != null) {
+	id=(String)session.getAttribute("id");
+	}
+}
+
 
 //페이징처리
 //전체갯수
-int totalCount=1;//dao.getTotalCount();
+int totalCount=dao.getTotalCount();
 int perPage=5; //한페이지에 보여질 글의 갯수
 int perBlock=5; //한블럭당 보여질 페이지의 갯수
 int startNum; //db에서 가져올 글의 시작번호(mysql:0 오라클:1번)
@@ -55,6 +70,10 @@ startNum=(currentPage-1)*perPage;
 //예를들어 총글갯수가 23   1페이지: 23  2페이지:18  3페이지: 13.....
 no=totalCount-(currentPage-1)*perPage;
 
+//전체 리스트
+List<BoardEventDto> list=dao.getList(startNum, perPage);
+
+SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 %>
 <body>
@@ -65,7 +84,7 @@ no=totalCount-(currentPage-1)*perPage;
 			if(loginok!=null && loginok.equals("admin"))
 			{%>
 					<a style="float: right; text-decoration: none; color: black;" 
-					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=eventInsertForm.jsp">
+					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=eventAddForm.jsp">
 						<i class="bi bi-plus-square"></i>&nbsp;추가
 					</a>				
 			<%}
@@ -84,35 +103,64 @@ no=totalCount-(currentPage-1)*perPage;
 			</tr>
 		</thead>
 		<tbody>
+		
+		
+		
 		<%
-			for(int i=0;i<10;i++)
+		
+			if(list.isEmpty())
 			{%>
 				<tr>
-					<th scope="row"><%=i+1%></th>
-					<td>제목</td>
-					<td>손흥민</td>
-					<td>2025-05-21</td>
-					<td>3</td>
+					<td colspan="5" align="center"><b>등록된 게시글이 없습니다</b></td>
 				</tr>
-			<%}
+			<%}else{
+					for(int i=0;i<list.size();i++)
+					{
+						BoardEventDto dto=list.get(i);
+					%>
+						<tr>
+							<th scope="row"><%=no - i%></th>
+							<td>
+								<a href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=eventDetail.jsp&idx=<%=dto.getEvent_idx() %>"
+								style="text-decoration: none; color: black;">
+									<%=dto.getEvent_title() %>
+								</a>
+							</td>
+							<td><%=dto.getEvent_writer() %></td>
+							<td><%=sdf.format(dto.getEvent_writeday()) %></td>
+							<td><%=dto.getEvent_readcount() %></td>
+						</tr>
+					<%}
+			}
 		%>
 		</tbody>
 	</table>
 	
 	<nav class="pagination-container">
-		<div class="pagination">
-				<a class="pagination-newer" href="#">이전</a>
-				<span class="pagination-inner">
-					<a class="pagination-active" href="#">1</a>
-					<a href="#">2</a>
-					<a href="#">3</a>
-					<a href="#">4</a>
-					<a href="#">5</a>
-					<a href="#">6</a>
-				</span>
-				<a class="pagination-older" href="#">다음</a>
-		</div>
-</nav>
+			<div class="pagination">
+				<span class="pagination-inner"> <%
+					if(startPage>1){%> <a class="pagination-newer"
+					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=event.jsp&currentPage=<%=startPage-perBlock%>">이전</a>
+					<%}
+				
+				for(int pp=startPage;pp<=endPage;pp++)
+				{
+					if(pp==currentPage)
+					{%> <a class="pagination-active"
+					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=event.jsp&currentPage=<%=pp%>"><%=pp %></a>
+					<%}else{%> <a class="page-link" <%-- 클래스명 일관성 --%>
+					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=event.jsp&currentPage=<%=pp%>"><%=pp %></a>
+					<%}
+				}
+				
+				//다음
+				if(endPage<totalPage)
+				{%> <a class="pagination-older"
+					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=event.jsp&currentPage=<%=endPage+1%>">다음</a>
+					<%}
+				%>
+			</div>
+		</nav>
 </div>
 
 </body>

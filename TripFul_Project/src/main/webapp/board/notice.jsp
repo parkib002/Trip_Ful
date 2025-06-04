@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="board.BoardNoticeDto"%>
 <%@page import="java.util.List"%>
 <%@page import="board.BoardNoticeDao"%>
@@ -70,6 +71,8 @@ no=totalCount-(currentPage-1)*perPage;
 
 //전체데이타
 List<BoardNoticeDto> list=dao.getList(startNum, perPage);
+
+SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 %>
 <body>
 <div class="notice-wrapper">
@@ -122,7 +125,7 @@ List<BoardNoticeDto> list=dao.getList(startNum, perPage);
 								</a>
 							</td>
 							<td><%=dto.getNotice_writer() %></td>
-							<td><%=dto.getNotice_writeday() %></td>
+							<td><%=sdf.format(dto.getNotice_writeday()) %></td>
 							<td><%=dto.getNotice_readcount() %></td>
 						</tr>
 					<%}
