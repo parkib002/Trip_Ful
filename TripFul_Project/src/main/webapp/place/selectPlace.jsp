@@ -276,7 +276,7 @@
   <%
   	if("admin".equals(loginok)){
   %>
-  	<button type="button" onclick="location.href='index.jsp?main=place/insertPlace.jsp'">관광지 추가</button>
+  	<button type="button" onclick="location.href='insertPlace.jsp'">관광지 추가</button>
   
   <% }
   %>

@@ -77,7 +77,7 @@
 <div id="map" style="height: 400px; width: 100%; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;"></div>
 
 <div class="d-flex justify-content-center">
-  <form method="post" action="place/insertPlaceAction.jsp" enctype="multipart/form-data" style="width: 100%; max-width: 1500px;">
+  <form method="post" action="insertPlaceAction.jsp" enctype="multipart/form-data" style="width: 100%; max-width: 1500px;">
     <div id="place-info" class="card p-2">
       <h5 class="mb-3 text-center">선택된 장소 정보</h5>
 

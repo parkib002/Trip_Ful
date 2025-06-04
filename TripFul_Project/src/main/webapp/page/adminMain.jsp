@@ -173,7 +173,7 @@
                     <div class="card-icon mb-3"><i class="bi bi-geo-alt-fill"></i></div>
                     <h5 class="card-title">여행지 관리</h5>
                     <p class="card-text text-muted small mb-3">등록된 여행지를 관리합니다.</p>
-                    <a href="../place/insertPlace.jsp" class="btn btn-primary w-100">이동</a>
+                    <a href="../place/selectPlace.jsp" class="btn btn-primary w-100">이동</a>
                 </div>
             </div>
         </div>
