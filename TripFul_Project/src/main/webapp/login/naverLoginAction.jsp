@@ -159,7 +159,7 @@ if(dto.getAdmin()==1){
 	%>
 
 	<script>
-		window.opener.document.location.href = "../page/adminMain.jsp";
+		window.opener.document.location.href = "../index.jsp?main=page/adminMain.jsp";
 		window.close();
 	</script>
 
