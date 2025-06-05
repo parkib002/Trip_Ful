@@ -522,6 +522,54 @@ public class PlaceDao {
 	    return list;
 	}
 	
+	public List<PlaceDto> getCountPlace(String sort) {
+	    List<PlaceDto> list = new Vector<>();
+
+	    String orderBy = "p.place_count DESC"; // 기본: 조회순 내림차순
+	    if ("rating".equals(sort)) {
+	        orderBy = "avg_rating IS NULL, avg_rating DESC";
+	    } else if ("likes".equals(sort)) {
+	        orderBy = "p.place_like DESC";
+	    } else if ("name".equals(sort)) {
+	        orderBy = "p.place_name ASC";
+	    } else if ("views".equals(sort)) {
+	        orderBy = "p.place_count DESC";
+	    }
+
+	    System.out.println("getCountPlace orderBy: " + orderBy);  // 여기 꼭 찍어보기
+
+	    String sql =  
+	    	    "SELECT p.*, avg_rating_table.avg_rating " +
+	    	    "FROM tripful_place p " +
+	    	    "LEFT JOIN ( " +
+	    	    "  SELECT place_num, ROUND(AVG(review_star), 1) AS avg_rating " +
+	    	    "  FROM tripful_review " +
+	    	    "  GROUP BY place_num " +
+	    	    ") avg_rating_table ON p.place_num = avg_rating_table.place_num " +
+	    	    "ORDER BY " + orderBy + " LIMIT 5"; // ★ DESC 제거됨!
+	    
+	    try (Connection conn = db.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            while (rs.next()) {
+	                PlaceDto dto = new PlaceDto();
+
+	                dto.setCountry_name(rs.getString("country_name"));
+	                dto.setPlace_name(rs.getString("place_name"));
+	                dto.setPlace_count(rs.getInt("place_count")); // 조회수
+	                dto.setPlace_like(rs.getInt("place_like"));   // 좋아요
+	                dto.setAvg_rating(rs.getDouble("avg_rating")); // 별점
+
+	                list.add(dto);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return list;
+	}
 	
 	
 
