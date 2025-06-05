@@ -17,7 +17,7 @@
     int newMembersThisWeek = 78;
     int newMembersThisMonth = 320;
     int recentReviewsCount = 45;
-    List<String> popularDestinations = Arrays.asList("제주도", "부산", "서울", "경주", "강릉");
+    List<String> popularDestinations = Arrays.asList();
     int unansweredInquiriesCount = 7;
 %>
 <!DOCTYPE html>
@@ -286,6 +286,6 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
