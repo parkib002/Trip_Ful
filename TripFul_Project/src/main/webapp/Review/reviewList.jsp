@@ -10,6 +10,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="Review/carouselStyle.css">
 
 
 <title>Insert title her</title>
