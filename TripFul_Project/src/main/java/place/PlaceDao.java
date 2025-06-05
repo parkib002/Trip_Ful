@@ -521,8 +521,45 @@ public class PlaceDao {
 
 	    return list;
 	}
-	
-	
+
+	public List<PlaceDto> searchByTag(String tag) {
+		List<PlaceDto> places = new ArrayList<>();
+		String sql = "SELECT * FROM tripful_place WHERE place_tag LIKE ?";
+
+
+		try (
+
+
+
+				Connection conn = db.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setString(1, "%" + tag + "%");
+			ResultSet rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				PlaceDto dto = new PlaceDto();
+				dto.setPlace_num(rs.getString("place_num"));
+				dto.setCountry_name(rs.getString("country_name"));
+				dto.setPlace_img(rs.getString("place_img"));
+				dto.setPlace_content(rs.getString("place_content"));
+				dto.setPlace_tag(rs.getString("place_tag"));
+				dto.setPlace_code(rs.getString("place_code"));
+				dto.setPlace_name(rs.getString("place_name"));
+				dto.setPlace_count(rs.getInt("place_count"));
+				dto.setContinent_name(rs.getString("continent_name"));
+				dto.setPlace_addr(rs.getString("place_addr"));
+				dto.setPlace_like(rs.getInt("place_like"));
+
+				places.add(dto);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return places;
+	}
 	
 
 }
