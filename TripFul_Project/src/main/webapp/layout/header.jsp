@@ -77,7 +77,7 @@
                     <a href="index.jsp?main=<%=
                         "admin".equals(loginok)
                         ? "page/adminMain.jsp"
-                        : "login/MyPage.jsp"
+                        : "login/MyPage.jsp?id=" + myid
                     %>" class="username-link">
                         <strong><%= name %></strong>님 페이지
                     </a>
