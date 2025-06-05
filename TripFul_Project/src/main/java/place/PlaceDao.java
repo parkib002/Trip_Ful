@@ -538,14 +538,15 @@ public class PlaceDao {
 
 	    System.out.println("getCountPlace orderBy: " + orderBy);  // 여기 꼭 찍어보기
 
-	    String sql =  "SELECT p.*, avg_rating_table.avg_rating" + 
-	             "FROM tripful_place p" +
-	             "LEFT JOIN ( " +
-	               "SELECT place_num, ROUND(AVG(review_star), 1) AS avg_rating" +
-	              "FROM tripful_review" +
-	              "GROUP BY place_num" +
-	             ") avg_rating_table ON p.place_num = avg_rating_table.place_num" + 
-	             "ORDER BY"+orderBy+"desc limit 5";
+	    String sql =  
+	    	    "SELECT p.*, avg_rating_table.avg_rating " +
+	    	    "FROM tripful_place p " +
+	    	    "LEFT JOIN ( " +
+	    	    "  SELECT place_num, ROUND(AVG(review_star), 1) AS avg_rating " +
+	    	    "  FROM tripful_review " +
+	    	    "  GROUP BY place_num " +
+	    	    ") avg_rating_table ON p.place_num = avg_rating_table.place_num " +
+	    	    "ORDER BY " + orderBy + " LIMIT 5"; // ★ DESC 제거됨!
 	    
 	    try (Connection conn = db.getConnection();
 	         PreparedStatement pstmt = conn.prepareStatement(sql)) {

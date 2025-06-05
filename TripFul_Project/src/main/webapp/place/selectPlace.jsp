@@ -17,6 +17,7 @@
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
+
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -276,7 +277,7 @@
   <%
   	if("admin".equals(loginok)){
   %>
-  	<button type="button" onclick="location.href='insertPlace.jsp'">관광지 추가</button>
+  	<button type="button" onclick="location.href='place/insertPlace.jsp'">관광지 추가</button>
   
   <% }
   %>
