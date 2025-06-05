@@ -78,47 +78,171 @@
   </style>
   
   <script>
-  $(document).ready(function() {
+  let uploadedImageSrcList = [];
+
+  $(document).ready(function () {
     $('#summernote').summernote({
-      height: 300,             // 에디터 높이
+      height: 300,
       placeholder: '내용을 입력하세요...',
       toolbar: [
-    	  ['style', ['bold', 'italic', 'underline', 'clear']],
-    	    ['font', ['strikethrough', 'superscript', 'subscript']],
-    	    ['color', ['color']],  // ✅ 색상 도구 추가
-    	    ['para', ['ul', 'ol', 'paragraph']],
-    	    ['insert', ['link', 'picture']],
-    	    ['view', ['fullscreen', 'codeview']]
-      ]
-    });
-  });
-  
-  $('#summernote').summernote({
-	  height: 300,
-	  callbacks: {
-	    onImageUpload: function(files) {
-	      for (let i = 0; i < files.length; i++) {
-	        sendFile(files[i]);
-	      }
-	    }
-	  }
-	});
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['font', ['strikethrough', 'superscript', 'subscript']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['insert', ['link', 'picture']],
+        ['view', ['fullscreen', 'codeview']]
+      ],
+      callbacks: {
+        onImageUpload: function (files) {
+          for (let i = 0; i < files.length; i++) {
+            sendFile(files[i]);
+          }
+        },
+        onMediaDelete: function(target) {
+        	  const fullUrl = target[0].src;
+        	  let pathOnly;
 
-	function sendFile(file) {
-	  const data = new FormData();
-	  data.append("file", file);
-	  $.ajax({
-	    url: 'uploadImg.jsp',  // 이미지 저장 처리용 JSP
-	    type: 'POST',
-	    data: data,
-	    contentType: false,
-	    processData: false,
-	    success: function(url) {
-	      $('#summernote').summernote('insertImage', url); // 이게 핵심
-	    }
-	  });
-	}
+        	  try {
+        	    pathOnly = new URL(fullUrl).pathname; // ex: /TripFul_Project/save/에펠탑218.jpg
+        	  } catch (e) {
+        	    pathOnly = fullUrl;
+        	  }
+
+        	  const normalizedDeleteTarget = normalizeUrl(pathOnly);
+
+        	  uploadedImageSrcList = uploadedImageSrcList.filter((url) => {
+        	    return normalizeUrl(url) !== normalizedDeleteTarget;
+        	  });
+
+        	  $.ajax({
+        	    url: 'deleteImg.jsp',
+        	    type: 'POST',
+        	    data: { imageUrl: pathOnly },
+        	    success: function(response) {
+        	      console.log('이미지 삭제 완료:', response);
+        	    },
+        	    error: function(xhr, status, error) {
+        	      console.error('이미지 삭제 실패:', error);
+        	    }
+        	  });
+
+        	  console.log("🧹 삭제 후 이미지 배열:", uploadedImageSrcList);
+        	}
+
+
+
+
+      }
+    });
+
+    function sendFile(file) {
+      const data = new FormData();
+      data.append("file", file);
+
+      $.ajax({
+        url: 'uploadImg.jsp',
+        type: 'POST',
+        data: data,
+        contentType: false,
+        processData: false,
+        success: function (url) {
+        	 const cleanUrl = url.trim();
+
+        	  // URL 객체 사용해서 절대경로에서 pathname 추출
+        	  let pathnameOnly;
+        	  try {
+        	    pathnameOnly = new URL(cleanUrl).pathname; // ex: /TripFul_Project/save/에펠탑218.jpg
+        	  } catch (e) {
+        	    pathnameOnly = cleanUrl; // 상대 경로면 그대로
+        	  }
+
+        	  $('#summernote').summernote('insertImage', cleanUrl);
+        	  uploadedImageSrcList.push(pathnameOnly); // ✅ 경로만 저장
+        	  alert("서머노트에 이미지 추가 ✅");
+        },
+        error: function (xhr, status, error) {
+          alert("이미지 업로드 실패: " + error);
+        }
+      });
+    }
+    
+    function normalizeUrl(url) {
+    	  // 인코딩된 것 디코딩하고, 공백 제거, \r\n 제거
+    	  return decodeURIComponent(url).trim().replace(/\s/g, '');
+    	}
+    
+    
+    let observer;
+
+    function observeImageDeletion() {
+      const editorBody = document.querySelector('.note-editable');
+
+      if (!editorBody) return;
+
+      observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          // 삭제된 노드 중 이미지가 있는지 확인
+          mutation.removedNodes.forEach((node) => {
+            if (node.tagName === 'IMG') {
+              const src = node.getAttribute('src');
+              handleImageDeleteByKey(src);
+            }
+
+            // 혹시 감싸는 divごと 삭제된 경우 처리
+            const imgs = node.querySelectorAll ? node.querySelectorAll('img') : [];
+            imgs.forEach(img => {
+              handleImageDeleteByKey(img.getAttribute('src'));
+            });
+          });
+        });
+      });
+
+      observer.observe(editorBody, {
+        childList: true,
+        subtree: true
+      });
+    }
+
+    // 이미지 삭제 처리 함수
+    function handleImageDeleteByKey(fullUrl) {
+      if (!fullUrl) return;
+
+      let pathOnly;
+      try {
+        pathOnly = new URL(fullUrl).pathname;
+      } catch (e) {
+        pathOnly = fullUrl;
+      }
+
+      const normalizedDeleteTarget = normalizeUrl(pathOnly);
+
+      // 배열에서 제거
+      uploadedImageSrcList = uploadedImageSrcList.filter((url) => {
+        return normalizeUrl(url) !== normalizedDeleteTarget;
+      });
+
+      // 서버에 삭제 요청
+      $.ajax({
+        url: 'deleteImg.jsp',
+        type: 'POST',
+        data: { imageUrl: pathOnly },
+        success: function (response) {
+          console.log('🔁 이미지 삭제 (키 입력 감지):', response);
+        },
+        error: function (xhr, status, error) {
+          console.error('이미지 삭제 실패:', error);
+        }
+      });
+
+      console.log("🧹 배열 삭제 후:", uploadedImageSrcList);
+    }
+    
+    observeImageDeletion();
+
+
+  });
 </script>
+
 
 
 </head>
@@ -135,7 +259,7 @@
 <div id="map" style="height: 400px; width: 100%; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;"></div>
 
 <div class="d-flex justify-content-center">
-  <form method="post" action="insertPlaceAction.jsp" enctype="multipart/form-data" style="width: 100%; max-width: 1500px;">
+  <form method="post" action="insertPlaceAction.jsp" target="previewPopup" enctype="multipart/form-data" style="width: 100%; max-width: 1500px;" id="previewForm">
     <div id="place-info" class="card p-2">
       <h5 class="mb-3 text-center">선택된 장소 정보</h5>
 
@@ -173,8 +297,14 @@
         <div class="col-12">
           <label for="summernote" class="form-label fw-semibold">관광지 설명</label>
           <textarea id="summernote" name="place_content" class="form-control"></textarea>
+          
         </div>
       </div>
+      <input type="hidden" id="input-name" name="preview_name">
+<input type="hidden" id="input-address" name="preview_address">
+<input type="hidden" id="input-placeid" name="preview_placeid">
+<input type="hidden" id="input-tag" name="preview_tag">
+<input type="hidden" id="input-content" name="preview_content">
 
       <button type="submit" class="btn btn-primary w-100 mt-3">추가</button>
       <button type="button" class="btn btn-secondary" id="btnPreview">미리보기</button>
@@ -253,30 +383,57 @@
 	  });
 }
     
-   $(document).ready(function() {
+   $(document).ready(function () {
 	   $('#btnPreview').on('click', function () {
-		   const name = $('#output-name').val();
-		   const address = $('#output-address').val();
-		   const placeId = $('#output-placeid').val();
-		   const tag = $('#place_tag').val();                 // 입력한 카테고리 텍스트
-		   const content = $('#summernote').summernote('code'); // summernote 편집기 내부 내용 (html)
+	     const name = $('#output-name').val();
+	     const address = $('#output-address').val();
+	     const placeId = $('#output-placeid').val();
+	     const tag = $('#place_tag').val();
+	     const content = $('#summernote').summernote('code');
+	     //const imageList = JSON.stringify(uploadedImageSrcList);
+	     const imageList = JSON.stringify(
+		  uploadedImageSrcList.map(url => {
+		    try {
+		      return new URL(url).pathname; // 전체 URL에서 `/TripFul_Project/save/...` 추출
+		    } catch (e) {
+		      return url; // 혹시 상대경로가 이미 있으면 그대로
+		    }
+		  })
+		);
 
-		   const popup = window.open("detailPreview.jsp", "popup", "width=1100,height=800");
-		   if (!popup) {
-		     alert("팝업이 차단됐습니다. 팝업 허용 후 다시 시도해주세요.");
-		     return;
-		   }
+	     
+	     // 새 팝업창 먼저 오픈
+	     const popup = window.open('', 'previewPopup', 'width=1100,height=800');
+	     if (!popup) {
+	       alert("팝업이 차단되었습니다. 팝업 허용 후 다시 시도해주세요.");
+	       return;
+	     }
 
-		   const sendMessage = () => {
-		     if (popup.document && popup.document.readyState === 'complete') {
-		       popup.postMessage({ name, address, placeId, tag, content }, "*");
-		       clearInterval(interval);
-		     }
-		   };
+	     // 기존에 생성된 폼이 있다면 삭제
+	     $('#dynamicPreviewForm').remove();
 
-		   const interval = setInterval(sendMessage, 100);
-   });
+	     // 폼 동적 생성
+	     const $form = $('<form>', {
+	       method: 'post',
+	       action: 'detailPreview.jsp',
+	       target: 'previewPopup',
+	       id: 'dynamicPreviewForm'
+	     });
+
+	     // hidden input 추가
+	     $form.append($('<input>', { type: 'hidden', name: 'preview_name', value: name }));
+	     $form.append($('<input>', { type: 'hidden', name: 'preview_address', value: address }));
+	     $form.append($('<input>', { type: 'hidden', name: 'preview_placeid', value: placeId }));
+	     $form.append($('<input>', { type: 'hidden', name: 'preview_tag', value: tag }));
+	     $form.append($('<input>', { type: 'hidden', name: 'preview_content', value: content }));
+	     $form.append($('<input>', { type: 'hidden', name: 'preview_images', value: imageList }));  // ✅ 이미지 배열 추가
+
+	     // form을 body에 붙이고 submit
+	     $('body').append($form);
+	     $form.submit();
 	   });
+	 });
+
 
   </script>
   

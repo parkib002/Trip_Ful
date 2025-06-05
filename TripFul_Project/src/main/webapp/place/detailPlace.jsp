@@ -315,7 +315,7 @@ $(function(){
   	for(int i=0;i<img.length;i++){
   %>
     <div class="carousel-item <%= (i == 0 ? "active" : "") %>">
-      <img src="./<%=img[i] %>" alt="Los Angeles" class="d-block" style="width:500px;">
+      <img src="<%=img[i] %>" alt="Los Angeles" class="d-block" style="width:500px;">
     </div>
    
     <%} 

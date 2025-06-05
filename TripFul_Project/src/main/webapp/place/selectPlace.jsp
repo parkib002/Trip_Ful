@@ -477,7 +477,7 @@ $(document).ready(function () {
         const $card = $('<div class="place-card">').css('cursor', 'pointer');
 
         const fileName = place.place_img ? place.place_img.split(',')[0] : null;
-        const imgPath = fileName ? ('./' + fileName) : 'https://via.placeholder.com/200x150?text=No+Image';
+        const imgPath = fileName ? (fileName) : 'https://via.placeholder.com/200x150?text=No+Image';
 
         const $imageWrapper = $('<div>').addClass('image-wrapper');
         const $img = $('<img>').attr('src', imgPath).attr('alt', place.place_name);

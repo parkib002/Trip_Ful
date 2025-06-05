@@ -1,3 +1,6 @@
+<%@page import="org.json.JSONArray"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -9,6 +12,33 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- 스타일 복사 -->
+<%
+    request.setCharacterEncoding("UTF-8");
+
+    String name = request.getParameter("preview_name");
+    String address = request.getParameter("preview_address");
+    String placeId = request.getParameter("preview_placeid");
+    String tag = request.getParameter("preview_tag");
+    String content = request.getParameter("preview_content");
+    String imageJson = request.getParameter("preview_images");
+
+    List<String> imageList = new ArrayList<>();
+    if (imageJson != null && !imageJson.isEmpty()) {
+        JSONArray arr = new JSONArray(imageJson);
+        for (int i = 0; i < arr.length(); i++) {
+            imageList.add(arr.getString(i));
+        }
+    }
+
+    // 콘솔에 출력 (서버 로그에서 확인 가능)
+    System.out.println("=== [미리보기 디버그 정보] ===");
+    System.out.println("이름: " + name);
+    System.out.println("주소: " + address);
+    System.out.println("Place ID: " + placeId);
+    System.out.println("카테고리: " + tag);
+    System.out.println("내용: " + content);
+    System.out.println("imageList : " + imageList);
+%>
 <style type="text/css">
 body {
     font-family: 'Arial', sans-serif;
@@ -138,6 +168,7 @@ function initMap() {
 		      document.getElementById("preview-content").innerHTML = data.content || '<p>내용 없음</p>';
 		      const placeId = data.placeId || null;
 		      console.log("Current placeId:", placeId);
+		      console.log(data.content)
 		      if (placeId && service && map) {
 		        showPlaceOnMap(placeId);
 		      } else {
@@ -158,7 +189,7 @@ function initMap() {
 </head>
 <body>
 <div class="container">
-        <h1 class="place-title" align="center" id="preview-name"></h1>
+        <h1 class="place-title" align="center" id="preview-name"><%=name %></h1>
         <div class="category-views d-flex justify-content-between align-items-center mb-2">
     	<p class="category m-0" id="preview-tag"></p>
    	 	<p class="views m-0 count"></p>
@@ -171,16 +202,31 @@ function initMap() {
 		</div>
         <div class="main-section">
            <!-- Carousel -->
+          
 <div id="demo" class="carousel slide" data-bs-ride="carousel">
   <!-- Indicators/dots -->
 <div class="carousel-indicators">
-    <button type="button" data-bs-target="#demo" data-bs-slide-to=""></button>
+    <%
+    for (int i = 0; i < imageList.size(); i++) {
+%>
+  <button type="button" data-bs-target="#demo" data-bs-slide-to="<%=i%>" class="<%= (i == 0) ? "active" : "" %>"></button>
+<%
+    }
+%>
 </div>
   <!-- The slideshow/carousel -->
   <div class="carousel-inner">
-    <div class="carousel-item">
-      <img src="" alt="Los Angeles" class="d-block" style="width:500px;">
-    </div>
+      <div class="carousel-inner">
+    <%
+      for (int i = 0; i < imageList.size(); i++) {
+        String img = imageList.get(i);
+    %>
+      <div class="carousel-item <%= (i == 0) ? "active" : "" %>">
+        <img src="<%= img %>" class="d-block w-100" alt="uploaded image">
+      </div>
+    <%
+      }
+    %>
   </div>
   <!-- Left and right controls/icons -->
   <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
