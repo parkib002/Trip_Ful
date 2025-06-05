@@ -84,7 +84,7 @@
         review.put("date", reviewData);               
         
         String review_img=map.get("review_img");
-        if(review_img!=null)
+        if(review_img!=null && review_img!="null")
         {
         	String [] review_imgs=review_img.split(",");
         	for(int i=0;i<review_imgs.length;i++)

@@ -1,8 +1,8 @@
 
-$(document).on('click', '.category', function(e) {
+$(document).on('click', '.review_category', function(e) {
     // 현재 클릭된 아이콘의 review-id를 가져옵니다. (옵션)
     var clickedId = $(this).attr("review_id");
-	console.log(clickedId);
+	//console.log(clickedId);
     // 다른 모든 열려있는 드롭다운 메뉴를 닫습니다.
     // 현재 클릭된 메뉴만 열리도록 하기 위함.
     $('.dropdown-menu').not($(this).next('.dropdown-menu')).slideUp(100);
