@@ -5,7 +5,7 @@ var closeBtn = $("#closeBtn");
 var submitReviewBtn = $("#btn-write"); // #btn-write ID를 가진 버튼이 '게시'/'수정' 역할
 
 // 마우스가 눌렸을 때 (mousedown) 모달 내에 있었는지 추적하는 변수
-let mouseEvent = false;
+/*let mouseEvent = false;*/
 
 // --- 공통 함수들 ---
 
@@ -37,15 +37,11 @@ function resetModalForm() {
     $("#review_star").val(0); // 별점 값 0으로 초기화
     $("#myModal .star_rating .star").removeClass('on'); // 별점 UI 초기화 (모든 별 'on'클래스 제거)
     $(".img-con").find(".img-wrapper").remove(); // 이미지 미리보기 제거
-    $(".img-con").find(".btn-upload").show(); // 이미지 업로드 버튼 다시 표시	
-	
-
-	// 모든 hidden photo input 초기화
-	$(".upload_img").val("");
-	
+    $(".img-con").find(".btn-upload").show(); // 이미지 업로드 버튼 다시 표시		
     submitReviewBtn.text("게시"); // 버튼 텍스트를 '게시'로 설정
     $("input[name='review_idx']").val(""); // review_idx 숨김 필드 초기화
     $(".review_content").val(""); // textarea 내용도 초기화 (reset()으로 안될 수 있음)
+	$(".img-con").find(".delete_img").val("false");
 }
 
 /* 업데이트 모달창 클릭 시 기존 리뷰 데이터를 모달에 채워 넣는 함수.
@@ -72,19 +68,21 @@ function updateModalData(reviewItem) {
     var getcontent = reviewItem.find("p.card-text").text();
     $(".review_content").val(getcontent); // textarea에 내용 채우기
 	
-	
-
 	var photo= reviewItem.find(".photo");
 	photo.each(function(idx){
 		if(idx<3){
 			var getSrc=$(this).attr("src");
-			if(getSrc && getSrc!=null && getSrc!="undefined" && getSrc!=""){
-				var currentCon=$("#show"+(idx+1));
-				var fileName= getSrc.substring(getSrc.lastIndexOf("/")+1);
+			console.log("getSrc: "+getSrc);
+			var currentCon=$("#show"+(idx+1));
+			var fileName= getSrc.substring(getSrc.lastIndexOf("/")+1);
+			console.log("fileName: "+fileName);
+			if(getSrc && getSrc!=null && getSrc!="undefined" && getSrc!=""){				
 				currentCon.find(".btn-upload").hide();
-				currentCon.append("<div class='img-wrapper'><img id='showimg' src='" + getSrc + "'><i class='bi bi-x img-icon'></i></div>");
-				currentCon.find("input[name='photo" + (idx + 1) + "']").val(fileName);
-			}
+				currentCon.append("<div class='img-wrapper'><img id='showimg' src='" + getSrc + "'><i class='bi bi-x img-icon'></i></div>");				
+				currentCon.find(".delete_img").val("true");
+			}else{
+				currentCon.find(".btn-upload").show();
+			}		
 			
 		}
 	});
@@ -167,6 +165,8 @@ $(window).click(function(e) {
 });
 
 
+
+
 // 별점 클릭 이벤트
 $(".star_rating .star").click(function() {
     var clickedStar = $(this);
@@ -181,8 +181,8 @@ $(".star_rating .star").click(function() {
 });
 
 // 파일 선택 이벤트
-$(".review_img").change(function() {
-
+$(document).on("change", ".review_img", function() {
+	console.log("1234");
     var file = this.files[0];
 	var currentImg=$(this);
 	var currentCon=currentImg.closest(".img-con");
@@ -191,13 +191,11 @@ $(".review_img").change(function() {
         const reader = new FileReader();
 		
         reader.onload = function(e) {			 
-			
+			//console.log("file.name: "+file.name);
             currentCon.find(".img-wrapper").remove();
             btnUpload.hide();
-            currentCon.append("<div class='img-wrapper'><img id='showimg' src='" + e.target.result + "'><i class='bi bi-x img-icon'></i></div>");
-			var inputName=currentImg.attr("name").replace("review_img", "photo");
+            currentCon.append("<div class='img-wrapper'><img id='showimg' src='" + e.target.result + "'><i class='bi bi-x img-icon'></i></div>");		
 			
-			$("input[name='"+inputName+"']").val(file.name);
         };
         reader.readAsDataURL(file);
     }
@@ -215,7 +213,8 @@ $(document).on("click", ".img-icon", function(e) {
 	var currentCon=$(this).closest(".img-con");
     currentCon.find(".img-wrapper").hide();
     currentCon.find(".btn-upload").show();
-	currentCon.find(".upload_img").val("");
+	currentCon.find(".delete_img").val("false");
+	
 });
 
 

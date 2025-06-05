@@ -11,11 +11,7 @@
 <head>
 <meta charset="UTF-8">
 
-<link
-	href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Dongle&family=Gaegu&family=Nanum+Pen+Script&display=swap"
-	rel="stylesheet">
-	<link rel="stylesheet" href="Review/carouselStyle.css">
-	<link rel="stylesheet" href="Review/ModalStyle.css">
+
 <title>Insert title her</title>
 <%
 	//place_num 얻기
@@ -103,7 +99,7 @@ function loadReviews() {
 	                    reviewCard += "<b>" + r.author + "</b>";	                    
 	                    reviewCard += "<div class='categorydate'>";
 	                    reviewCard += "<span class='review_writeday'>" + r.date + "</span>&nbsp;&nbsp;";
-	                    reviewCard += "<i class='bi bi-three-dots-vertical category' review_id='"+r.author+"'></i>";
+	                    reviewCard += "<i class='bi bi-three-dots-vertical review_category' review_id='"+r.author+"'></i>";
 	                    reviewCard += "<div class='dropdown-menu'>";
 
 	                    //console.log(r.author, review_id);
@@ -139,18 +135,22 @@ function loadReviews() {
 	                    
 	                    
 	                    var photos = [];
-	                    if (r.photo1 && r.photo1 !== "null" && r.photo1 !== "") photos.push(r.photo1);
-	                    if (r.photo2 && r.photo2 !== "null" && r.photo2 !== "") photos.push(r.photo2);
-	                    if (r.photo3 && r.photo3 !== "null" && r.photo3 !== "") photos.push(r.photo3);
-	                    
+	                    if (r.photo1 && r.photo1 !== "null" && r.photo1 !== "") 
+	                    	photos.push(r.photo1);
+	                    if (r.photo2 && r.photo2 !== "null" && r.photo2 !== "") 
+	                    	photos.push(r.photo2);
+	                    if (r.photo3 && r.photo3 !== "null" && r.photo3 !== "") 
+	                    	photos.push(r.photo3);
+	                    reviewCard += "<div class='img-con mb-2'>";
 	                    if (photos.length > 0) {
 	                        photos.forEach(function(photoUrl) {
-	                            reviewCard += "<div class='img-con mb-2'>";
+	                        	console.log("photoUrl: "+photoUrl);
+	                           
 	                            reviewCard += "<img src='save/" + photoUrl + "' class='photo' photo='"+photoUrl+"'>";
-	                            reviewCard += "</div>";
+	                            
 	                        });
 	                    }
-	                    
+	                    reviewCard +="</div>";
 
 	                    // 리뷰 텍스트
 	                    reviewCard += "<p class='card-text'>" + r.text.replaceAll("\n", "<br>") + "</p>";
@@ -251,7 +251,7 @@ function getStarClass(star) {
 </script>
 </head>
 
-<body>
+<body id="review_body">
 
 	<!-- 모달 버튼 -->
 <div>
@@ -319,7 +319,10 @@ function getStarClass(star) {
 		<form id="modalform" class="modalfrm" enctype="multipart/form-data">			
 			<div align="center" class="modal-head">
 				<input type="hidden" name="place_num" value="<%=place_num%>">
-				<input type="hidden" name="review_idx" value="">			
+				<input type="hidden" name="review_idx" value="">		
+				
+				
+				
 				<h4><%=place_name %></h4>
 				<br>
 			</div>
@@ -354,21 +357,21 @@ function getStarClass(star) {
 										<i class="bi bi-camera-fill camera"></i>
 										<input type="file" name="review_img1" id="file1" class="review_img">
 									</label>
-									<input type="hidden" name="photo1" value="" class="upload_img">
+									<input type="hidden" name="delete_img1" value="false" class="delete_img">
 								</div>
 								<div id="show2" class="img-con" >
 									<label class="btn-upload">
 										<i class="bi bi-camera-fill camera"></i>
 										<input type="file" name="review_img2" id="file2" class="review_img">
 									</label>
-									<input type="hidden" name="photo2" value="" class="upload_img">
+									<input type="hidden" name="delete_img2" value="false" class="delete_img">
 								</div>
 								<div id="show3"class="img-con" >
 									<label class="btn-upload">
 										<i class="bi bi-camera-fill camera"></i>
-										<input type="file" name="review_img3" id="file3" class="review_img">
-										<input type="hidden" name="photo3" value="" class="upload_img">
+										<input type="file" name="review_img3" id="file3" class="review_img">										
 									</label>
+									<input type="hidden" name="delete_img3" value="false" class="delete_img">	
 								</div>
 							</div>
 							<br><br>
@@ -383,6 +386,7 @@ function getStarClass(star) {
 				
 			</div>
 		</form>
+
 	</div>	
 
 </body>
