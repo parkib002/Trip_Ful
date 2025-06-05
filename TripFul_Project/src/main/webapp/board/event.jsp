@@ -30,7 +30,7 @@ if( session.getAttribute("loginok")!=null)
 //페이징처리
 //전체갯수
 int totalCount=dao.getTotalCount();
-int perPage=5; //한페이지에 보여질 글의 갯수
+int perPage=10; //한페이지에 보여질 글의 갯수
 int perBlock=5; //한블럭당 보여질 페이지의 갯수
 int startNum; //db에서 가져올 글의 시작번호(mysql:0 오라클:1번)
 int startPage; //각블럭당 보여질 시작페이지
@@ -97,9 +97,9 @@ SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			<tr>
 				<th scope="col" style="width: 8%;">번호</th>
             	<th scope="col" style="width: 47%;">제목</th>
-            	<th scope="col" style="width: 15%;">작성자</th>
+            	<th scope="col" style="width: 15%; text-align: center;">작성자</th>
            		<th scope="col" style="width: 20%;">작성일</th>
-            	<th scope="col" style="width: 10%;">조회수</th>
+            	<th scope="col" style="width: 10%; text-align: center;">조회수</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -119,16 +119,16 @@ SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						BoardEventDto dto=list.get(i);
 					%>
 						<tr>
-							<th scope="row"><%=no - i%></th>
+							<th scope="row">&nbsp;<%=no - i%></th>
 							<td>
 								<a href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=eventDetail.jsp&idx=<%=dto.getEvent_idx() %>"
 								style="text-decoration: none; color: black;">
 									<%=dto.getEvent_title() %>
 								</a>
 							</td>
-							<td><%=dto.getEvent_writer() %></td>
+							<td align="center"><%=dto.getEvent_writer() %></td>
 							<td><%=sdf.format(dto.getEvent_writeday()) %></td>
-							<td><%=dto.getEvent_readcount() %></td>
+							<td align="center"><%=dto.getEvent_readcount() %></td>
 						</tr>
 					<%}
 			}
