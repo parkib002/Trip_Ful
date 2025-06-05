@@ -187,7 +187,7 @@ if (dto.getAdmin() == 1) {
 	session.setAttribute("id", dto.getId());
 %>
 <script>
-	window.opener.document.location.href = "../page/adminMain.jsp";
+	window.opener.document.location.href = "../index.jsp?main=page/adminMain.jsp";
 	window.close();
 </script>
 <%
