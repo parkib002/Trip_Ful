@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Tripful - 관광지 정보</title>
 	
-	<link rel="stylesheet" href="Review/carouselStyle.css">
+	
     <link rel="stylesheet" href="css/pagination.css">
     <link rel="stylesheet" href="css/boardListStyle.css">
     <link rel="stylesheet" href="css/noticeStyle.css">
