@@ -11,6 +11,7 @@
 <head>
 <meta charset="UTF-8">
 
+
 <title>Insert title her</title>
 <%
 	//place_num 얻기
@@ -385,7 +386,9 @@ function getStarClass(star) {
 				
 			</div>
 		</form>
-	</div>		
+
+	</div>	
+
 </body>
 
 </html>

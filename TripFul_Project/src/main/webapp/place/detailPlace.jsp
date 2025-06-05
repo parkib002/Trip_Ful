@@ -10,10 +10,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+
 <title>Insert title here</title>
 <%
 	request.setCharacterEncoding("utf-8");
@@ -38,6 +35,7 @@
 
 	
 %>
+
 <style type="text/css">
 body {
     font-family: 'Arial', sans-serif;
