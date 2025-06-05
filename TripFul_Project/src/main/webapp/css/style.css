@@ -1,6 +1,6 @@
 /* 기본 바디와 글자 색상 */
 body {
-    background-color: #FFFFF0;
+    /*background-color: #FFFFF0 !important;*/
     color: black;
     font-family: 'Noto Sans KR', sans-serif;
 

@@ -54,18 +54,24 @@
 
 
 
-.review-image-container {
-    max-height: 200px; /* 이미지 컨테이너 최대 높이 */
-    overflow: hidden; /* 넘치는 부분 숨김 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+div.img-con {
+    display: flex;    
+    flex-wrap: wrap;
+    justify-content: inherit;
+    /* max-height:180px;
+    overflow: auto; */
+    
 }
 
-.review-image-container img {      
-    width: 200px; /* 이미지 높이 100% */   
-    height: 200px; /* 이미지 높이 100% */   
+div.img-con img.photo {      
+    width: 170px; /* 이미지 높이 100% */   
+    height: 170px; /* 이미지 높이 100% */   
     border-radius:10px;    
+    margin: 5px;
+    display: inline-flex; /* 인라인 블록처럼 작동하면서 내부 정렬 가능 */
+    align-items: center; /* 내부 아이콘/텍스트 세로 중앙 정렬 */
+    justify-content: center; /* 내부 아이콘/텍스트 가로 중앙 정렬 */
+    box-sizing: border-box; 
 }
 
 /* 별점 스타일 */
@@ -186,7 +192,7 @@ div.categorydate{
 }
 
 /* 카테고리 아이콘 */
-i.category{
+i.review_category{
 	background: rgba(0, 0, 0, 0); /* 투명 배경 */
     color: #CCC; /* 아이콘 색상 */
     border: none;
@@ -201,7 +207,7 @@ i.category{
     height: 30px; /* 버튼의 고정 높이 */
     
 }
-i.category:hover {
+i.review_category:hover {
 	background: rgba(0, 0, 0, 0.5);
 }
 

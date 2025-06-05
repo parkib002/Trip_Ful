@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /* 모달창 */
-* {
+#review_body {
 	box-sizing: border-box;
 }
 
@@ -52,7 +52,7 @@
 	transform: scale(1);
 }
 
-.close, .save , .update{
+.modal .close, .modal .save , .modal .update{
 	color: #aaa;
 	float: right;	
 	font-size: 28px;
@@ -61,7 +61,7 @@
 	margin-left: 5px;
 }
 
-.close:hover, .save:hover ,.update:hover{
+.modal .close:hover, .modal .save:hover, .modal .update:hover{
 	color: black;
 }
 

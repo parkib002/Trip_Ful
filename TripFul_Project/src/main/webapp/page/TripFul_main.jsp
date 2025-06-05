@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.*, main.MainPlaceDao, main.MainPlaceDto, review.ReviewDao" %>
+<%@ page import="java.util.*, place.PlaceDto, place.PlaceDao, review.ReviewDao" %>
+
 
 <%
-    MainPlaceDao mainPlaceDao = new MainPlaceDao();
-    ReviewDao reviewDao = new ReviewDao();
 
-    List<MainPlaceDto> placeList = mainPlaceDao.getRandomPlaces(5);
+    ReviewDao reviewDao = new ReviewDao();
+    PlaceDao placeDao = new PlaceDao();
+    List<PlaceDto> placeList = placeDao.getRandomPlaces(5);
     List<HashMap<String, String>> overallLatestReviewList = reviewDao.getAllReviews();
 %>
 
@@ -25,9 +26,9 @@
     <div class="carousel-inner">
         <% if (placeList != null && !placeList.isEmpty()) {
             for (int i = 0; i < placeList.size(); i++) {
-                MainPlaceDto place = placeList.get(i);
+                PlaceDto place = placeList.get(i);
                 String activeClass = (i == 0) ? "active" : "";
-                HashMap<String, String> currentReview = reviewDao.getLatestReviewForPlace(place.getPlaceNum());
+                HashMap<String, String> currentReview = reviewDao.getLatestReviewForPlace(place.getPlace_name());
         %>
         <div class="carousel-item <%= activeClass %>">
             <div class="d-flex justify-content-center py-4">
@@ -36,9 +37,9 @@
                     <div class="card border-0 shadow-lg h-100 rounded-4 overflow-hidden d-flex flex-row" style="min-height: 450px; position: relative;">
                         <!-- 이미지 영역 -->
                         <div style="flex: 0 0 40%; position: relative;">
-                            <img src="<%= request.getContextPath() %>/save/<%= place.getPlaceImg() %>"
+                            <img src="<%= request.getContextPath() %>/save/<%= place.getPlace_img() %>"
                                  class="object-fit-cover h-100 w-100"
-                                 alt="<%= place.getPlaceName() %>"
+                                 alt="<%= place.getPlace_name() %>"
                                  style="filter: brightness(90%);">
                             <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.25);"></div>
                         </div>
@@ -46,11 +47,11 @@
                         <!-- 텍스트 및 리뷰 영역 -->
                         <div class="card-body p-4 d-flex flex-column justify-content-between" style="flex: 1 1 60%; overflow-y: auto; position: relative;">
                             <div>
-                                <h5 class="card-title fw-bold text-primary"><%= place.getPlaceName() %></h5>
-                                <p class="card-text"><%= place.getPlaceContent() %></p>
-                                <p class="text-muted small">태그: <%= place.getPlaceTag() %> | 대륙: <%= place.getContinentName() %></p>
+                                <h5 class="card-title fw-bold text-primary"><%= place.getPlace_name() %></h5>
+                                <p class="card-text"><%= place.getPlace_content() %></p>
+                                <p class="text-muted small">태그: <%= place.getPlace_tag()%> | 대륙: <%= place.getContinent_name() %></p>
                                 <div class="bg-light p-4 mt-4 rounded-4 shadow-sm border-start border-5 border-warning">
-                                    <h6 class="fw-bold mb-2"><%= place.getPlaceName() %>에 대한 여행자의 리뷰</h6>
+                                    <h6 class="fw-bold mb-2"><%= place.getPlace_name()%>에 대한 여행자의 리뷰</h6>
                                     <% if (currentReview != null) {
                                         String reviewAuthor = Optional.ofNullable(currentReview.get("author")).orElse("익명");
                                         String reviewText = Optional.ofNullable(currentReview.get("text")).orElse("리뷰 내용 없음");
@@ -66,7 +67,7 @@
                                 </div>
                             </div>
                             <!-- 우측 하단 버튼 -->
-                            <a href="index.jsp?main=place/detailPlace.jsp&place_num=<%= place.getPlaceNum() %>"
+                            <a href="index.jsp?main=place/detailPlace.jsp&place_num=<%= place.getPlace_num() %>"
                                class="btn btn-outline-warning mt-2"
                                style="position: absolute; bottom: 16px; right: 16px;">
                                 자세히 보기

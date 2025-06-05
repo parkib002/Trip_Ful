@@ -21,8 +21,10 @@
         String lowerKeyword = keyword.toLowerCase();
         filtered = allPlaces.stream()
                 .filter(dto -> dto.getPlace_name().toLowerCase().contains(lowerKeyword) ||
-                        dto.getCountry_name().toLowerCase().contains(lowerKeyword))
+                        dto.getCountry_name().toLowerCase().contains(lowerKeyword) ||
+                        dto.getPlace_tag().toLowerCase().contains(lowerKeyword))
                 .collect(Collectors.toList());
+
     }
 %>
 <!DOCTYPE html>
