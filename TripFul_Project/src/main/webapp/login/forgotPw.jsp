@@ -64,5 +64,5 @@
 		</div>
 	</div>
 </body>
-<script src="JavaScript/forgotJS.js"></script>
+<script src="login/JavaScript/forgotJS.js"></script>
 </html>
