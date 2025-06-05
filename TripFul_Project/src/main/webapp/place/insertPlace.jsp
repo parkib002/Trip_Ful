@@ -17,6 +17,64 @@
       height: 500px;
       width: 100%;
     }
+    
+  .carousel-inner {
+  height: 300px; /* 고정 높이 */
+  display: block;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-item img {
+  max-height: 100%;
+  width: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+    
+    .place-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  
+}
+
+.category {
+  font-size: 1rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.location,
+.address {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.main-section {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.image-box img {
+  border-radius: 10px;
+  width: 100%;
+  height: auto;
+}
+
+.info-box {
+  flex-grow: 1;
+}
+    
+    
   </style>
   
   <script>
@@ -119,9 +177,11 @@
       </div>
 
       <button type="submit" class="btn btn-primary w-100 mt-3">추가</button>
+      <button type="button" class="btn btn-secondary" id="btnPreview">미리보기</button>
     </div>
   </form>
 </div>
+
 
 
   <script>
@@ -182,9 +242,42 @@
   document.getElementById("output-name").value = currentPlace.name;
   document.getElementById("output-address").value = currentPlace.address;
   document.getElementById("output-placeid").value = currentPlace.place_id;
+  
+  const content = $('#summernote').summernote('code');
+  const tag = $('#place_tag').val();
 
-  console.log("저장할 데이터:", currentPlace);
+  console.log("저장할 데이터:", {
+	    ...currentPlace,
+	    tag: tag,
+	    content: content
+	  });
 }
+    
+   $(document).ready(function() {
+	   $('#btnPreview').on('click', function () {
+		   const name = $('#output-name').val();
+		   const address = $('#output-address').val();
+		   const placeId = $('#output-placeid').val();
+		   const tag = $('#place_tag').val();                 // 입력한 카테고리 텍스트
+		   const content = $('#summernote').summernote('code'); // summernote 편집기 내부 내용 (html)
+
+		   const popup = window.open("detailPreview.jsp", "popup", "width=1100,height=800");
+		   if (!popup) {
+		     alert("팝업이 차단됐습니다. 팝업 허용 후 다시 시도해주세요.");
+		     return;
+		   }
+
+		   const sendMessage = () => {
+		     if (popup.document && popup.document.readyState === 'complete') {
+		       popup.postMessage({ name, address, placeId, tag, content }, "*");
+		       clearInterval(interval);
+		     }
+		   };
+
+		   const interval = setInterval(sendMessage, 100);
+   });
+	   });
+
   </script>
   
 

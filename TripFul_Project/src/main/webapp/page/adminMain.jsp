@@ -28,6 +28,7 @@
     <title>관리자 메인 페이지</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif; /* Google Font Inter 적용 */
@@ -99,7 +100,74 @@
             color: #333;
             text-align: center;
         }
+        
+        .sort-dropdown {
+ 			padding: 0.35rem 0.5rem;
+		 	border: 2px solid #2196f3;
+  			border-radius: 0.5rem;
+  			font-size: 1rem;
+ 		 	color: #2196f3;
+		  	background-color: #fff;
+		  	cursor: pointer;
+ 		 	transition: all 0.3s ease;
+		}
+        
     </style>
+    <script type="text/javascript">
+    $(function() {
+        let currentSort = 'views';
+
+        function loadPopularList(sort) {
+            $.ajax({
+                type: "post",
+                url: "page/sortPlaceAction.jsp",
+                data: { "sort": sort },
+                dataType: "json",
+                success: function(res) {
+                    console.log(sort);
+                    console.log(res);
+                    if(res.length > 0) {
+                        console.log(res[0].place_name);
+                    }
+
+                    $('#popularList').empty();
+
+                    $.each(res, function(index, item) {
+                        var rank = index + 1;
+                        var name = item.place_name;
+                        var value = 0;
+
+                        if (sort === 'views') {
+                            value = item.place_count;
+                        } else if (sort === 'rating') {
+                            value = item.avg_rating !== null ? item.place_rating.toFixed(1) : "0.0";
+                        } else if (sort === 'likes') {
+                            value = item.place_like;
+                        }
+
+                        var li = '<li class="list-group-item d-flex justify-content-between align-items-center">'
+                               + rank + '. ' + name+"("+item.country_name+")"
+                               + '<span class="badge bg-primary rounded-pill">' + value + '</span>'
+                               + '</li>';
+
+                        $('#popularList').append(li);
+                    });
+                },
+                error: function(err) {
+                    console.log("에러:", err);
+                }
+            });
+        }
+
+        // 페이지 최초 로딩 시 인기 리스트 불러오기
+        loadPopularList(currentSort);
+
+        $('#sortSelect').on('change', function() {
+            currentSort = $(this).val();
+            loadPopularList(currentSort);
+        });
+    });
+    </script>
 </head>
 <body>
 <div class="admin-banner">
@@ -139,14 +207,18 @@
                 <div class="card-body">
                     <div class="text-center card-icon mb-3"><i class="bi bi-star-fill"></i></div>
                     <h5 class="card-title mb-3 text-center">인기 여행지 TOP 5</h5>
+                    <div class="text-center mb-3">
+    				<select id="sortSelect" class="sort-dropdown">
+        			<option value="views">조회순</option>
+       				<option value="rating">별점순</option>
+        			<option value="likes">좋아요순</option>
+   					</select>
+					</div>
                     <!-- TODO: 실제 데이터로 변경 필요 -->
-                    <ul class="list-group list-group-flush">
-                        <% for(int i = 0; i < popularDestinations.size(); i++) { %>
+                    <ul class="list-group list-group-flush" id="popularList">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <%= (i+1) + ". " + popularDestinations.get(i) %>
-                            <span class="badge bg-primary rounded-pill"><%= 50 - i*5 %></span> <!-- 예시 조회수 -->
+                            <span class="badge bg-primary rounded-pill"></span> <!-- 예시 조회수 -->
                         </li>
-                        <% } %>
                     </ul>
                 </div>
             </div>
