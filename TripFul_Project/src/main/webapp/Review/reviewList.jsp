@@ -14,19 +14,8 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Dongle&family=Gaegu&family=Nanum+Pen+Script&display=swap"
 	rel="stylesheet">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-<link rel="stylesheet" href="Review/carouselStyle.css">
-<link rel="stylesheet" href="Review/ModalStyle.css">
+	<link rel="stylesheet" href="Review/carouselStyle.css">
+	<link rel="stylesheet" href="Review/ModalStyle.css">
 <title>Insert title her</title>
 <%
 	//place_num 얻기
@@ -395,10 +384,7 @@ function getStarClass(star) {
 			</div>
 		</form>
 	</div>	
-	 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-	 
-	 <script src="Review/JavaScript/ModalJs.js"></script>
-	 <script src="Review/JavaScript/reviewListJs.js"></script>
+
 </body>
 
 </html>
