@@ -26,6 +26,21 @@ function naverSign(apiURL) {
 	window.open(apiURL, "NaverLogin", "width=500, height=800, top=200, left=700, resizable=no, scrollbars=no");
 }
 
+function kakaoSign() {
+    const kakaoRestApiKey = "06960d1e88695098bafe3caf197a0a7e"; // 카카오 REST API 키
+    const redirectUri = encodeURIComponent('http://localhost:8080/TripFul_Project/login/kakaoLoginAction.jsp');
+
+    // 인가 코드 요청 URL을 직접 생성 (올바른 구문으로 수정)
+    const authUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoRestApiKey}&redirect_uri=${redirectUri}`;
+
+    // 새 팝업 창으로 카카오 로그인 페이지 띄우기
+    window.open(authUrl, "kakaoLoginPop", "width=500, height=800, top=200, left=700, scrollbars=yes");
+
+    // 주의: 이 방식은 Kakao.Auth.login의 success/fail 콜백을 사용하지 않습니다.
+    // 따라서 로그인 성공/실패 여부는 kakaoLoginAction.jsp에서 처리해야 합니다.
+}
+
+
 
 $("#id").keyup(function() {
 	//ajax를 통한 비동기 방식으로 중복 처리
