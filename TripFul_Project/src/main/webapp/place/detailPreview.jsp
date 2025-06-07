@@ -21,6 +21,8 @@
     String tag = request.getParameter("preview_tag");
     String content = request.getParameter("preview_content");
     String imageJson = request.getParameter("preview_images");
+    
+    String contentWithoutImg = content.replaceAll("<img[^>]*>", "");
 
     List<String> imageList = new ArrayList<>();
     if (imageJson != null && !imageJson.isEmpty()) {
@@ -43,20 +45,23 @@
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
-    background-color: #F5F5F5;
+    background-color: #f5f5f5;
 }
+
 .container {
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
     background-color: white;
 }
+
 .place-title {
     font-size: 32px;
     margin-bottom: 20px;
     border-bottom: 2px solid #ccc;
     padding-bottom: 10px;
 }
+
 .main-section {
     display: flex;
     gap: 20px;
@@ -64,61 +69,76 @@ body {
     align-items: flex-start;
     min-height: 320px;
 }
+
 .carousel {
     width: 500px;
     flex-shrink: 0;
 }
+
 .carousel-inner img {
     width: 500px;
     height: 500px;
     object-fit: cover;
     border-radius: 10px;
 }
+
 .image-box img {
     width: 400px;
     height: auto;
     border-radius: 10px;
 }
+
 .info-box {
     flex: 1;
 }
+
 .description {
     font-size: 16px;
     margin-bottom: 15px;
 }
+
 .category, .location {
     font-size: 14px;
     color: #666;
 }
+
 .review-section h2 {
     font-size: 24px;
     margin-bottom: 20px;
 }
+
 .review-card {
-    background-color: #F9F9F9;
+    background-color: #f9f9f9;
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 15px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
 .review-header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 8px;
 }
+
 .review-user {
     font-weight: bold;
 }
+
 .review-date {
     font-size: 12px;
     color: #999;
 }
+
 .category-views {
     font-size: 14px;
     color: #666;
 }
+
 </style>
 <script>
+const initialPlaceId = "<%= placeId %>";
+
 function initMap() {
 	  console.log("initMap called");
 	  map = new google.maps.Map(document.getElementById("map"), {
@@ -127,6 +147,12 @@ function initMap() {
 	  });
 	  service = new google.maps.places.PlacesService(map);
 	  console.log("Map and service initialized");
+	  
+	  // 👉 여기 추가!
+	  if (initialPlaceId && initialPlaceId !== "null") {
+	    console.log("Calling showPlaceOnMap with initialPlaceId:", initialPlaceId);
+	    showPlaceOnMap(initialPlaceId);
+	  }
 	}
 	function showPlaceOnMap(placeId) {
 	  console.log("showPlaceOnMap called with placeId:", placeId);
@@ -191,7 +217,7 @@ function initMap() {
 <div class="container">
         <h1 class="place-title" align="center" id="preview-name"><%=name %></h1>
         <div class="category-views d-flex justify-content-between align-items-center mb-2">
-    	<p class="category m-0" id="preview-tag"></p>
+    	<p class="category m-0" id="preview-tag">카테고리: <%=tag %></p>
    	 	<p class="views m-0 count"></p>
    	 	<p class="views m-0">별점: 없음</p>
 <!-- 좋아요 아이콘과 좋아요 수 -->
@@ -236,15 +262,16 @@ function initMap() {
     <span class="carousel-control-next-icon"></span>
   </button>
 </div>
+		<div id="preview-content">
+		<%=contentWithoutImg %>
+		</div>
+</div>
             <div class="info-box">
                 <p class="description"></p>
                 <p class="location">위치: </p>
                 <div id="map" style="width: 100%; height: 400px;"></div>
-                <p class="address" id="preview-address"></p>
-                <p>Place ID: <span id="preview-placeid"></span></p>
+                <p class="address" id="preview-address">주소: <%=address %></p>
             </div>
         </div>
-		<div id="preview-content"></div>
-</div>		
 </body>
 </html>

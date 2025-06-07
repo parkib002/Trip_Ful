@@ -20,20 +20,21 @@
 </head>
 <body>
 <%
+request.setCharacterEncoding("utf-8");
+
 String realPath = getServletContext().getRealPath("/save"); // 실제 저장 경로
 int uploadSize = 1024 * 1024 * 10; // 10MB
 
 try {
-    MultipartRequest multi = new MultipartRequest(request, realPath, uploadSize, "utf-8", new DefaultFileRenamePolicy());
 
     // 파라미터 수집
-    String pname = multi.getParameter("place_name");
-    String paddr = multi.getParameter("place_address");
-    String pid = multi.getParameter("place_id");
-    String countryname = multi.getParameter("country_name");
-    String continentname = multi.getParameter("continent_name");
-    String tag = multi.getParameter("place_tag");
-    String content = multi.getParameter("place_content");
+    String pname = request.getParameter("place_name");
+    String paddr = request.getParameter("place_address");
+    String pid = request.getParameter("place_id");
+    String countryname = request.getParameter("country_name");
+    String continentname = request.getParameter("continent_name");
+    String tag = request.getParameter("place_tag");
+    String content = request.getParameter("place_content");
 
     // 이미지 추출용 패턴 (<img src="...">)
     Pattern imgTagPattern = Pattern.compile("<img[^>]+src\\s*=\\s*\"([^\"]+)\"[^>]*>");
@@ -55,9 +56,6 @@ try {
                 String savePath = "save/" + fileName;
                 String filePath = realPath + File.separator + fileName;
 
-                try (FileOutputStream fos = new FileOutputStream(filePath)) {
-                    fos.write(imageBytes);
-                }
 
                 if (imgUrlBuilder.length() > 0) imgUrlBuilder.append(",");
                 imgUrlBuilder.append("/" + savePath); // 웹 경로 저장
@@ -89,13 +87,14 @@ try {
     PlaceDao dao = new PlaceDao();
     dao.insertPlace(dto);
 
-    response.sendRedirect("../index.jsp?main=place/selectPlace.jsp");
-    return;
+   response.sendRedirect("../index.jsp?main=place/selectPlace.jsp");
+   return;
 
 } catch (Exception e) {
     e.printStackTrace();
     out.println("오류 발생: " + e.getMessage());
 }
 %>
+
 </body>
 </html>

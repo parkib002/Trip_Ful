@@ -266,7 +266,7 @@ $(function(){
 <div class="flex gap-2" style="float: right;">
   <!-- 수정 버튼 -->
   <button class="flex items-center gap-1 text-white bg-blue-500 hover:bg-blue-600 text-xs px-2 py-1 rounded-md shadow-sm transition" type="button"
-   onclick="location.href='index.jsp?main=place/updatePlace.jsp?place_num=<%=num%>'">
+   onclick="location.href='place/updatePlace.jsp?place_num=<%=num%>'">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M11 5h2m2 0h.01M12 20h.01M20.5 13.5L17 10l-6 6v4h4l5.5-5.5zM4 6h16M4 10h16M4 14h7" />
