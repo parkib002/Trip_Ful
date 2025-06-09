@@ -1,0 +1,56 @@
+@charset "UTF-8";
+
+/* 리뷰박스 */
+.report_box{
+	margin-top:200px;
+	border:1px solid #e8eaed;
+	background-color: #fff;
+	border-radius: 8px;
+	margin-top: 200px !important;
+	padding: 24px;
+	max-width: 500px;
+	min-width:400px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.report_table{
+	margin-bottom: 0; /* 부트스트랩 기본 margin-bottom 제거 */
+    /* 테이블 자체의 border-top도 제거하거나 조정 */
+    --bs-table-border-color: transparent; 
+}
+.report_table td{
+	padding: 16px 0; /* 각 셀의 상하 패딩 */
+    border-bottom: 1px solid #e8eaed; /* 하단 구분선 */
+    vertical-align: middle; /* 텍스트와 아이콘 수직 중앙 정렬 */
+    cursor: pointer;
+}
+
+/* 리뷰 제목 */
+.report_main_title {
+font-size: 20px;
+font-weight: bold;
+margin-bottom: 24px;
+color: #202124;
+text-align: center;
+}
+
+.report_title {
+font-size: 17px;
+font-weight: 400;
+color: #3c4043;
+line-height: 1.3;
+font-weight: bold;
+}
+
+.report_text{
+font-size: 15px;
+font-weight: 400;
+color: #3c4043;
+line-height: 1.3; 
+}
+
+.report_right{	
+	font-size: 20px; /* 아이콘 크기 */
+    color: #70757a;
+    cursor: pointer;
+    font-weight: bold;
+}

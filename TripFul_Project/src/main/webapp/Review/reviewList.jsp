@@ -100,7 +100,10 @@ function loadReviews() {
 	                    reviewCard += "<b>" + r.author + "</b>";	                    
 	                    reviewCard += "<div class='categorydate'>";
 	                    reviewCard += "<span class='review_writeday'>" + r.date + "</span>&nbsp;&nbsp;";
-	                    reviewCard += "<i class='bi bi-three-dots-vertical review_category' review_id='"+r.author+"'></i>";
+	                    if(r.read!="Google")
+	                    	{
+	                    reviewCard += "<i class='bi bi-three-dots-vertical review_category' review_id='"+r.author+"'></i>";	
+                    	
 	                    reviewCard += "<div class='dropdown-menu'>";
 
 	                    //console.log(r.author, review_id);
@@ -112,10 +115,11 @@ function loadReviews() {
 	                    			        	reviewCard += "<button type='button' class='updateModal' review_idx='"+r.review_idx+"'>수정</button>";
 	                    			        }	                    			        
 
-	                    				}else if(r.author!=review_id && r.read=="DB" || r.read=="Google"){	                    					
-	                    					reviewCard += "<button type='button' class='report'>신고</button>"
+	                    				}else if(r.author!=review_id){	                    					
+	                    					reviewCard += "<button type='button' class='report' review_idx='"+r.review_idx+"' loginok='"+loginok+"'>신고</button>"
 	                    				}
 	                    reviewCard += "</div>";//카테고리 끝
+	                    	}
 	                    reviewCard += "</div></div>"; //날짜 리뷰헤더 끝        
 	                    reviewCard += "<div class='star_rating2 mb-2'>";
 	                    reviewCard += "<span>" + r.rating + "</span>&nbsp;&nbsp;";
