@@ -27,17 +27,17 @@ function naverSign(apiURL) {
 }
 
 function kakaoSign() {
-    const kakaoRestApiKey = "06960d1e88695098bafe3caf197a0a7e"; // 카카오 REST API 키
-    const redirectUri = encodeURIComponent('http://localhost:8080/TripFul_Project/login/kakaoLoginAction.jsp');
+	const kakaoRestApiKey = "06960d1e88695098bafe3caf197a0a7e"; // 카카오 REST API 키
+	const redirectUri = encodeURIComponent('http://localhost:8080/TripFul_Project/login/kakaoLoginAction.jsp');
 
-    // 인가 코드 요청 URL을 직접 생성 (올바른 구문으로 수정)
-    const authUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoRestApiKey}&redirect_uri=${redirectUri}`;
+	// 인가 코드 요청 URL을 직접 생성 (올바른 구문으로 수정)
+	const authUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoRestApiKey}&redirect_uri=${redirectUri}`;
 
-    // 새 팝업 창으로 카카오 로그인 페이지 띄우기
-    window.open(authUrl, "kakaoLoginPop", "width=500, height=800, top=200, left=700, scrollbars=yes");
+	// 새 팝업 창으로 카카오 로그인 페이지 띄우기
+	window.open(authUrl, "kakaoLoginPop", "width=500, height=800, top=200, left=700, scrollbars=yes");
 
-    // 주의: 이 방식은 Kakao.Auth.login의 success/fail 콜백을 사용하지 않습니다.
-    // 따라서 로그인 성공/실패 여부는 kakaoLoginAction.jsp에서 처리해야 합니다.
+	// 주의: 이 방식은 Kakao.Auth.login의 success/fail 콜백을 사용하지 않습니다.
+	// 따라서 로그인 성공/실패 여부는 kakaoLoginAction.jsp에서 처리해야 합니다.
 }
 
 
@@ -71,6 +71,12 @@ $("#id").keyup(function() {
 				inputId.siblings(".label").addClass("error");
 				//console.log(res.trim());
 			}
+			/*else if (res.trim() == 5) {
+				// 이전 아이디와 동일 아이디
+				inputId.siblings(".label").text("아이디      영문과 숫자가 모두 포함되어야 합니다.");
+				inputId.siblings(".label").addClass("error");
+				
+			}*/
 			else {
 				inputId.siblings(".label").text("아이디      사용가능한 아이디입니다.");
 				inputId.siblings(".label").removeClass("error");
@@ -123,12 +129,91 @@ $("#birth").keyup(function() {
 			$(this).siblings(".label").text("생년월일     6자리 YYMMDD형태로 입력해주세요.");
 			$(this).siblings(".label").addClass("error");
 		}
+		else if (Number(day) < 10 && !day.startsWith("0")) {
+			$(this).siblings(".label").text("생년월일     6자리 YYMMDD형태로 입력해주세요.");
+			$(this).siblings(".label").addClass("error");
+		}
 		else {
 			$(this).siblings(".label").text("생년월일");
 			$(this).siblings(".label").removeClass("error");
 		}
 	}
+})
 
+$("#currpw").keyup(function() {
+	//ajax를 통한 비동기 방식으로 중복 처리
+	var inputCurrPw = $("#currpw");
 
+	$.ajax({
+		type: "get",
+		url: "./login/PwDuplicate.jsp",
+		data: { "currpw": inputCurrPw.val() },
+		dataType: "html",
+		success: function(res) {
+			if (res.trim() == 1) {
+				inputCurrPw.siblings(".label").text("현재 비밀번호");
+				inputCurrPw.siblings(".label").removeClass("error");
+				console.log(res.trim());
+			}
+			else {
+				inputCurrPw.siblings(".label").text("현재 비밀번호      비밀번호가 틀립니다.");
+				inputCurrPw.siblings(".label").addClass("error");
+				//console.log(res.trim());
+			}
+		}
+	})
+})
 
+$("#newpw").keyup(function() {
+	var inputCurrPw = $("#newpw");
+
+	$.ajax({
+		type: "get",
+		url: "./login/PwDuplicate.jsp",
+		data: { "currpw": inputCurrPw.val() },
+		dataType: "html",
+		success: function(res) {
+			if (res.trim() == 1) {
+				inputCurrPw.siblings(".label").text("새 비밀번호  현재와 동일한 비밀번호는 사용할 수 없습니다.");
+				inputCurrPw.siblings(".label").addClass("error");
+				console.log(res.trim());
+			}
+			else {
+				if (inputCurrPw.val() == "") {
+					inputCurrPw.siblings(".label").text("새 비밀번호");
+					inputCurrPw.siblings(".label").removeClass("error");
+				}
+				else if (inputCurrPw.val().includes('!') || inputCurrPw.val().includes('@') || inputCurrPw.val().includes('#') ||
+					inputCurrPw.val().includes('$') || inputCurrPw.val().includes('!') || inputCurrPw.val().includes('%') ||
+					inputCurrPw.val().includes('^') || inputCurrPw.val().includes('&')) {
+
+					if (inputCurrPw.val().length >= 8 && inputCurrPw.val().length <= 16) {
+						inputCurrPw.siblings(".label").text("새 비밀번호");
+						inputCurrPw.siblings(".label").removeClass("error");
+					}
+
+					else {
+						inputCurrPw.siblings(".label").text("새 비밀번호      8자리 이상 16자리 이하여야 합니다.");
+						inputCurrPw.siblings(".label").addClass("error");
+					}
+				}
+				else {
+					inputCurrPw.siblings(".label").text("새 비밀번호      특수문자를 입력해주세요");
+					inputCurrPw.siblings(".label").addClass("error");
+				}
+				
+			}
+		}
+	})
+})
+
+$("#renewpw").keyup(function(){
+	if($(this).val() != $("#newpw").val()){
+		$(this).siblings(".label").text("비밀번호를 다시 확인하세요");
+		$(this).siblings(".label").addClass("error");
+	}
+	else{
+		$(this).siblings(".label").text("비밀번호가 일치합니다.");
+				$(this).siblings(".label").removeClass("error");
+	}
 })

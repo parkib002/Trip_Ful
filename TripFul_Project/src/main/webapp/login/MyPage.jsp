@@ -20,12 +20,20 @@
 <body>
 <%
 	String id = request.getParameter("id");
+	String s_id = null;
 	LoginDao dao = new LoginDao();
 	LoginDto dto = dao.getOneMember(id);
 	
 	LocalDate now = LocalDate.now();
 	String localeYear = now.toString().split("-")[0];
-	int age = Integer.parseInt(localeYear) - Integer.parseInt(dto.getBirth().substring(0, 2));
+	int age = Integer.parseInt(localeYear) - Integer.parseInt(dto.getBirth().substring(0, 2))-1900;
+	String age1 = age+"";
+	age1 = age1.replaceAll("^1", "");
+	age1 = age1.replaceAll("[1-9]$","0 대");
+	
+	if(session.getAttribute("id")!=null){
+		s_id = (String)session.getAttribute("id");
+	}
 	
 %>
 	<aside class="side-bar">
@@ -51,12 +59,17 @@
 			<h1>내 정보</h1>
 			<ul>
 				<li>이름 : <%=dto.getName() %></li>
-				<li>연령대 : <%= %> </li>
+				<li>연령대 : <%=age1 %> </li>
 				<li>이메일 : <%=dto.getEmail() %></li>
 				<li>아이디 : <%=id %></li>
 			</ul>
 			<div class="update-btn">
-				<button class="btn btn-info">정보 수정</button>
+				<%
+					if(id.equals(s_id)){
+						%><button class="btn btn-info" onclick="location.href='http://localhost:8080/TripFul_Project/index.jsp?main=login/changeForm.jsp'">정보 수정</button><%
+					}
+				%>
+				
 			</div>
 		</div>
 		<div class="MyReview">

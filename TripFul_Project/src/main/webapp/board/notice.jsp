@@ -73,8 +73,35 @@ no=totalCount-(currentPage-1)*perPage;
 List<BoardNoticeDto> list=dao.getList(startNum, perPage);
 
 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+String keywordFromRequest = request.getParameter("keyword");
 %>
 <body>
+<br><br>
+<!-- 검색창 -->
+<div class="container my-3 board-search-container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <form action="<%= request.getContextPath() %>/index.jsp" method="get" class="d-flex" id="boardPageGlobalSearchForm">
+                <%-- main 파라미터를 boardSearchResults.jsp로 직접 지정 --%>
+                <input type="hidden" name="main" value="board/boardSearchResult.jsp"> 
+                
+                <input class="form-control me-2" type="search"
+                       id="boardPageGlobalSearchInput"
+                       name="keyword"
+                       value="<%= keywordFromRequest != null ? keywordFromRequest.replace("\"", "&quot;") : "" %>" 
+                       placeholder="게시판 통합 검색"
+                       aria-label="게시판 통합 검색">
+                <button class="btn" type="submit"
+                style="width: 100px; height: 50px;
+                background-color: #2c3e50; color: white;">
+                    <i class="bi bi-search"></i> 검색
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div class="notice-wrapper">
 	<div class="notice-header">
 		<h3><i class="bi bi-x-diamond-fill">  </i><b>공지사항</b></h3>

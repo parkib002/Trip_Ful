@@ -48,3 +48,27 @@ $(document).on("click", ".delete-btn", function(){
 				        });
 });
 
+$(document).on("click",".report",function(){
+	var review_idx=$(this).attr("review_idx");
+	var loginok=$(this).attr("loginok");
+	if(loginok==null)
+		{
+			swal.fire({
+											        title: "로그인 후 이용 가능합니다", 
+											        text: "로그인 페이지로 이동하시겠습니까?", 
+											        type: "warning",
+											        confirmButtonColor: "#3085d6",
+											        cancelButtonColor: "#d33",
+											        confirmButtonText: "네, 이동하겠습니다",
+											        cancelButtonText: "아니요",  
+											        showCancelButton: true
+											        })
+											          .then((result) => {
+											          if (result.value) {
+											              window.location = 'index.jsp?main=login/login.jsp';
+											          }
+											        })
+		}else{
+			location.href="index.jsp?main=Review/reviewReport.jsp?review_idx="+review_idx;
+		}	
+})

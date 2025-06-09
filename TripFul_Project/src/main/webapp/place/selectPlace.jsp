@@ -89,8 +89,8 @@
 .image-wrapper {
   height: 170px;
   overflow: hidden;
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 6px;
+  border-bottom: 0px solid #ccc;
+  margin-bottom: 3px;
 }
 
 
@@ -133,11 +133,7 @@
   transform: scale(0.95);
 }
    
-   .sort-label {
-  font-weight: bold;
-  color: #2196f3;
-  font-size: 1rem;
-}
+
 
 .sort-dropdown {
   padding: 0.65rem 1rem;
@@ -268,7 +264,6 @@
 <div class="container">
   <div class="selection-buttons" id="global-controls">
     <!-- 🔽 정렬 드롭다운 추가 -->
-    <label for="sortSelect" class="sort-label"></label>
     <select id="sortSelect" class="sort-dropdown">
       <option value="views">조회순</option>
       <option value="rating">별점순</option>
@@ -477,7 +472,7 @@ $(document).ready(function () {
         const $card = $('<div class="place-card">').css('cursor', 'pointer');
 
         const fileName = place.place_img ? place.place_img.split(',')[0] : null;
-        const imgPath = fileName ? ('./' + fileName) : 'https://via.placeholder.com/200x150?text=No+Image';
+        const imgPath = fileName ? (fileName) : 'https://via.placeholder.com/200x150?text=No+Image';
 
         const $imageWrapper = $('<div>').addClass('image-wrapper');
         const $img = $('<img>').attr('src', imgPath).attr('alt', place.place_name);
@@ -497,7 +492,7 @@ $(document).ready(function () {
         const likesText = (typeof place.likes === 'number' && place.likes >= 0)
             ? '❤️ 좋아요: ' + place.likes
             : '❤️ 좋아요 정보 없음';
-        $('<div class="text-area">').css({ fontSize: '0.85rem', color: '#555' })
+        $('<div class="text-area">').css({ fontSize: '0.65rem', color: '#555' })
             .html(viewsText + ' | ' + likesText)
             .appendTo($card);
 

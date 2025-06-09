@@ -1,0 +1,61 @@
+@charset "UTF-8";
+/* 카드 이미지 높이를 동일하게 맞추고, 이미지가 잘리지 않게 조정 */
+    .card-img-top {
+        height: 280px;
+        object-fit: cover;
+    }
+    
+    /* 카드 전체를 클릭 가능하게 하고, 마우스 오버 효과 추가 */
+    .card-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    .card-link:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    /* 제목이 길 경우 ...으로 표시 */
+    .card-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* ---------------------------------------------------- */
+    /* 👇 모든 문제를 해결하는 최종 CSS 👇         */
+    /* ---------------------------------------------------- */
+
+    /* [해결 1] 카드 상단 잘림 방지를 위한 수직 여백 (유지) */
+    .carousel-inner {
+        padding-top: 1em;
+        padding-bottom: 1em;
+    }
+
+    /* [해결 2] 버튼 외부 이동 및 스타일링 (유지) */
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: auto;
+        background-color: transparent;
+        border: none;
+        z-index: 10;
+    }
+    .carousel-control-prev { left: -50px; }
+    .carousel-control-next { right: -50px; }
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+       filter: invert(1);
+    }
+    
+    /* ✅ [최종 해결] 캐러셀 내부 .row의 음수 마진을 제거하여 좌우 카드 잘림 현상 완벽 해결 */
+    #cardCarousel .row {
+        margin-right: 0;
+        margin-left: 0;
+    }
+    /* 카드 호버 효과 */
+	.cardEvent:hover {
+	    transform: scale(1.02);
+	    transition: transform 0.3s ease-in-out;
+	}

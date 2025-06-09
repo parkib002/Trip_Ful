@@ -130,6 +130,56 @@ body {
     color: #666;
 }
 
+.button-group {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 2px solid;
+  border-radius: 20px;
+  background-color: transparent;
+  cursor: pointer;
+  gap: 8px;
+  min-width: 100px; /* 버튼 폭 고정 또는 최소값 */
+  height: 40px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.btn-outline i {
+  font-size: 14px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.edit {
+  border-color: #3498db;
+  color: #3498db;
+}
+
+.edit:hover {
+  background-color: #3498db;
+  color: white;
+}
+
+.delete {
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+
+.delete:hover {
+  background-color: #e74c3c;
+  color: white;
+}
+
 </style>
 </head>
 <script>
@@ -262,26 +312,10 @@ $(function(){
         <%
         	if("admin".equals(loginok)){
         %>
-        
-<div class="flex gap-2" style="float: right;">
-  <!-- 수정 버튼 -->
-  <button class="flex items-center gap-1 text-white bg-blue-500 hover:bg-blue-600 text-xs px-2 py-1 rounded-md shadow-sm transition" type="button"
-   onclick="location.href='index.jsp?main=place/updatePlace.jsp?place_num=<%=num%>'">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M11 5h2m2 0h.01M12 20h.01M20.5 13.5L17 10l-6 6v4h4l5.5-5.5zM4 6h16M4 10h16M4 14h7" />
-    </svg>
-    <span>수정</span>
-  </button>
-  <!-- 삭제 버튼 -->
-  <button class="flex items-center gap-1 text-white bg-red-500 hover:bg-red-600 text-xs px-2 py-1 rounded-md shadow-sm transition" type="button"
-  onclick="deletePlace('<%=dto.getPlace_name()%>',<%=num%>)">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M6 18L18 6M6 6l12 12" />
-    </svg>
-    <span>삭제</span>
-  </button>
+
+<div class="button-group">
+  <button class="btn-outline edit" onclick="location.href='place/updatePlace.jsp?place_num=<%=num%>'"><i class="fas fa-pen"></i>수정</button>
+  <button class="btn-outline delete" onclick="deletePlace('<%=dto.getPlace_name()%>',<%=num%>)"><i class="fas fa-trash"></i>삭제</button>
 </div>
 <%} %>
         </h1>
@@ -315,7 +349,7 @@ $(function(){
   	for(int i=0;i<img.length;i++){
   %>
     <div class="carousel-item <%= (i == 0 ? "active" : "") %>">
-      <img src="./<%=img[i] %>" alt="Los Angeles" class="d-block" style="width:500px;">
+      <img src="<%=img[i] %>" alt="Los Angeles" class="d-block" style="width:500px;">
     </div>
    
     <%} 

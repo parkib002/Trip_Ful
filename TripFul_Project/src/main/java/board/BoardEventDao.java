@@ -268,4 +268,43 @@ public class BoardEventDao {
 		        }
 		        return list;
 		    }
+		    
+		    
+		    //전체 리스트
+		    public List<BoardEventDto> getAllEvents()
+			{
+				List<BoardEventDto> list = new ArrayList<BoardEventDto>();
+				
+				// limit 없이 최신순으로 모든 데이터를 가져옵니다.
+				String sql = "select * from tripful_event order by event_idx desc";
+				
+				Connection conn = db.getConnection();
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
+					
+				try {
+					pstmt = conn.prepareStatement(sql);
+					rs = pstmt.executeQuery();
+					
+					while(rs.next())
+					{
+						BoardEventDto dto = new BoardEventDto();
+						dto.setEvent_idx(rs.getString("event_idx"));
+						dto.setEvent_title(rs.getString("event_title"));
+						dto.setEvent_content(rs.getString("event_content"));
+						dto.setEvent_img(rs.getString("event_img")); // JSP에서 사용할 이미지 파일명
+						dto.setEvent_writer(rs.getString("event_writer"));
+						dto.setEvent_readcount(rs.getInt("event_readcount"));
+						dto.setEvent_writeday(rs.getTimestamp("event_writeday"));
+						
+						list.add(dto); // 리스트에 추가
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} finally {
+					db.dbClose(rs, pstmt, conn);
+				}
+				
+				return list;
+			}
 }
