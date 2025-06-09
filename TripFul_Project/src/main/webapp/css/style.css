@@ -71,37 +71,62 @@ body {
 
 /* 캐러셀 컨테이너 */
 #spotReviewCarousel {
+    aspect-ratio: 16 / 9;
     width: 100%;
     max-width: 1920px;
-    max-height: 1080px;
     margin: 0 auto 50px;
-    overflow: hidden;
     background-color: transparent;
     box-shadow: none;
     border-radius: 0;
     position: relative;
+    height: 500px;
 }
 
-/* 캐러셀 내부 높이 */
-#spotReviewCarousel .carousel-inner,
+
+
+/* 캐러셀 아이템 높이 통일 */
 #spotReviewCarousel .carousel-item {
+    height: 500px; /* 전체 캐러셀 높이 */
+}
+
+/* 이미지 영역 고정 크기 설정 */
+#spotReviewCarousel .carousel-item .card > div:first-child {
     height: 100%;
+    max-height: 500px;  /* 캐러셀 높이와 일치하게 */
     overflow: hidden;
 }
 
-/* 캐러셀 이미지 */
+/* 이미지 크기와 비율 유지 */
 #spotReviewCarousel .carousel-item img {
-    height: 100%;
     width: 100%;
-    object-fit: cover;
-    border-radius: 20px 20px 0 0;
-    transition: transform 0.5s ease;
+    height: 100%;
+    object-fit: cover; /* 비율 유지하면서 잘라서 채움 */
+    border-radius: 20px 0 0 20px;
+}
+
+/* 반응형: 모바일에서 이미지 크기 조정 */
+@media (max-width: 768px) {
+    #spotReviewCarousel .carousel-item {
+        height: auto;
+    }
+
+    #spotReviewCarousel .carousel-item img {
+        height: 300px;
+        border-radius: 20px 20px 0 0;
+    }
+
+    #spotReviewCarousel .carousel-item .card {
+        flex-direction: column;
+    }
+
+    #spotReviewCarousel .carousel-item .card > div:first-child {
+        height: auto;
+    }
 }
 
 #spotReviewCarousel .card {
     width: 100%;
-    height: 100%;
-    min-height: 600px; /* 원하는 높이로 조정 */
+	height: 700px;
     min-width: 60%; /* 원하는 높이로 조정 */
     position: relative;
     display: flex;
@@ -125,7 +150,6 @@ body {
 .carousel-item .card {
     border-radius: 20px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    overflow: hidden;
 }
 
 /* 카드 본문 */

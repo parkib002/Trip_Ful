@@ -136,14 +136,14 @@
                         var value = 0;
 
                         if (sort === 'views') {
-                            value = item.place_count;
+                            value = item.place_count+"회";
                         } else if (sort === 'rating') {
-                            value = item.avg_rating !== null ? item.place_rating.toFixed(1) : "0.0";
+                            value = item.avg_rating !== null ? item.place_rating.toFixed(1)+"점" : "0.0";
                         } else if (sort === 'likes') {
-                            value = item.place_like;
+                            value = item.place_like+"개";
                         }
 
-                        var li = '<li class="list-group-item d-flex justify-content-between align-items-center">'
+                        var li = '<li class="list-group-item d-flex justify-content-between align-items-center list" id='+item.place_num+'>'
                                + rank + '. ' + name+"("+item.country_name+")"
                                + '<span class="badge bg-primary rounded-pill">' + value + '</span>'
                                + '</li>';
@@ -165,6 +165,13 @@
             loadPopularList(currentSort);
         });
     });
+    
+    $(document).on("click",".list",function(){
+    	
+    	var num=$(this).attr("id");
+    	
+		location.href="index.jsp?main=place/detailPlace.jsp?place_num="+num;    	
+    })
     </script>
 </head>
 <body>
