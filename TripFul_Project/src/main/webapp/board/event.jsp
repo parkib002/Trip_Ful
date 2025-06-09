@@ -86,7 +86,7 @@ String keywordFromRequest = request.getParameter("keyword");
 <body>
 <!-- 카드형 게시판 -->
 <div class="container my-5">
-    <h3><i class="bi bi-x-diamond-fill"></i>&nbsp;<b>진행중인 이벤트</b></h3>
+    <h3 style="color: #2C3E50;"><i class="bi bi-x-diamond-fill"></i>&nbsp;<b>진행중인 이벤트</b></h3>
 
     <div id="cardCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
@@ -185,7 +185,7 @@ String keywordFromRequest = request.getParameter("keyword");
 			if(loginok!=null && loginok.equals("admin"))
 			{%>
 					<a style="float: right; text-decoration: none; color: black;" 
-					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=eventAddForm.jsp">
+					href="<%= request.getContextPath() %>/board/eventAddForm.jsp">
 						<i class="bi bi-plus-square"></i>&nbsp;추가
 					</a>				
 			<%}

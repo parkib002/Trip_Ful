@@ -11,7 +11,7 @@
 <style>
     body { background-color: #f8f9fa; }
     .reply-header {
-        background-color: #2c3e50;
+        background-color: #2C3E50;
         color: white;
         padding: 30px 20px;
         text-align: center;

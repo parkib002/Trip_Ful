@@ -62,7 +62,7 @@
         <div class="card-footer text-end bg-light">
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=event.jsp'"><i class="bi bi-list-ul"></i>&nbsp;목록</button>
             <% if (isAdmin) { %>
-            <button type="button" class="btn btn-sm btn-outline-primary" onclick="location.href='<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=eventUpdateForm.jsp&idx=<%=idx %>'"> <i class="bi bi-pencil-square"></i>&nbsp;수정</button>
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="location.href='<%= request.getContextPath() %>/board/eventUpdateForm.jsp?idx=<%=idx %>'"> <i class="bi bi-pencil-square"></i>&nbsp;수정</button>
             <button type="button" class="btn btn-sm btn-outline-danger" onclick="if(confirm('정말로 이 이벤트를 삭제하시겠습니까?')) { location.href='<%= request.getContextPath() %>/board/eventDeleteAction.jsp?idx=<%=idx %>'; }"><i class="bi bi-trash"></i>&nbsp;삭제</button>
             <% } %>
         </div>

@@ -73,7 +73,7 @@
 
 /* 마우스 올렸을 때 (활성화되지 않은 메뉴에만) */
 .board_menu_list li:not(.active) a:hover {
-    background-color: #2C3E50;;
+    background-color: #2C3E50;
     color: #ffffff;
 }
 

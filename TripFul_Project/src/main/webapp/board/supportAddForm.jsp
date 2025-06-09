@@ -13,7 +13,7 @@
 		background-color: #f8f9fa;
 	}
     .support-header {
-        background-color: #1A3A2F; 
+        background-color: #2C3E50; 
         color: white;
         padding: 40px 20px;
         text-align: center;

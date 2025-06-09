@@ -126,7 +126,7 @@ String keywordFromRequest = request.getParameter("keyword");
             <h3>
                 <i class="bi bi-x-diamond-fill"> </i><b>고객센터</b>
             </h3>
-            <select id="answerFilter" name="filter" onchange="filterList()">
+            <select id="answerFilter" name="filter" onchange="filterList()" style="max-width: 120px;">
                 <option value="all">전체</option>
                 <option value="answered">답변 완료</option>
                 <option value="unanswered">미답변</option>
@@ -258,7 +258,6 @@ String keywordFromRequest = request.getParameter("keyword");
         </nav>
     </div>
 
-    <%-- AJAX 로직은 이전과 동일하게 유지 --%>
     <script type="text/javascript">
     $(document).ready(function() {
         var currentLoginOk = "<%= loginok == null ? "null" : loginok %>"; 
