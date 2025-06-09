@@ -4,7 +4,7 @@
 
 function findfunc() {
 
-	window.open("findID.jsp", "popup_findID", "width=400, height=200,scrollbars=no,resizable=no,status=no,top=300,left=800");
+	window.open("./login/findID.jsp", "popup_findID", "width=400, height=200,scrollbars=no,resizable=no,status=no,top=300,left=800");
 
 	$("#findID").attr("target", "popup_findID").submit();
 

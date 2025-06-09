@@ -4,9 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import board.BoardNoticeDto;
 import mysql.db.DbConnect;
 
 public class LoginDao {
@@ -405,6 +408,7 @@ public class LoginDao {
 
 	}
 
+	// 비밀번호 찾기 시 회원 인증
 	public boolean authentication(LoginDto dto) {
 		boolean flag = false;
 		Connection conn = db.getConnection();
@@ -419,11 +423,11 @@ public class LoginDao {
 			pstmt.setString(2, dto.getName());
 			pstmt.setString(3, dto.getEmail());
 			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				flag = true;
 			}
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -432,5 +436,110 @@ public class LoginDao {
 		}
 
 		return flag;
+	}
+
+	// 회원정보 수정
+	public void updateMember(LoginDto dto) {
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+
+		String sql = "update tripful_member set id = ?, name = ?, email = ?, birth = ? where idx = ?";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getId());
+			pstmt.setString(2, dto.getName());
+			pstmt.setString(3, dto.getEmail());
+			pstmt.setString(4, dto.getBirth());
+			pstmt.setString(5, dto.getIdx());
+
+			pstmt.execute();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.dbClose(pstmt, conn);
+		}
+	}
+
+	// 총 회원 수
+	public int getTotalCount() {
+		int n = 0;
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select count(*) from tripful_member";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				n = rs.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+
+		return n;
+	}
+
+	// 회원 목록
+	public List<LoginDto> getList(int startNum, int perPage) {
+		List<LoginDto> list = new ArrayList<LoginDto>();
+		String sql = "select * from tripful_member order by idx desc limit ?,?";
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			// 바인딩
+			pstmt.setInt(1, startNum);
+			pstmt.setInt(2, perPage);
+			// 실행
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				LoginDto dto = new LoginDto();
+				dto.setIdx(rs.getString("idx"));
+				dto.setId(rs.getString("id"));
+				dto.setName(rs.getString("name"));
+				dto.setEmail(rs.getString("email"));
+				dto.setBirth(rs.getString("birth"));
+				dto.setJoindate(rs.getTimestamp("joindate"));
+				dto.setAdmin(rs.getInt("admin"));
+				// list 에 추가
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		return list;
+	}
+
+	// 회원 탈퇴 및 삭제
+	public void deleteMember(String id) {
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+
+		String sql = "delete from tripful_member where id = ?";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.dbClose(pstmt, conn);
+		}
 	}
 }
