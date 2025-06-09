@@ -51,15 +51,12 @@
 </head>
 <body>
 <div class="container detailContainer mt-5 mb-5">
-    <%-- 이벤트 상세 내용 카드 ... (기존과 동일) ... --%>
+    <%-- 이벤트 상세 내용 카드 --%>
     <div class="card shadow-sm">
         <div class="card-header bg-light"><h3><%= dto.getEvent_title() %></h3></div>
         <div class="card-body">
             <p class="card-text"><small class="text-muted"><i class="bi bi-person"></i> 작성자: <%= dto.getEvent_writer() %> | <i class="bi bi-calendar-event"></i> 작성일: <%= sdf.format(dto.getEvent_writeday()) %> | <i class="bi bi-eye"></i> 조회수: <%= dto.getEvent_readcount() %></small></p>
             <hr>
-            <% if (dto.getEvent_img() != null && !dto.getEvent_img().isEmpty()) { %>
-                <div class="text-center mb-4"><img src="<%= request.getContextPath() %>/uploads/<%= dto.getEvent_img() %>" class="img-fluid rounded" alt="이벤트 대표 이미지" style="max-height: 450px;"></div>
-            <% } %>
             <div class="event-content mt-3"><%= dto.getEvent_content() %></div>
         </div>
         <div class="card-footer text-end bg-light">
@@ -202,10 +199,6 @@ $(document).ready(function() {
                         renderComments(response.comments, '#commentListAdditional', true);
                         $button.text('간략히 보기');
                         additionalCommentsVisible = true;
-                        // 추가로 로드한 댓글이 있고, 그게 마지막 댓글 묶음이라면 버튼 숨기기 (선택적)
-                        // if (commentsPerPage + response.comments.length >= totalServerComments) {
-                        //     $button.hide(); // 모든 댓글을 보여줬으므로 더보기/간략히 버튼 숨김
-                        // }
                     } else {
                         alert('더 이상 댓글이 없습니다.');
                         $button.hide(); // 더 로드할 댓글이 없으므로 버튼 숨김
@@ -225,14 +218,6 @@ $(document).ready(function() {
 
     // 댓글 등록 성공 시
     $('#submitComment').click(function() {
-        // ... (기존 댓글 등록 AJAX 로직) ...
-        // success: function(response) {
-        //     if (response.trim() === "success") {
-        //         $('#comment_content').val('');
-        //         loadInitialCommentsAndSetupButton(); // ★ 댓글 전체 새로고침 및 버튼 재설정
-        //     } else { /* ... */ }
-        // },
-        // ...
         let contentVal = $('#comment_content').val();
         let userIdForComment = $('input[name="user_id"]').val(); 
 
@@ -254,13 +239,6 @@ $(document).ready(function() {
 
     // 댓글 삭제 성공 시
     $('#commentListInitial, #commentListAdditional').on('click', '.delete-comment', function() { // 이벤트 위임 대상 변경
-        // ... (기존 댓글 삭제 AJAX 로직) ...
-        // success: function(response) {
-        //     if (response.trim() === "success") {
-        //         loadInitialCommentsAndSetupButton(); // ★ 댓글 전체 새로고침 및 버튼 재설정
-        //     } else { /* ... */ }
-        // },
-        // ...
         if (!currentUser) { alert('댓글을 삭제하려면 로그인이 필요합니다.'); return; }
         if (!confirm('정말로 이 댓글을 삭제하시겠습니까?')) { return; }
         let answerIdx = $(this).data('answer-idx');
