@@ -19,7 +19,7 @@
 <%
 String id = null;
 if (request.getParameter("status").equals("1")) {
-	request.setAttribute("id", request.getParameter("id")); 
+	id = request.getParameter("id"); 
 %>
 <script>
 	$(function() {
@@ -104,6 +104,9 @@ LoginDto dto = dao.getOneMember(id);
 								name="renewpw" type="password" class="input" required="required"
 								id="renewpw">
 						</div>
+						<input name="id"
+								type="text" class="hidden" required="required" id="id"
+								value=<%=id%>>
 						<br>
 						<div class="group">
 							<input type="submit" class="button" value="Change">
