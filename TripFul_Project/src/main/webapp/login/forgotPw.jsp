@@ -21,7 +21,9 @@
 				type="radio" name="tab" class="sign-up"><label for="tab-2"
 				class="tab">Find PW</label>
 			<div class="login-form">
-				<%//아이디 찾기 %>
+				<%
+				//아이디 찾기
+				%>
 				<div class="sign-in-htm">
 					<form action="./findID.jsp" id="findID" name="findID" method="post">
 						<div class="group">
@@ -34,29 +36,34 @@
 						</div>
 						<br>
 						<div class="group">
-							<input type="button" class="button" id="idBtn" onclick="findfunc()" value="아이디 찾기">
+							<input type="button" class="button" id="idBtn"
+								onclick="findfunc()" value="아이디 찾기">
 						</div>
 					</form>
 				</div>
-				
-				<%//비밀번호 찾기 %>
+
+				<%
+				//비밀번호 찾기
+				%>
 				<div class="sign-up-htm">
-					<form action="./findPW.jsp" method="post" id="findPW">
+					<form
+						action="<%=request.getContextPath()%>/index.jsp?main=login/changeForm.jsp?status=1"
+						method="post" id="findPW">
 						<div class="group">
 							<label for="user" class="label">이름</label> <input name="name"
-								type="text" class="input" required="required">
+								type="text" class="input" required="required" id="f_name">
 						</div>
 						<div class="group">
 							<label for="user" class="label">아이디</label> <input name="id"
-								type="text" class="input" required="required" id="id">
+								type="text" class="input" required="required" id="f_id">
 						</div>
 						<div class="group">
 							<label for="pass" class="label">이메일</label> <input name="email"
-								type="email" class="input" required="required">
+								type="email" class="input" required="required" id="f_email">
 						</div>
 						<br>
 						<div class="group">
-							<input type="button" class="button" onclick="findPass()" value="비밀번호 찾기">
+							<input type="button" class="button" value="비밀번호 변경" onclick="findPass()">
 						</div>
 					</form>
 				</div>
@@ -64,5 +71,5 @@
 		</div>
 	</div>
 </body>
-<script src="login/JavaScript/forgotJS.js"></script>
+<script src="./login/JavaScript/forgotJS.js"></script>
 </html>
