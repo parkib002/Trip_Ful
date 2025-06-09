@@ -17,7 +17,7 @@
     int newMembersThisWeek = 78;
     int newMembersThisMonth = 320;
     int recentReviewsCount = 45;
-    List<String> popularDestinations = Arrays.asList("제주도", "부산", "서울", "경주", "강릉");
+    List<String> popularDestinations = Arrays.asList();
     int unansweredInquiriesCount = 7;
 %>
 <!DOCTYPE html>
@@ -26,9 +26,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 메인 페이지</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style>
         body {
             font-family: 'Inter', sans-serif; /* Google Font Inter 적용 */
@@ -288,6 +286,6 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

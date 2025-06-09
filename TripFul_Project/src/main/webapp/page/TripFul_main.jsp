@@ -35,7 +35,7 @@
             <div class="d-flex justify-content-center py-4">
                 <div class="col-md-10">
                     <!-- 카드 내부를 flex row로 배치 -->
-                    <div class="card border-0 shadow-lg h-100 rounded-4 overflow-hidden d-flex flex-row" style="min-height: 450px; position: relative;">
+                    <div class="card border-0 shadow-lg h-100 rounded-4 overflow-hidden d-flex flex-row" >
                         <!-- 이미지 영역 -->
                         <div style="flex: 0 0 40%; position: relative;">
                             <img src="<%= img[0]%>"
