@@ -12,7 +12,7 @@ import mysql.db.DbConnect;
 public class LoginDao {
 
 	DbConnect db = new DbConnect();
-	
+
 	// 회원 정보 바탕 멤버 DB 저장 (회원가입)
 	public void insertMember(LoginDto dto) {
 		Connection conn = db.getConnection();
@@ -46,7 +46,7 @@ public class LoginDao {
 
 	}
 
-	// 비밀번호 각종 제약 조건 확인
+	// 아이디 각종 제약 조건 확인
 	public int chkDup(String inputId) {
 
 		// 반환 값 : 사용가능 | 중복 | 글자수 제한 | 문자형태 제한 | 영문+숫자형태 제한
@@ -90,6 +90,43 @@ public class LoginDao {
 		return flag;
 	}
 
+	// 비밀번호 각종 제약 조건 확인
+	public int chkPw(String id, String pw) {
+		// 0 : DB 검색 실패 | 1 : 이전과 같은 비밀번호 | 2 : 가능
+
+		int flag = 0;
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		String sql = "select hash_pw, salt from tripful_member where id = ?";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				String salt = rs.getString("salt");
+				String currPw = rs.getString("hash_pw");
+
+				if (currPw.equals(BCrypt.hashpw(pw, salt))) {
+					return 1;
+				} else {
+					return 2;
+				}
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+
+		return flag;
+	}
+
 	// 이름 email 사용 ID 찾기
 	public String findID(String name, String email) {
 		String id = "";
@@ -120,7 +157,7 @@ public class LoginDao {
 		return id;
 	}
 
-	// 이름 이메일 아이디를 통해 PW, Salt 리턴 
+	// 이름 이메일 아이디를 통해 PW, Salt 리턴
 	public String[] findPW(String name, String email, String id) {
 		String salt = "";
 		String pw = "";
@@ -152,12 +189,12 @@ public class LoginDao {
 		} finally {
 			db.dbClose(rs, pstmt, conn);
 		}
-		
-		// 복호화 불가능 다만 새 비밀번호 생성시 
+
+		// 복호화 불가능 다만 새 비밀번호 생성시
 		// 이전 PW와 비교 이전 비밀번호와 동일한 비밀번호 사용 불가 조건 추가
 		return hash_pw;
 	}
-	
+
 	// 로그인 시 해당 멤버 있는지 id와 pw를 받아 비교후 리턴
 	public int loginMember(String id, String pw) {
 		int flag = 0;
@@ -171,21 +208,21 @@ public class LoginDao {
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
-			String salt = this.getSalt(id);	// id를 통해 Salt 가져오는 Method
-			if (salt.equals("")) {			// Salt 없을시 flag 바로 0 리턴
+			String salt = this.getSalt(id); // id를 통해 Salt 가져오는 Method
+			if (salt.equals("")) { // Salt 없을시 flag 바로 0 리턴
 				return flag;
 			}
 			String hash_pw = BCrypt.hashpw(pw, salt);
-			//System.out.println(hash_pw);
+			// System.out.println(hash_pw);
 			pstmt.setString(2, hash_pw);
 
 			rs = pstmt.executeQuery();
 
-			if (rs.next()) {				// id pw 맞는 지 확인	Select 성공시
-				if (rs.getString("admin").equals("1")) {	// admin 값 1이면 어드민 계정 flag 2 반환
+			if (rs.next()) { // id pw 맞는 지 확인 Select 성공시
+				if (rs.getString("admin").equals("1")) { // admin 값 1이면 어드민 계정 flag 2 반환
 					flag = 2;
 					return flag;
-				} else {									// 나머지 flag 1 반환
+				} else { // 나머지 flag 1 반환
 					flag = 1;
 					return flag;
 				}
@@ -200,18 +237,21 @@ public class LoginDao {
 
 		return flag;
 	}
-	
-	// TODO Hash_Password로 변경 해야함
+
+	// id와 pw를 받아 pw 해싱후 DB 저장
 	public void changePW(String id, String pw) {
 		Connection conn = db.getConnection();
 		PreparedStatement pstmt = null;
+		String newsalt = BCrypt.gensalt();
+		String hash_pw = BCrypt.hashpw(pw, newsalt);
 
-		String sql = "update tripful_member set pw=? where id=?";
+		String sql = "update tripful_member set hash_pw = ?, salt = ? where id=?";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, pw);
-			pstmt.setString(2, id);
+			pstmt.setString(1, hash_pw);
+			pstmt.setString(2, newsalt);
+			pstmt.setString(3, id);
 
 			pstmt.execute();
 
@@ -222,7 +262,7 @@ public class LoginDao {
 			db.dbClose(pstmt, conn);
 		}
 	}
-	
+
 	// ID를 통해 멤버 각종 정보 리턴
 	public LoginDto getOneMember(String id) {
 		LoginDto dto = new LoginDto();
@@ -256,7 +296,7 @@ public class LoginDao {
 
 		return dto;
 	}
-	
+
 	// ID를 통해 솔트값 리턴 -> 로그인 시 활용
 	public String getSalt(String id) {
 		String salt = "";
@@ -354,7 +394,7 @@ public class LoginDao {
 			pstmt.setString(1, s_dto.getMember_idx());
 			pstmt.setString(2, s_dto.getSocial_provider());
 			pstmt.setString(3, s_dto.getSocial_provider_key());
-			
+
 			pstmt.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -363,5 +403,34 @@ public class LoginDao {
 			db.dbClose(pstmt, conn);
 		}
 
+	}
+
+	public boolean authentication(LoginDto dto) {
+		boolean flag = false;
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		String sql = "select * from tripful_member where id=? and name=? and email=?";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getId());
+			pstmt.setString(2, dto.getName());
+			pstmt.setString(3, dto.getEmail());
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				flag = true;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+
+		return flag;
 	}
 }
