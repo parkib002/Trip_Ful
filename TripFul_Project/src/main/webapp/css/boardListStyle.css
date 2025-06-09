@@ -1,57 +1,85 @@
 @charset "UTF-8";
 
+/* --- 상단 타이틀 영역 --- */
 .title {
-		border: 1px solid gray;
-		height: 310px;
-		background-color: #6994BF;
-		display: block; /* flex 제거 */
-		padding: 30px 50px; /* 내부 여백 추가 */
-		color: white;
-	}
+    background-color: #6994BF; /* 기존 색상 유지 */
+    color: white;
+    padding: 40px 50px; /* 내부 여백 조정 */
+    /* 그림자로 부드러운 깊이감 주기 (기존 border 제거) */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    /* 고정 높이 대신 내부 콘텐츠에 따라 유연하게 조절되도록 height 제거 */
+}
 
-	.title-content {
-		max-width: 1200px;
-		margin: 0 auto;
-		margin-top: 60px; /* 위쪽에서 20px 내려오기 */
-	}
+.title-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
 
-	.title-content h1 {
-		margin: 0;
-		font-size: 36px;
-		font-weight: normal; /* 볼드 제거 */
-		text-align: left; /* 왼쪽 정렬 */
-	}
+.title-content h1 {
+    margin: 0;
+    font-size: 2.5rem; /* 40px */
+    font-weight: 300; /* 조금 더 얇게 하여 세련된 느낌 */
+    text-align: left;
+    letter-spacing: -1px; /* 자간을 살짝 좁혀 가독성 향상 */
+}
 
-	.title-content .desc {
-		font-size: 18px;
-		margin-bottom: 20px;
-		text-align: left; /* 왼쪽 정렬 */
-	}
+.title-content .desc {
+    font-size: 1.125rem; /* 18px */
+    margin-top: 8px;
+    margin-bottom: 30px;
+    text-align: left;
+    font-weight: 300;
+    opacity: 0.9; /* 텍스트를 살짝 투명하게 하여 부드러운 느낌 */
+}
 
-	.board_menu td {
-		width: 300px;
-		height: 80px;
-		font-size: 22px;
-		cursor: pointer;
-		text-align: center;
-		vertical-align: middle;
-		border: 1px solid #ccc;
-		padding: 0;
-		font-weight: normal; /* td 기본은 normal */
-	}
+/* --- 게시판 메뉴 --- */
+.board_menu {
+    /* 메뉴가 타이틀 영역 하단에 붙도록 조정 */
+    margin-top: 20px;
+}
 
-	.board_menu td a {
-		display: block;
-		color: inherit;
-		text-decoration: none;
-		height: 100%;
-		width: 100%;
-		line-height: 80px;
-	}
+/* ul 태그 기본 스타일 제거 및 flexbox 적용 */
+.board_menu_list {
+    display: flex; /* 메뉴 항목을 가로로 배치 */
+    list-style: none; /* li 태그의 기본 점 제거 */
+    padding: 0;
+    margin: 0;
+    border-radius: 8px; /* 메뉴 전체에 둥근 모서리 */
+    overflow: hidden; /* 둥근 모서리 밖으로 나가는 자식 요소 숨김 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
 
-	.board_menu td.active {
-		background-color: #2C3E50;
-		color: white;
-		font-weight: bold;
-	}
-	
+/* li 태그 (각 메뉴 칸) */
+.board_menu_list li {
+    flex: 1; /* 모든 메뉴가 동일한 너비를 갖도록 설정 */
+    text-align: center;
+}
+
+/* a 태그 (클릭 가능한 링크 영역) */
+.board_menu_list li a {
+    display: block; /* a 태그가 li 전체 영역을 차지하도록 */
+    padding: 20px 0; /* 상하 여백으로 높이 조절 */
+    text-decoration: none;
+    font-size: 1.1rem; /* 17.6px */
+    font-weight: bold;
+    /* 부드러운 전환 효과 */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-bottom: 3px solid transparent; /* 평상시엔 투명한 밑줄 */
+    
+    background-color: #dcdcdc;      /* 1. 배경을 항상 투명하게 하여 다른 스타일에 덮어쓰이지 않도록 방지 */
+    color: black;   /* 2. 비활성 글자색: 흰색이지만 살짝 투명하게 하여 은은하게 보이도록 설정 */
+}
+
+/* 마우스 올렸을 때 (활성화되지 않은 메뉴에만) */
+.board_menu_list li:not(.active) a:hover {
+    background-color: #2C3E50;;
+    color: #ffffff;
+}
+
+/* 현재 활성화된 메뉴 */
+.board_menu_list li.active a {
+    background-color: #2C3E50; /* 기존 색상 유지 */
+    color: white;
+    font-weight: 700;
+}
