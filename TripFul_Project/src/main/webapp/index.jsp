@@ -24,6 +24,7 @@
 	<link
 	href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Dongle&family=Gaegu&family=Nanum+Pen+Script&display=swap"
 	rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 </head>
 <body>
@@ -51,7 +52,35 @@
     <%@ include file="layout/footer.jsp" %>
 </div>
 
-<%@ include file="layout/regionModal.jsp" %>
+<div class="floating-buttons">
+    <a href="index.jsp?main=board/boardList.jsp&sub=support.jsp"
+       class="btn btn-light rounded-circle shadow-lg d-flex justify-content-center align-items-center"
+       data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="고객센터">
+        <i class="fas fa-headset fa-lg"></i>
+    </a>
+
+    <a href="#"class="btn btn-light rounded-circle shadow-lg d-flex justify-content-center align-items-center"
+            data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="맨 위로">
+        <i class="fas fa-arrow-up fa-lg"></i>
+        </a>
+</div>
+
+
+
+
+
+<script>
+    document.addEventListener(
+        "DOMContentLoaded", function() {
+        // 툴팁 활성화
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+
+    });
+</script>
+
+
 
 <script src="js/header.js" defer></script>
 <script src="js/selectPlace.js" defer></script>
