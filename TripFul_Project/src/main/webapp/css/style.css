@@ -112,11 +112,10 @@ body {
 /*}*/
 
 /* 카드 호버 효과 */
-.card:hover {
+#spotReviewCarousel .card:hover {
     transform: scale(1.02);
     transition: transform 0.3s ease-in-out;
 }
-
 /* 슬라이드 애니메이션 */
 .carousel-item {
     transition: transform 1s ease, opacity 1s ease;
