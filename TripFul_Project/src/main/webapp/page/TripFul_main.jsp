@@ -29,6 +29,7 @@
                 PlaceDto place = placeList.get(i);
                 String activeClass = (i == 0) ? "active" : "";
                 HashMap<String, String> currentReview = reviewDao.getLatestReviewForPlace(place.getPlace_name());
+                String [] img=place.getPlace_img().split(",");
         %>
         <div class="carousel-item <%= activeClass %>">
             <div class="d-flex justify-content-center py-4">
@@ -37,7 +38,7 @@
                     <div class="card border-0 shadow-lg h-100 rounded-4 overflow-hidden d-flex flex-row" style="min-height: 450px; position: relative;">
                         <!-- 이미지 영역 -->
                         <div style="flex: 0 0 40%; position: relative;">
-                            <img src="<%= request.getContextPath() %>/save/<%= place.getPlace_img() %>"
+                            <img src="<%= img[0]%>"
                                  class="object-fit-cover h-100 w-100"
                                  alt="<%= place.getPlace_name() %>"
                                  style="filter: brightness(90%);">
