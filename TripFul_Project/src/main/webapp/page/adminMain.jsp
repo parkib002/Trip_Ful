@@ -25,6 +25,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="
+https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
+"></script>
     <title>관리자 메인 페이지</title>
     <style>
         body {
@@ -116,6 +119,11 @@
         
     </style>
     <script type="text/javascript">
+        
+    let currentXAxisData = ['이름', '영희', '민수', '지수']; // 초기 데이터
+    let currentSeriesData = [70, 80, 100, 30];
+    let currentChartType = 'bar'; // 기본 차트 타입 (예: 'bar' 또는 'line')
+    
     $(function() {
         let currentSort = 'views';
         function loadPopularList(sort) {
@@ -161,6 +169,27 @@
             currentSort = $(this).val();
             loadPopularList(currentSort);
         });
+        
+        
+        
+        //document.getElementById("drawLine").addEventListener('click', drawChart);
+        //document.getElementById("drawBar").addEventListener('click', drawChart);
+        
+        $("#c_sortSelect").change(function(){
+        	
+        	 if ($(this).val() === 'views') {
+                 currentXAxisData = ['1월', '2월', '3월', '4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+                 currentSeriesData = [100, 120, 150, 130,80,30,90,125,180,200,140,150,130];
+             } else if ($(this).val() === 'new_review') {
+                 currentXAxisData = ['A', 'B', 'C', 'D','A', 'B', 'C', 'D','A', 'B', 'C', 'D','A', 'B', 'C', 'D','A', 'B', 'C', 'D','A', 'B', 'C', 'D'];
+                 currentSeriesData = [90, 110, 80, 140,90, 110, 80, 140,90, 110, 80, 140,90, 110, 80, 140,90, 110, 80, 140,90, 110, 80, 140];
+             } else if ($(this).val() === 'new_member') {
+                 currentXAxisData = ['X', 'Y', 'Z'];
+                 currentSeriesData = [50, 70, 60];
+             }
+        	 drawChart(currentXAxisData, currentSeriesData, currentChartType);
+        })
+        
     });
     
     $(document).on("click",".list",function(){
@@ -169,6 +198,25 @@
     	
 		location.href="index.jsp?main=place/detailPlace.jsp?place_num="+num;    	
     })
+    
+    function drawChart(xAxisData, seriesData, chartType) {
+        var myChart = echarts.init(document.getElementById('chart'));
+        let option = {
+            xAxis: {
+                type: 'category',
+                data: xAxisData // 인자로 받은 x축 데이터
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: seriesData, // 인자로 받은 y축(값) 데이터
+                type: chartType // 인자로 받은 차트 타입
+            }]
+        };
+        myChart.setOption(option);
+    }
+    
     </script>
 </head>
 <body>
@@ -277,6 +325,23 @@
                     <h5 class="card-title">공지사항 관리</h5>
                     <p class="card-text text-muted small mb-3">공지사항을 등록하고 수정합니다.</p>
                     <a href="index.jsp?main=board/boardList.jsp&sub=notice.jsp" class="btn btn-primary w-100">이동</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2 class="section-title mb-4">📈 통계 추이</h2>
+    <div class="row g-4">
+        <div class="col-lg-12 col-md-12 mb-4">
+            <div class="card shadow-sm p-3 text-center h-100">
+                <div class="card-body">
+                    <div class="card-icon mb-3"><i class="bi bi-bar-chart-fill"></i></div>
+                    <h5 class="card-title"><select id="c_sortSelect" class="sort-dropdown">
+        			<option value="views">리뷰 조회수</option>
+       				<option value="new_review">리뷰 생성 수</option>
+       				<option value="new_member">신규 가입자</option>
+        			</select></h5>
+                    <div id="chart" style="width: 100%; height: 500px;"></div>
+                    
                 </div>
             </div>
         </div>
