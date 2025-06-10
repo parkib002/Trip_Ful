@@ -9,10 +9,19 @@
     <link rel="stylesheet" href="css/pagination.css">
     <link rel="stylesheet" href="css/boardListStyle.css">
     <link rel="stylesheet" href="css/noticeStyle.css">
-    <link rel="stylesheet" href="css/style.css">	
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/hero.css">
+    <link rel="stylesheet" href="css/carousel.css">
+    <link rel="stylesheet" href="css/indicators.css">
+    <link rel="stylesheet" href="css/card.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/misc.css">
 
-	
-	<link rel="stylesheet" href="Review/ModalStyle.css">
+
+
+    <link rel="stylesheet" href="Review/ModalStyle.css">
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -86,6 +95,7 @@
 <script src="js/selectPlace.js" defer></script>
 <script src="js/mainPageCarousel.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>
 
 <script src="Review/JavaScript/ModalJs.js" defer></script>
 <script src="Review/JavaScript/reviewListJs.js" defer></script>

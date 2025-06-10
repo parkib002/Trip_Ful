@@ -4,287 +4,32 @@ body {
     color: black;
     font-family: 'Noto Sans KR', sans-serif;
 }
-/* 네비게이션 바 */
-.navbar-toggler:focus {
-    outline: none !important;
-    box-shadow: none !important;
+
+.highlight-yellow {
+    background-color: #fff8dc;
+    border: 2px solid #ffe066;
+    color: #ff9900;
 }
-.navbar {
-    background-color: #FFFFFF;
-    height: 90px;   /* header.jsp에서 옮겨온 높이 */
-    position: relative;
-    top: 0;          /* 화면 맨 위에서 시작 */
-    width: 100%;     /* 가로 길이를 화면 전체로 설정 */
-    z-index: 1000;   /* header.jsp에서 옮겨온 z-index */
+
+.section-card {
+    border-radius: 1.5rem;
+    background-color: #fffbe6;
+    box-shadow: 0 4px 12px rgba(255, 200, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.navbar-nav .nav-link {
-    color: #212121;
-}
-.navbar-nav .nav-link:hover {
-    color: #FB8C00;
-}
-/* 히어로 섹션 */
-.hero {
-    position: relative;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-    text-align: center;
-}
-.bg-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    z-index: -1; /* 배경 뒤로 보내기 */
-}
-.hero-content {
-    position: relative;
-    z-index: 1; /* 텍스트는 위에 보이게 */
-}
-.hero h1 {
-    font-size: 3.5rem;
-    color: #FFFFFF;
-    font-style: italic;
-}
-.hero h2 {
-    font-size: 1.5rem;
-    color: #FFFFFF;
-    font-weight: bold;
-}
-/* 캐러셀 컨테이너 */
-#spotReviewCarousel {
-    aspect-ratio: 16 / 9;
-    width: 100%;
-    max-width: 1920px;
-    margin: 0 auto 50px;
-    background-color: transparent;
-    box-shadow: none;
-    border-radius: 0;
-    position: relative;
-    height: 600px;
-}
-/* 캐러셀 아이템 높이 통일 */
-#spotReviewCarousel .carousel-item {
-    height: 500px; /* 전체 캐러셀 높이 */
-}
-/* 이미지 영역 고정 크기 설정 */
-#spotReviewCarousel .carousel-item .card > div:first-child {
-    height: 100%;
-    max-height: 500px;  /* 캐러셀 높이와 일치하게 */
-    overflow: hidden;
-}
-/* 이미지 크기와 비율 유지 */
-#spotReviewCarousel .carousel-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* 비율 유지하면서 잘라서 채움 */
-    border-radius: 20px 0 0 20px;
-}
-/* 반응형: 모바일에서 이미지 크기 조정 */
-@media (max-width: 768px) {
-    #spotReviewCarousel .carousel-item {
-        height: auto;
-    }
-    #spotReviewCarousel .carousel-item img {
-        height: 300px;
-        border-radius: 20px 20px 0 0;
-    }
-    #spotReviewCarousel .carousel-item .card {
-        flex-direction: column;
-    }
-    #spotReviewCarousel .carousel-item .card > div:first-child {
-        height: auto;
-    }
-}
-#spotReviewCarousel .card {
-    width: 100%;
-    height: 700px;
-    min-width: 60%; /* 원하는 높이로 조정 */
-    position: relative;
-    display: flex;
-    flex-direction: column;
-}
-/*#spotReviewCarousel .carousel-item:hover img {*/
-/*    transform: scale(1.05);*/
-/*}*/
-/* 카드 호버 효과 */
-#spotReviewCarousel .card:hover {
+
+.section-card:hover {
     transform: scale(1.02);
-    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 8px 20px rgba(255, 200, 0, 0.4);
 }
-/* 슬라이드 애니메이션 */
-.carousel-item {
-    transition: transform 1s ease, opacity 1s ease;
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: brightness(0) saturate(100%) invert(92%) sepia(81%) saturate(352%) hue-rotate(357deg) brightness(101%) contrast(102%);
 }
-/* 카드 스타일 */
-.carousel-item .card {
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
-/* 카드 본문 */
-.card-body h5 {
-    color: #4E54C8;
+
+.yellow-title {
+    color: #f0ad00;
     font-weight: 700;
-}
-.card-body p {
-    color: #555;
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-/* 리뷰 박스 강조선 */
-.border-start.border-warning {
-    border-left-width: 6px !important;
-}
-/* 리뷰 본문 박스 스타일 */
-.carousel-item .bg-light {
-    font-style: italic;
-    color: #444;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    border-radius: 20px;
-}
-/* 인디케이터 포함 하단 박스 */
-.carousel-bottom-box {
-    background-color: white;
-    border-top: 2px solid #ddd;
-    border-radius: 0 0 20px 20px;
-    padding: 15px 0;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-}
-/* 캐러셀 인디케이터 */
-.carousel-indicators {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 15;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    width: auto;          /* 혹은 필요하면 명시적 max-width 주기 */
-    max-width: 100%;      /* 너무 크지 않게 제한 */
-    padding: 0;
-    margin: 0 auto;       /* 가로 중앙 정렬 보조 */
-    box-sizing: border-box;
-}
-
-/* 인디케이터 버튼 */
-.carousel-indicators button {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: #FFC107 !important;
-    opacity: 0.9;
-    border: none;
-    margin: 0;
-    cursor: pointer;
-    transition: opacity 0.3s ease, background-color 0.3s ease;
-}
-
-.carousel-indicators .active {
-    opacity: 1;
-    background-color: #FD7E14 !important;
-}
-
-/* 반응형: 모바일 인디케이터 위치 조정 */
-@media (max-width: 768px) {
-    .carousel-indicators {
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-}
-
-.carousel-indicators button:focus {
-    outline: none;
-    box-shadow: none;
-}
-/* 반응형 */
-@media (max-width: 768px) {
-    #spotReviewCarousel {
-        max-width: 100%;
-        height: auto;
-        margin: 0 10px 40px;
-    }
-    .carousel-item .row {
-        flex-direction: column !important;
-    }
-    .carousel-item .col-md-6 {
-        max-width: 100%;
-        flex: 0 0 100%;
-    }
-    .card-body p {
-        font-size: 0.9rem;
-    }
-    /* 모바일에서 인디케이터 위치 조정 */
-    .carousel-indicators {
-        bottom: 10px;
-    }
-}
-/* 유저 이름 링크 */
-.username-link {
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-}
-.username-link:hover {
-    text-decoration: underline;
-    color: #FB8C00;
-    cursor: pointer;
-}
-/* Collapse 메뉴 위치 조정 */
-.collapse#mainMenu {
-    position: relative; /* 헤더가 fixed이므로 메뉴도 fixed로 조정 */
-    top: 90px; /* 헤더 높이만큼 아래에 위치 */
-    left: 0;
-    max-width: 30%;
-    background-color: white;
-    z-index: 1050;
-    transition: transform 0.3s ease-out;
-    /*transform: translateY(-100%); */
-}
-.star_rating2 .rating {
-    font-size: 1.2em; /* 별 아이콘 크기 조절 */
-    color: #ccc; /* 기본 별 색상 (비어있는 별) */
-}
-.star_rating2 .rating.on {
-    color: #FFC107; /* 채워진 별 색상 (노란색) */
-}
-
-/* 공통 플로팅 버튼 스타일 */
-.floating-buttons {
-    position: fixed;
-    right: 30px;
-    bottom: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    z-index: 1000;
-}
-
-/* 버튼 공통 디자인 */
-.floating-buttons .btn {
-    width: 60px;
-    height: 60px;
-    transition: all 0.2s ease-in-out;
-    background-color: white;
-    border: 2px solid black; /* 부트스트랩 primary */
-    color: black;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* 호버 효과 */
-.floating-buttons .btn:hover {
-    transform: scale(1.1);
-    background-color: black;
-    color: white;
+    text-shadow: 1px 1px 1px #fff5cc;
 }
