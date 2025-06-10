@@ -11,7 +11,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="Review/carouselStyle.css">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/Review/carouselStyle.css">
 
 
 <title>Insert title her</title>
@@ -100,7 +100,13 @@ function loadReviews() {
 	                    reviewCard += "<div class='item'>"; // Owl Carousel의 'item' 클래스
 	                    reviewCard += "<div class='card h-100 p-3'>";
 	                    reviewCard += "<div class='review-header d-flex justify-content-between align-items-center mb-2'>";
-	                    reviewCard += "<b>" + r.author + "</b>";	                    
+	                    if(r.read =="DB" && r.read !== "")
+                    	{
+	                    reviewCard += "<a class='r_author' href='<%= request.getContextPath() %>/index.jsp?main=login/MyPage.jsp?id="+r.author+"'>" + r.author + "</a>";
+                    	}
+	                    else{
+	                    	reviewCard += "<b>" + r.author + "</b>";
+	                    }
 	                    reviewCard += "<div class='categorydate'>";
 	                    reviewCard += "<span class='review_writeday'>" + r.date + "</span>&nbsp;&nbsp;";
 	                    if(r.read!="Google")

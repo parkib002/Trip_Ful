@@ -25,7 +25,7 @@
 				//아이디 찾기
 				%>
 				<div class="sign-in-htm">
-					<form action="./findID.jsp" id="findID" name="findID" method="post">
+					<form action="./login/findID.jsp" id="findID" name="findID" method="post">
 						<div class="group">
 							<label for="user" class="label">이름</label> <input id="name"
 								type="text" class="input" name="name" required="required">

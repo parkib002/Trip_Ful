@@ -18,23 +18,38 @@
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <%
 String id = null;
-if (request.getParameter("status").equals("1")) {
-	id = request.getParameter("id"); 
-%>
-<script>
-	$(function() {
-		$("#tab-2").prop("checked", true);
-		$("#tab-1").prop("disabled", true);
-		$("#currpw").attr("required", false);
-		$("#curpw").hide();
-	})
-</script>
-<%
+
+if(request.getParameter("status")!=null){
+	if (request.getParameter("status").equals("1")) {
+		id = request.getParameter("id"); 
+	%>
+	<script>
+		$(function() {
+			$("#tab-2").prop("checked", true);
+			$("#tab-1").prop("disabled", true);
+			$("#currpw").attr("required", false);
+			$("#curpw").hide();
+		})
+	</script>
+	<%
+	}
 }
 
 if (session.getAttribute("id") != null) {
-id = (String) session.getAttribute("id");
+	id = (String) session.getAttribute("id");
+	if(((String)session.getAttribute("loginok")).equals("admin")){
+		id = request.getParameter("userid");
+		%>
+			<script>
+				$(function(){
+					$("#tab-2").prop("disabled", true);
+				})
+			</script>
+		<%
+	}
 }
+
+
 
 LoginDao dao = new LoginDao();
 LoginDto dto = dao.getOneMember(id);
@@ -53,7 +68,7 @@ LoginDto dto = dao.getOneMember(id);
 				//로그인 페이지
 				%>
 				<div class="sign-in-htm">
-					<form action="<%=request.getContextPath()%>/login/loginAction.jsp"
+					<form action="<%=request.getContextPath()%>/login/updateMember.jsp"
 						method="post" onsubmit="return chkSignIn()">
 						<div class="group">
 							<label for="user" class="label">이름</label> <input name="name"
@@ -75,6 +90,7 @@ LoginDto dto = dao.getOneMember(id);
 								type="text" class="input" required="required" id="birth"
 								value=<%=dto.getBirth()%>>
 						</div>
+						<input type="hidden" value=<%=id %> name="currid">
 						<br>
 						<div class="group">
 							<input type="submit" class="button" value="Change">
@@ -105,7 +121,7 @@ LoginDto dto = dao.getOneMember(id);
 								id="renewpw">
 						</div>
 						<input name="id"
-								type="text" class="hidden" required="required" id="id"
+								type="hidden" class="hidden" required="required" id="id"
 								value=<%=id%>>
 						<br>
 						<div class="group">

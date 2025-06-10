@@ -15,26 +15,25 @@ a {
 /* 커스텀 시작 */
 
 /* 사이드바 시작 */
+/* 사이드바 시작 */
 :root {
 	--side-bar-width: 230px;
 	--side-bar-height: 35vh;
-	--side-bar-top-position: 15vh;
-	/* 사이드바의 상단 위치를 명시적으로 지정 (예: 화면 높이의 15%) */
-	/* 기존 calc((100vh - var(--side-bar-height)) / 5) 계산 결과와 유사하게 설정 또는 원하는 값으로 조절 */
+	/* --side-bar-top-position 변수는 더 이상 사용하지 않음 */
 	--icon-visible-area-width: 55px;
 	/* 아이콘 보이는 영역 너비 (아이콘 23px + 좌우여백 15px*2 = 53px 이므로 55px 정도) */
 }
 
 .side-bar {
 	position: fixed;
-	/* margin-top 대신 top 속성 사용으로 수직 위치 명확히 지정 */
-	top: var(--side-bar-top-position);
+	/* [수정] 수직 중앙 정렬을 위해 top: 50% 사용 */
+	top: 55%;
 	left: 0;
 	width: var(--side-bar-width);
 	min-height: var(--side-bar-height);
 	background-color: #C4DFDF;
-	transform: translateX(calc(-100% + var(--icon-visible-area-width)));
-	/* 초기 숨김 */
+	/* [수정] 기존 translateX에 translateY(-50%)를 추가하여 수직 중앙 정렬 */
+	transform: translateX(calc(-100% + var(--icon-visible-area-width))) translateY(-50%);
 	transition: transform 0.5s ease-in-out;
 	z-index: 1000;
 	overflow: hidden; /* 내용이 넘칠 경우 숨김 (선택 사항이지만, 초기 상태에서 메뉴가 보이지 않도록 도움) */
@@ -42,7 +41,8 @@ a {
 }
 
 .side-bar:hover {
-	transform: translateX(0); /* 호버 시 나타남 */
+	/* [수정] 호버 시에도 수직 중앙 위치 유지를 위해 translateY(-50%) 추가 */
+	transform: translateX(0) translateY(-50%);
 }
 
 /* --- 아이콘 스타일 수정 --- */
@@ -136,7 +136,6 @@ a {
 
 /* 스크롤 테스트용 body 스타일 */
 body {
-	height: 5000px;
 	margin: 0;
 	padding: 0;
 	background-color: #F0F4F8;
@@ -413,4 +412,278 @@ header {
 	display: block; /* 또는 flex */
 	font-size: 0.85rem;
 	color: #555;
+}
+/* 캐러셀 내 카드 스타일 (Bootstrap 기본 카드 외 추가 스타일) */
+.item .card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-height: 320px; /* 카드 최소 높이 설정 (내용이 적을 때 보기 좋게) */
+    display: flex;
+    flex-direction: column;
+    
+}
+.googlechk{
+	align-content: flex-end;	
+}
+.googlereview, .review_writeday{
+	color: #ccc;	
+	min-width: 90px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    /* top: calc(100% + 5px); /* category 아이콘 아래에 위치 (아이콘 높이 + 여백) */
+    top: 45px;
+    right: 35px; /* category 아이콘 옆에 위치 */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 10;
+    min-width: 80px; /* 메뉴 너비 조정 */
+    border-radius: 4px;
+    overflow: hidden;
+    
+}
+
+.dropdown-menu button {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    
+}
+
+.dropdown-menu button:hover {
+    background-color: #f0f0f0;
+}
+
+
+
+div.img-con {
+    display: flex;    
+    flex-wrap: wrap;
+    justify-content: inherit;
+    /* max-height:180px;
+    overflow: auto; */
+    
+}
+
+div.img-con img.photo {      
+    width: 170px; /* 이미지 높이 100% */   
+    height: 170px; /* 이미지 높이 100% */   
+    border-radius:10px;    
+    margin: 5px;
+    display: inline-flex; /* 인라인 블록처럼 작동하면서 내부 정렬 가능 */
+    align-items: center; /* 내부 아이콘/텍스트 세로 중앙 정렬 */
+    justify-content: center; /* 내부 아이콘/텍스트 가로 중앙 정렬 */
+    box-sizing: border-box; 
+}
+
+/* 별점 스타일 */
+.star_rating2 {
+	width: 100%;
+	height: 60px;
+	box-sizing: border-box;
+	display: inline-flex;
+	float: left;
+	flex-direction: row;
+	justify-content: flex-start;
+	margin-bottom: 10px;
+}
+
+.star_rating2 .rating.off {
+	width: 25px;
+	height: 25px;
+	margin-right: 10px;
+	display: inline-block;
+	background-image: url("../review_image/star3.png");
+	background-repeat: no-repeat;
+	background-size: 100%;
+	box-sizing: border-box;
+}
+
+.star_rating2 .rating.on {
+	width: 25px;
+	height: 25px;
+	margin-right: 10px;
+	display: inline-block;
+	background-image: url("../review_image/star4.png");
+	background-repeat: no-repeat;
+	background-size: 100%;
+	box-sizing: border-box;
+}
+
+/* 텍스트 줄바꿈 유지 */
+.card-text {
+    white-space: pre-wrap; /* 공백 및 줄바꿈 유지 */
+    max-height: 200px; 
+    overflow: auto; /* 넘치는 부분 숨김 */
+}
+
+
+
+
+/* Owl Carousel Navigation 버튼 스타일링 */
+#reviewCarousel.owl-carousel .owl-nav {
+    position: absolute; /* 캐러셀 컨테이너를 기준으로 절대 위치 */
+    top: 50%; /* 수직 1/3지점 정렬 */
+    transform: translateY(-50%); /* 정확한 중앙 정렬을 위한 조정 */
+    width: 100%; /* 부모 너비에 맞춤 */
+    display: flex; /* 버튼을 가로로 정렬 */
+    justify-content: space-between; /* 버튼을 양 끝으로 분산 */
+    padding: 0 10px; /* 좌우 패딩 (컨테이너 경계에서 떨어뜨리기) */
+    pointer-events: none; /* 버튼 외 영역 클릭 방지 (버튼 클릭은 가능) */
+    
+    
+}
+
+#reviewCarousel.owl-carousel .owl-nav button {
+    background: rgba(0, 0, 0, 0.3); /* 투명 배경 */
+    color: white; /* 아이콘 색상 */
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%; /* 원형 버튼 */    
+    cursor: pointer;
+    pointer-events: all; /* 버튼 클릭 가능하게 설정 */
+    transition: background-color 0.3s ease; /* 호버 효과 */       
+    
+    display: flex; /* Flex 컨테이너로 만듭니다. */
+    align-items: center; /* 자식 요소를 수직 중앙 정렬합니다. */
+    justify-content: center; /* 자식 요소를 수평 중앙 정렬합니다. */
+    width: 40px; /* 버튼의 고정 너비 */
+    height: 40px; /* 버튼의 고정 높이 */
+   
+    
+     /* --- 기본 버튼 텍스트를 숨김 --- */
+    font-size: 0; 
+    line-height: 0;
+    
+}
+
+/* Bootstrap Icons를 사용하는 경우 */
+#reviewCarousel.owl-carousel .owl-nav button.owl-prev:before,
+#reviewCarousel.owl-carousel .owl-nav button.owl-next:before {
+    /* 가상 요소의 폰트 크기 */
+    font-size: 24px; /* 원하는 아이콘 크기로 설정 */
+    font-family: "bootstrap-icons"; /* Bootstrap Icons 폰트 패밀리 */
+    
+}
+
+ #reviewCarousel.owl-carousel .owl-nav button:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+#reviewCarousel.owl-carousel .owl-nav button.owl-prev:before {
+    /* 왼쪽 버튼 */    
+    content: "\F284"; /* Bootstrap Icons: chevron-left 유니코드 */ 
+  
+}
+
+#reviewCarousel.owl-carousel .owl-nav button.owl-next:before {
+    /* 오른쪽 버튼 */    
+    content: "\F285"; 
+} 
+
+/* 캐러셀 점(dots)이 필요 없다면 숨김 */
+#reviewCarousel.owl-carousel .owl-dots {
+    display: none;
+}
+div.categorydate{
+	display: flex; /* Flex 컨테이너로 설정 */
+    justify-content: space-between; /* 요소들을 양 끝으로 벌립니다. (예: 날짜와 카테고리 아이콘) */
+    align-items: center; /* 요소들을 수직 중앙 정렬합니다. */
+    flex-wrap: nowrap; 
+    min-width: 100px;
+}
+
+/* 카테고리 아이콘 */
+i.review_category{
+	background: rgba(0, 0, 0, 0); /* 투명 배경 */
+    color: #CCC; /* 아이콘 색상 */
+    border: none;
+    padding: 5px 7.5px;
+    border-radius: 50%; /* 원형 버튼 */    
+    cursor: pointer;
+    pointer-events: all; /* 버튼 클릭 가능하게 설정 */
+    transition: background-color 0.3s ease; /* 호버 효과 */ 
+  	flex-shrink:0;
+      
+    width: 30px; /* 버튼의 고정 너비 */
+    height: 30px; /* 버튼의 고정 높이 */
+    
+}
+i.review_category:hover {
+	background: rgba(0, 0, 0, 0.5);
+}
+
+/* 별점 평균 스타일 */
+/* rating-summary 컨테이너 */
+.rating-summary {
+    width: 100%;
+    max-width: 400px; /* 원하는 너비로 조절 */
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.rating-summary h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* 각 별점 줄 (5점, 4점 등) */
+.rating-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.rating-label {
+    width: 40px; /* "5점" 같은 레이블의 너비 */
+    font-weight: bold;
+    color: #555;
+}
+
+/* 진행 바의 배경 컨테이너 */
+.progress-bar-container {
+    flex-grow: 1; /* 남은 공간을 모두 차지하도록 설정 */
+    height: 10px; /* 바의 높이 */
+    background-color: #e9ecef; /* 바의 배경색 */
+    border-radius: 5px;
+    overflow: hidden; /* 내부 막대가 삐져나오지 않도록 */
+    margin: 0 10px;
+}
+
+/* 실제 진행률을 나타내는 내부 막대 */
+.progress-bar {
+    height: 100%;
+    background-color: #ffc107; /* 기본 노란색 (별점 색상과 유사하게) */
+    border-radius: 5px;
+    transition: width 0.5s ease-in-out; /* 너비 변경 시 애니메이션 */
+}
+
+.rating-percentage {
+    width: 120px; /* 퍼센트 텍스트의 너비 */
+    text-align: right;
+    font-size: 0.9em;
+    color: #555;
+}
+
+/* 전체 평균 별점 표시 부분 */
+.overall-rating {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    text-align: center;
+    font-size: 1.1em;
+    color: #333;
 }

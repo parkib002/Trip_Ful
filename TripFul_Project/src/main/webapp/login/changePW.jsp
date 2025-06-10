@@ -16,7 +16,7 @@
 		id = (String)session.getAttribute("id");
 	}
 	else{
-		id = (String)request.getAttribute("id");
+		id = request.getParameter("id");
 	}
 
 	LoginDao dao = new LoginDao();

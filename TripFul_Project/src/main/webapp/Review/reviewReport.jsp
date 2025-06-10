@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="Review/report.css">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/Review/report.css">
 <title>Insert title here</title>
 <%	
 	String review_idx=request.getParameter("review_idx");		
@@ -36,7 +36,7 @@
 
 <body>
 	<div class="container mt-3 report_box" >
-	<form id="myform" action="Review/reportForm.jsp" method="post" >
+	<form id="myform" action="<%=request.getContextPath() %>/Review/reportForm.jsp" method="post" >
 	<input type="hidden" name="review_idx" value="<%=review_idx%>">
 	<input type="hidden" name="review_title" value="">
 	<input type="hidden" name="review_content" value="">
