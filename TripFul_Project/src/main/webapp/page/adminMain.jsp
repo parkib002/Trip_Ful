@@ -178,7 +178,7 @@
 </div>
 <div class="container admin-section">
     <!-- 주요 현황 요약 섹션 시작 -->
-    <h2 class="section-title mb-4">:상승세인_차트: 주요 현황 요약</h2>
+    <h2 class="section-title mb-4">📈 주요 현황 요약</h2>
     <div class="row g-4 mb-5">
         <div class="col-lg-3 col-md-6 mb-4">
             <div class="card summary-card shadow-sm p-3 h-100">
@@ -238,7 +238,7 @@
         </div>
     </div>
     <!-- 주요 현황 요약 섹션 끝 -->
-    <h2 class="section-title mb-4">:톱니바퀴: 핵심 기능 관리</h2>
+    <h2 class="section-title mb-4">⚙️ 핵심 기능 관리</h2>
     <div class="row g-4">
         <div class="col-lg-3 col-md-6 mb-4">
             <div class="card shadow-sm p-3 text-center h-100">
