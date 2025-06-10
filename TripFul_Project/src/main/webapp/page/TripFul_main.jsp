@@ -16,7 +16,7 @@
 
 <header class="hero position-relative overflow-hidden">
     <video autoplay muted loop playsinline class="bg-video">
-        <source src="<%= request.getContextPath() %>/image/hero.mp4" type="video/mp4">
+        <source src="<%= request.getContextPath() %>/image/main_video.mp4" type="video/mp4">
     </video>
     <div class="hero-overlay position-absolute w-100 h-100 bg-dark opacity-50"></div>
     <%-- 여기서 animate-target 클래스를 제거했습니다. --%>
