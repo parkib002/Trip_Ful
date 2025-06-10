@@ -402,8 +402,10 @@
 		
 
 
-      <button type="submit" class="btn btn-primary w-100 mt-3">수정</button>
-      <button type="button" class="btn btn-secondary" id="btnPreview">미리보기</button>
+      <div class="d-flex justify-content-center gap-3 mt-3">
+  <button type="submit" class="btn btn-primary" style="width: 300px;">수정</button>
+  <button type="button" class="btn btn-secondary" style="width: 300px;" id="btnPreview">미리보기</button>
+</div>
     </div>
   </form>
 </div>
@@ -527,7 +529,7 @@
   
   
 
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpVlcErlSTHrCz7Y4h3_VM8FTMkm9eXAc&callback=initMap" async defer></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpVlcErlSTHrCz7Y4h3_VM8FTMkm9eXAc&libraries=places&callback=initMap" async defer></script>
 
 </body>
 </html>

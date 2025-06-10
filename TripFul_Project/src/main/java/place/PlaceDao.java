@@ -555,6 +555,7 @@ public class PlaceDao {
 	            while (rs.next()) {
 	                PlaceDto dto = new PlaceDto();
 
+	                dto.setPlace_num(rs.getString("place_num"));
 	                dto.setCountry_name(rs.getString("country_name"));
 	                dto.setPlace_name(rs.getString("place_name"));
 	                dto.setPlace_count(rs.getInt("place_count")); // 조회수
@@ -570,8 +571,6 @@ public class PlaceDao {
 
 	    return list;
 	}
-
-	
 
 	public List<PlaceDto> searchByTag(String tag) {
 		List<PlaceDto> places = new ArrayList<>();

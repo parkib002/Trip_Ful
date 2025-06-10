@@ -306,8 +306,10 @@
 <input type="hidden" id="input-tag" name="preview_tag">
 <input type="hidden" id="input-content" name="preview_content">
 
-      <button type="submit" class="btn btn-primary w-100 mt-3">추가</button>
-      <button type="button" class="btn btn-secondary" id="btnPreview">미리보기</button>
+      <div class="d-flex justify-content-center gap-3 mt-3">
+  <button type="submit" class="btn btn-primary" style="width: 300px;">추가</button>
+  <button type="button" class="btn btn-secondary" style="width: 300px;" id="btnPreview">미리보기</button>
+</div>
     </div>
   </form>
 </div>
