@@ -75,7 +75,7 @@
 				<%
 				if (id.equals(s_id) || (loginok != null && loginok.equals("admin"))) {
 				%><button class="btn btn-info"
-					onclick="location.href='http://localhost:8080/TripFul_Project/index.jsp?main=login/changeForm.jsp'">정보
+					onclick="location.href='http://localhost:8080/TripFul_Project/index.jsp?main=login/changeForm.jsp?userid=<%=id%>'">정보
 					수정</button>
 					<button class="btn btn-danger"
 					onclick="btnDel()">회원 탈퇴</button>
@@ -192,6 +192,7 @@
     function loadMyReviews(continent) {
         var userId = "<%=id%>";
         var loginok = "<%=loginok%>";
+        var currId = "<%=s_id%>";
 
         var targetDivClass;
         switch(continent) {
@@ -222,12 +223,12 @@
                         reviewCard += "<span class='review_writeday'>" + r.review_writeday + "</span>&nbsp;&nbsp;";
                         reviewCard += "<i class='bi bi-three-dots-vertical review_category' review_id='"+r.review_id+"'></i>";
                         reviewCard += "<div class='dropdown-menu'>";
-                        if(r.review_id === userId || (loginok !== 'null' && loginok === "admin")) {
+                        if(r.review_id == currId || (loginok !== 'null' && loginok === "admin")) {
+                        	console.log(r.review_id);
+                        	console.log(userId);
                             reviewCard += "<button type='button' class='delete-btn' review_id='" + r.review_id + "' review_idx='"+r.review_idx+"'>삭제</button>";
-                            if(r.review_id === userId) {
-                                reviewCard += "<button type='button' class='updateModal' review_idx='"+r.review_idx+"'>수정</button>";
-                            }
-                        } else {
+                        } 
+                        else {
                             reviewCard += "<button type='button' class='report' review_idx='"+r.review_idx+"' loginok='"+loginok+"'>신고</button>";
                         }
                         reviewCard += "</div></div></div>";

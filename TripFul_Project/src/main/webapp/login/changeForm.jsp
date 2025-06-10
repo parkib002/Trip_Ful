@@ -36,8 +36,20 @@ if(request.getParameter("status")!=null){
 }
 
 if (session.getAttribute("id") != null) {
-id = (String) session.getAttribute("id");
+	id = (String) session.getAttribute("id");
+	if(((String)session.getAttribute("loginok")).equals("admin")){
+		id = request.getParameter("userid");
+		%>
+			<script>
+				$(function(){
+					$("#tab-2").prop("disabled", true);
+				})
+			</script>
+		<%
+	}
 }
+
+
 
 LoginDao dao = new LoginDao();
 LoginDto dto = dao.getOneMember(id);
