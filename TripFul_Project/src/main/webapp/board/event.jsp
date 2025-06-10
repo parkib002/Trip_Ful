@@ -196,9 +196,8 @@ String keywordFromRequest = request.getParameter("keyword");
 	<table class="table table-hover notice-table">
 		<thead>
 			<tr>
-				<th scope="col" style="width: 8%;">번호</th>
-            	<th scope="col" style="width: 47%;">제목</th>
-            	<th scope="col" style="width: 15%; text-align: center;">작성자</th>
+				<th scope="col" style="width: 10%;">번호</th>
+            	<th scope="col" style="width: 60%;">제목</th>
            		<th scope="col" style="width: 20%;">작성일</th>
             	<th scope="col" style="width: 10%; text-align: center;">조회수</th>
 			</tr>
@@ -212,7 +211,7 @@ String keywordFromRequest = request.getParameter("keyword");
 			if(list.isEmpty())
 			{%>
 				<tr>
-					<td colspan="5" align="center"><b>등록된 게시글이 없습니다</b></td>
+					<td colspan="4" align="center"><b>등록된 게시글이 없습니다</b></td>
 				</tr>
 			<%}else{
 					for(int i=0;i<list.size();i++)
@@ -227,7 +226,6 @@ String keywordFromRequest = request.getParameter("keyword");
 									<%=dto.getEvent_title() %>
 								</a>
 							</td>
-							<td align="center"><%=dto.getEvent_writer() %></td>
 							<td><%=sdf.format(dto.getEvent_writeday()) %></td>
 							<td align="center"><%=dto.getEvent_readcount() %></td>
 						</tr>

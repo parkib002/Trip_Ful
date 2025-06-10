@@ -49,6 +49,7 @@
 .notice-content img { max-width: 100%; height: auto; border-radius: 8px; margin-top: 10px; margin-bottom: 10px; } /* 클래스명 event-content -> notice-content (선택적) */
 /* 댓글 관련 CSS는 필요 없어짐 */
 .btn-sm i { vertical-align: middle; }
+
 </style>
 </head>
 <body>

@@ -12,6 +12,32 @@ import mysql.db.DbConnect; // 실제 사용하는 DB 연결 클래스 경로로 
 public class BoardSupportDao {
 
     DbConnect db = new DbConnect();
+    
+    //미답변 글갯수
+    public int getUnansweredTotalCount() {
+        int n = 0;
+        Connection conn = db.getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        // 원본글(relevel=0)이면서, 해당 글과 같은 그룹(regroup)에 속한 답변글(relevel > 0)이 존재하지 않는 글의 수를 센다.
+        String sql = "SELECT count(*) FROM tripful_qna q WHERE q.relevel = 0 " +
+                     "AND NOT EXISTS (SELECT 1 FROM tripful_qna r WHERE r.regroup = q.regroup AND r.relevel > 0)";
+
+        try {
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                n = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("getUnansweredTotalCount 오류: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            db.dbClose(rs, pstmt, conn);
+        }
+        return n;
+    }
 
     // 전체 원본글갯수 (relevel = 0 인 글) - 필터링 조건 추가
     public int getTotalCount(String filter) { // filter 파라미터 추가
@@ -309,19 +335,81 @@ public class BoardSupportDao {
         return success;
     }
 
-    // 검색 기능은 필터링 조건 추가가 필요하면 유사하게 수정 (현재는 유지)
+    /**
+     * 고객센터(Q&A) 게시글 검색 결과의 총 개수를 반환합니다.
+     * @param keyword 검색할 키워드 (제목 또는 내용)
+     * @return 검색된 게시글의 총 개수
+     */
     public int getSearchSupportTotalCount(String keyword) {
         int total = 0;
-        // ... (기존 코드)
-        // 만약 검색 시에도 답변 상태 필터를 적용하려면, 이 메소드도 filter 파라미터를 받고 SQL을 수정해야 합니다.
+        Connection conn = db.getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        // 제목 또는 내용에 키워드가 포함된 원본글(relevel=0)의 수를 셉니다.
+        String sql = "SELECT count(*) FROM tripful_qna WHERE relevel=0 AND (qna_title LIKE ? OR qna_content LIKE ?)";
+
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + keyword + "%");
+            pstmt.setString(2, "%" + keyword + "%");
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.dbClose(rs, pstmt, conn);
+        }
         return total;
     }
 
+    /**
+     * 고객센터(Q&A) 게시글을 키워드로 검색하여 페이징 처리된 목록을 반환합니다.
+     * @param keyword 검색할 키워드 (제목 또는 내용)
+     * @param startNum 시작 번호
+     * @param perPage 페이지당 게시글 수
+     * @return 검색된 게시글 목록
+     */
     public List<BoardSupportDto> searchSupport(String keyword, int startNum, int perPage) {
         List<BoardSupportDto> list = new ArrayList<>();
-        // ... (기존 코드)
-        // 만약 검색 시에도 답변 상태 필터를 적용하려면, 이 메소드도 filter 파라미터를 받고 SQL을 수정해야 합니다.
-        // dto.setAnswered(rs.getBoolean("answered_status")); 부분은 이미 추가되어 있습니다.
+        Connection conn = db.getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        // 제목 또는 내용에 키워드가 포함된 원본글(relevel=0)을 찾고, 답변 상태까지 함께 조회합니다.
+        String sql = "SELECT q.*, " +
+                     "EXISTS (SELECT 1 FROM tripful_qna r WHERE r.regroup = q.regroup AND r.relevel > 0) as answered_status " +
+                     "FROM tripful_qna q " +
+                     "WHERE q.relevel = 0 AND (q.qna_title LIKE ? OR q.qna_content LIKE ?) " +
+                     "ORDER BY q.regroup DESC, q.restep ASC LIMIT ?, ?";
+
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + keyword + "%");
+            pstmt.setString(2, "%" + keyword + "%");
+            pstmt.setInt(3, startNum);
+            pstmt.setInt(4, perPage);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                BoardSupportDto dto = new BoardSupportDto();
+                dto.setQna_idx(rs.getString("qna_idx"));
+                dto.setQna_title(rs.getString("qna_title"));
+                dto.setQna_content(rs.getString("qna_content"));
+                dto.setQna_writer(rs.getString("qna_writer"));
+                dto.setQna_private(rs.getString("qna_private"));
+                dto.setQna_writeday(rs.getTimestamp("qna_writeday"));
+                dto.setRegroup(rs.getInt("regroup"));
+                dto.setAnswered(rs.getBoolean("answered_status")); // 답변 상태 설정
+                list.add(dto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.dbClose(rs, pstmt, conn);
+        }
         return list;
     }
 }
