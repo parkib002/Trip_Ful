@@ -2,7 +2,7 @@
 <%@ page import="board.EventAnswerDao" %>
 <%@ page import="board.EventAnswerDto" %>
 <%
-    String answer_idx = request.getParameter("comment_idx");
+    String answer_idx = request.getParameter("answer_idx");
 
     // 로그인 사용자 ID 및 관리자 여부 확인
     String loggedInUserId = (String) session.getAttribute("id");

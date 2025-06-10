@@ -10,6 +10,8 @@
 <head>
 <meta charset="UTF-8">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <title>고객센터</title>
 <script type="text/javascript">
     function filterList() {
@@ -97,12 +99,10 @@ String keywordFromRequest = request.getParameter("keyword");
 <body>
 
 <br><br><br>
-<!-- 검색창 -->
 <div class="container my-3 board-search-container">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6">
             <form action="<%= request.getContextPath() %>/index.jsp" method="get" class="d-flex" id="boardPageGlobalSearchForm">
-                <%-- main 파라미터를 boardSearchResults.jsp로 직접 지정 --%>
                 <input type="hidden" name="main" value="board/boardSearchResult.jsp"> 
                 
                 <input class="form-control me-2" type="search"
@@ -126,7 +126,7 @@ String keywordFromRequest = request.getParameter("keyword");
             <h3>
                 <i class="bi bi-x-diamond-fill"> </i><b>고객센터</b>
             </h3>
-            <select id="answerFilter" name="filter" onchange="filterList()">
+            <select id="answerFilter" name="filter" onchange="filterList()" style="max-width: 120px;">
                 <option value="all">전체</option>
                 <option value="answered">답변 완료</option>
                 <option value="unanswered">미답변</option>
@@ -151,12 +151,13 @@ String keywordFromRequest = request.getParameter("keyword");
         <table class="table table-hover notice-table">
             <thead>
                 <tr>
-                    <th scope="col" style="width: 8%;">번호</th>
-                    <th scope="col" style="width: 37%;">제목</th> 
-                    <th scope="col" style="width: 15%; text-align: center;">작성자</th>
-                    <th scope="col" style="width: 15%;">작성일</th> 
-                    <th scope="col" style="width: 10%; text-align: center;">상태</th>
-                    <th scope="col" style="width: 10%; text-align: center;">조회수</th>
+                   <th scope="col" style="width: 8%;">번호</th>
+			        <th scope="col" style="width: 12%; text-align: center;">문의유형</th>
+			        <th scope="col" style="width: 30%;">제목</th>
+			        <th scope="col" style="width: 15%; text-align: center;">작성자</th>
+			        <th scope="col" style="width: 15%;">작성일</th> 
+			        <th scope="col" style="width: 10%; text-align: center;">상태</th>
+			        <th scope="col" style="width: 10%; text-align: center;">조회수</th>
                 </tr>
             </thead>
             <tbody>
@@ -164,7 +165,7 @@ String keywordFromRequest = request.getParameter("keyword");
                 if(list.isEmpty()){
                 %>
                     <tr>
-                        <td colspan="6" align="center"><b>
+                        <td colspan="7" align="center"><b>
                         <%
                         if (!"all".equals(filter) && totalCount == 0) {
                             if ("answered".equals(filter)) {
@@ -184,11 +185,12 @@ String keywordFromRequest = request.getParameter("keyword");
                 } else {
                     for(int i = 0; i < list.size(); i++) {
                         BoardSupportDto dto = list.get(i);
-                        // relevel == 0 조건은 DAO에서 이미 처리되었으므로 JSP에서는 생략 가능
+
                 %>
                 <tr class="original-post-row" data-idx="<%=dto.getQna_idx()%>"
                     data-regroup="<%=dto.getRegroup()%>">
                     <th> &nbsp;<%=no - i%></th>
+                    <td align="center"><%=dto.getQna_category() %></td>
                     <td>
                         <%
                         if ("0".equals(dto.getQna_private())) { 
@@ -221,7 +223,7 @@ String keywordFromRequest = request.getParameter("keyword");
                     <td align="center"><%=dto.getQna_readcount() %></td>
                 </tr>
                 <tr class="details-row" id="details-<%=dto.getQna_idx()%>" style="display: none;">
-                    <td colspan="6" class="details-content-cell"></td>
+                    <td colspan="7" class="details-content-cell"></td>
                 </tr>
                 <%
                     } // end for
@@ -258,7 +260,6 @@ String keywordFromRequest = request.getParameter("keyword");
         </nav>
     </div>
 
-    <%-- AJAX 로직은 이전과 동일하게 유지 --%>
     <script type="text/javascript">
     $(document).ready(function() {
         var currentLoginOk = "<%= loginok == null ? "null" : loginok %>"; 
@@ -266,7 +267,6 @@ String keywordFromRequest = request.getParameter("keyword");
         if (currentLoginOk === "null") currentLoginOk = null; 
         if (currentUserId === "null") currentUserId = null;
 
-        // ... (나머지 AJAX 및 escapeHtml 함수는 이전과 동일) ...
         $('.view-details-link').on('click', function(e) {
             e.preventDefault();
 
@@ -299,13 +299,16 @@ String keywordFromRequest = request.getParameter("keyword");
                     if (response.originalPost) {
                         var post = response.originalPost;
                         htmlContent += '<div class="original-post-content" style="padding:15px; border-bottom:1px solid #eee;">';
-                        htmlContent += '<h4>[질문] ' + escapeHtml(post.qna_title) + '</h4>';
                         
+                        var detailUrl = '<%= request.getContextPath() %>/index.jsp?main=board/supportDetail.jsp&idx=' + post.qna_idx;
+                        htmlContent += '<h4>[질문] <a href="' + detailUrl + '" style="color: inherit; text-decoration: none;">' + escapeHtml(post.qna_title) + '</a></h4>';
+
                         var originalPostReplyFormUrl = '<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=supportReplyForm.jsp' +
                                           '&parent_idx=' + post.qna_idx +
                                           '&regroup=' + post.regroup +
                                           '&restep=' + post.restep +
-                                          '&relevel=' + post.relevel;
+                                          '&relevel=' + post.relevel +
+                                          '&parent_title=' + encodeURIComponent(post.qna_title);
                         var originalPostUpdateFormUrl = '<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=supportUpdateForm.jsp' +
                                           '&qna_idx=' + post.qna_idx;
                         var originalPostDeleteUrl = '<%= request.getContextPath() %>/board/supportDeleteAction.jsp' +

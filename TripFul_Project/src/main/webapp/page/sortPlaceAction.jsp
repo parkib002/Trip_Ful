@@ -26,6 +26,7 @@
 		ob.put("place_count", dto.getPlace_count());
 		ob.put("place_like", dto.getPlace_like());
 		ob.put("place_rating", dto.getAvg_rating());
+		ob.put("place_num",dto.getPlace_num());
 		
 		
 		arr.put(ob);

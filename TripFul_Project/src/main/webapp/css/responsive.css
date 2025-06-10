@@ -1,0 +1,41 @@
+@media (max-width: 768px) {
+    #spotReviewCarousel {
+        max-width: 100%;
+        height: auto;
+        margin: 0 10px 40px;
+    }
+
+    #spotReviewCarousel .carousel-item {
+        height: auto;
+    }
+
+    #spotReviewCarousel .carousel-item img {
+        height: 300px;
+        border-radius: 20px 20px 0 0;
+    }
+
+    #spotReviewCarousel .carousel-item .card {
+        flex-direction: column;
+    }
+
+    #spotReviewCarousel .carousel-item .card > div:first-child {
+        height: auto;
+    }
+
+    .carousel-item .row {
+        flex-direction: column !important;
+    }
+
+    .carousel-item .col-md-6 {
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .carousel-indicators {
+        bottom: 10px;
+    }
+
+    .card-body p {
+        font-size: 0.9rem;
+    }
+}

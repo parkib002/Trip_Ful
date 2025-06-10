@@ -68,6 +68,7 @@ body {
 .carousel {
     width: 500px;
     flex-shrink: 0;
+    margin-top: 15px; /* 원하는 만큼 숫자 조정 */
 }
 
 .carousel-inner img {
@@ -179,6 +180,19 @@ body {
   background-color: #e74c3c;
   color: white;
 }
+
+#map{
+	
+	border: 1px solid gray;
+	border-radius: 10px;
+}
+
+  hr {
+    height: 2px;
+    background-color: gray;
+    border: none;
+  }
+
 
 </style>
 </head>
@@ -366,16 +380,17 @@ $(function(){
 </div>
             <div class="info-box">
                 <p class="description"></p>
-                <p class="location">위치: </p>
-                <div id="map" style="width: 100%; height: 400px;"></div>
-                <p class="address">주소:<%=dto.getPlace_addr() %>
+                <div id="map" style="width: 100%; height: 500px;"></div>
             </div>
         </div>
-
+        <div align="center">
+                <h5>주소: <%=dto.getPlace_addr() %></h5>
+		</div>
+		<hr>
 		<div>
 				<%=dto.getPlace_content() %>
 		</div>
-		
+		<hr>
 <div class="review-section">
   <h2>방문자 리뷰</h2>
 
