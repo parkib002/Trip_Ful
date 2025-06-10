@@ -105,7 +105,26 @@
         </div>
     </div>
     <hr class="mb-4">
-
+    
+    <div class="row justify-content-center my-4">
+        <div class="col-12 col-md-8 col-lg-7">
+            <form action="<%= request.getContextPath() %>/index.jsp" method="get" class="d-flex">
+                <%-- 검색 결과를 이 페이지에서 다시 받기 위한 hidden input --%>
+                <input type="hidden" name="main" value="board/boardSearchResult.jsp">
+                
+                <input class="form-control me-2" type="search" name="keyword"
+                       value="<%= displayKeyword %>" 
+                       placeholder="게시판 통합검색"
+                       aria-label="Search">
+               <button class="btn" type="submit"
+                style="width: 100px; height: 50px;
+                background-color: #2c3e50; color: white;">
+                    <i class="bi bi-search"></i> 검색
+                </button>
+            </form>
+        </div>
+    </div>
+	<br>
     <%-- 공지사항 검색 결과 섹션 --%>
     <div class="search-results-section mb-5">
         <h4><i class="bi bi-megaphone-fill"></i> 공지사항 (<%= totalNoticeCount %>건)</h4>
@@ -206,11 +225,13 @@
                 <% for (BoardSupportDto support : supportList) { %>
                      <li class="list-group-item">
                         <div class="d-flex justify-content-between align-items-start">
-                            <a href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=support.jsp&keyword=<%= encodedKeyword %>&scrollToQna=<%= getString(support.getQna_idx(),"") %>">
-                                 <%= highlightKeyword(support.getQna_title(), keyword) %>
-                                <% if ("1".equals(support.getQna_private())) { %><i class="bi bi-lock-fill ms-1"></i><% } %>
-                            </a>
-                             <small class="text-muted item-date flex-shrink-0 ms-2"><%= formatDate(sdf, support.getQna_writeday()) %></small>
+                            <%-- 고객센터 검색 결과 섹션 --%>
+						    <%-- 링크 주소를 supportDetail.jsp로 직접 연결 --%>
+						    <a href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=supportDetail.jsp&idx=<%= getString(support.getQna_idx(),"") %>&keyword=<%= encodedKeyword %>">
+						        <%= highlightKeyword(support.getQna_title(), keyword) %>
+						        <% if ("1".equals(support.getQna_private())) { %><i class="bi bi-lock-fill ms-1"></i><% } %>
+						    </a>
+                            <small class="text-muted item-date flex-shrink-0 ms-2"><%= formatDate(sdf, support.getQna_writeday()) %></small>
                         </div>
                         <div class="item-meta mt-1">
                             <span class="item-writer">작성자: <%= getString(support.getQna_writer(), "알 수 없음") %></span>

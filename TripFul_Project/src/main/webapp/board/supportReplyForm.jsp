@@ -11,7 +11,7 @@
 <style>
     body { background-color: #f8f9fa; }
     .reply-header {
-        background-color: #2c3e50;
+        background-color: #2C3E50;
         color: white;
         padding: 30px 20px;
         text-align: center;
@@ -54,10 +54,14 @@
         return;
     }
     
-    // 실제 부모 글의 제목 등을 가져와서 표시하고 싶다면 여기서 DB 조회
-    // board.BoardSupportDao daoForTitle = new board.BoardSupportDao();
-    // board.BoardSupportDto parentDto = daoForTitle.getData(parent_idx_str);
-    // String parentTitle = (parentDto != null) ? parentDto.getQna_title() : "원본 글";
+	 // 새로 추가된 parent_title 파라미터를 받습니다. (웹 컨테이너가 자동으로 디코딩해줌)
+    String parentTitle = request.getParameter("parent_title");
+    if (parentTitle == null || parentTitle.trim().isEmpty()) {
+        parentTitle = "원본글"; // 혹시 파라미터가 없을 경우를 대비한 기본값
+    }
+
+    // 동적으로 답변 제목을 생성합니다.
+    String replyTitle = "Re: [" + parentTitle + "] 문의에 대한 답변입니다.";
 %>
 <br><br>
 <div class="reply-header">
@@ -83,7 +87,7 @@
 
         <div class="mb-3">
             <label for="qna_title" class="form-label">답변 제목</label>
-            <input type="text" class="form-control" id="qna_title" name="qna_title" value="RE: 문의에 대한 답변입니다." required>
+            <input type="text" class="form-control" id="qna_title" name="qna_title" value="<%= replyTitle.replace("\"", "&quot;") %>" required>
         </div>
 
         <div class="mb-3">

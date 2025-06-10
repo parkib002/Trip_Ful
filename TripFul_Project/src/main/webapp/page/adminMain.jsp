@@ -1,16 +1,16 @@
+<%@page import="board.BoardSupportDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
 <%
+	BoardSupportDao supportDao=new BoardSupportDao();
     // 세션에서 관리자 이름과 로그인 상태를 가져옵니다.
     String adminName = (String) session.getAttribute("name");
     String loginStatus = (String) session.getAttribute("loginok");
-
     // 로그인 상태가 'admin'이 아니면 인덱스 페이지로 리다이렉트합니다.
     if (loginStatus == null || !loginStatus.equals("admin")) {
         response.sendRedirect("index.jsp");
         return;
     }
-
     // 주요 현황 요약 데이터 (예시 데이터)
     // TODO: 실제 데이터베이스에서 해당 정보를 조회하도록 로직을 구현해야 합니다.
     int newMembersToday = 12;
@@ -18,7 +18,7 @@
     int newMembersThisMonth = 320;
     int recentReviewsCount = 45;
     List<String> popularDestinations = Arrays.asList();
-    int unansweredInquiriesCount = 7;
+    int unansweredInquiriesCount = supportDao.getUnansweredTotalCount();
 %>
 <!DOCTYPE html>
 <html>
@@ -26,13 +26,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 메인 페이지</title>
-
     <style>
         body {
             font-family: 'Inter', sans-serif; /* Google Font Inter 적용 */
         }
         .admin-banner {
-            background: linear-gradient(135deg, #007bff, #00b3d4); /* 그라데이션 각도 변경 */
+            background: linear-gradient(135deg, #007BFF, #00B3D4); /* 그라데이션 각도 변경 */
             color: white;
             padding: 50px 20px; /* 패딩 조정 */
             text-align: center;
@@ -58,10 +57,10 @@
         }
         .card-icon {
             font-size: 2.5rem; /* 아이콘 크기 조정 */
-            color: #007bff; /* 기본 아이콘 색상 */
+            color: #007BFF; /* 기본 아이콘 색상 */
         }
         .summary-card .card-icon { /* 요약 카드 아이콘 색상 다르게 */
-            color: #28a745;
+            color: #28A745;
         }
         .summary-card .display-6, .summary-card .h5 { /* 요약 카드 숫자/텍스트 크기 */
             font-weight: 600;
@@ -83,13 +82,13 @@
             border-bottom-right-radius: 0;
         }
         .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
+            background-color: #007BFF;
+            border-color: #007BFF;
             transition: background-color 0.2s ease, border-color 0.2s ease;
         }
         .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
+            background-color: #0056B3;
+            border-color: #0056B3;
         }
         .section-title {
             font-size: 1.8rem;
@@ -98,13 +97,12 @@
             color: #333;
             text-align: center;
         }
-        
         .sort-dropdown {
  			padding: 0.35rem 0.5rem;
-		 	border: 2px solid #2196f3;
+		 	border: 2px solid #2196F3;
   			border-radius: 0.5rem;
   			font-size: 1rem;
- 		 	color: #2196f3;
+ 		 	color: #2196F3;
 		  	background-color: #fff;
 		  	cursor: pointer;
  		 	transition: all 0.3s ease;
@@ -120,7 +118,6 @@
     <script type="text/javascript">
     $(function() {
         let currentSort = 'views';
-
         function loadPopularList(sort) {
             $.ajax({
                 type: "post",
@@ -133,14 +130,11 @@
                     if(res.length > 0) {
                         console.log(res[0].place_name);
                     }
-
                     $('#popularList').empty();
-
                     $.each(res, function(index, item) {
                         var rank = index + 1;
                         var name = item.place_name;
                         var value = 0;
-
                         if (sort === 'views') {
                             value = item.place_count+"회";
                         } else if (sort === 'rating') {
@@ -153,7 +147,6 @@
                                + rank + '. ' + name+"("+item.country_name+")"
                                + '<span class="badge bg-primary rounded-pill">' + value + '</span>'
                                + '</li>';
-
                         $('#popularList').append(li);
                     });
                 },
@@ -162,10 +155,8 @@
                 }
             });
         }
-
         // 페이지 최초 로딩 시 인기 리스트 불러오기
         loadPopularList(currentSort);
-
         $('#sortSelect').on('change', function() {
             currentSort = $(this).val();
             loadPopularList(currentSort);
@@ -185,10 +176,9 @@
     <h1 class="display-4">Tripful 관리자 페이지</h1>
     <p class="lead">안녕하세요, <strong><%= adminName != null ? adminName : "관리자" %></strong>님! 사이트 현황을 한눈에 확인하세요.</p>
 </div>
-
 <div class="container admin-section">
     <!-- 주요 현황 요약 섹션 시작 -->
-    <h2 class="section-title mb-4">📈 주요 현황 요약</h2>
+    <h2 class="section-title mb-4">:상승세인_차트: 주요 현황 요약</h2>
     <div class="row g-4 mb-5">
         <div class="col-lg-3 col-md-6 mb-4">
             <div class="card summary-card shadow-sm p-3 h-100">
@@ -240,15 +230,15 @@
                     <div class="card-icon mb-3"><i class="bi bi-question-circle-fill"></i></div>
                     <h5 class="card-title mb-2">미답변 문의</h5>
                     <!-- TODO: 실제 데이터로 변경 필요 -->
-                    <p class="display-6 text-danger"><strong><%= unansweredInquiriesCount %></strong></p>
+                    <a href="<%=request.getContextPath()%>/index.jsp?main=board%2FboardList.jsp&sub=support.jsp&filter=unanswered&currentPage=1"
+                    style="text-decoration: none;"><p class="display-6 text-danger"><strong><%= unansweredInquiriesCount %></strong></p></a>
                     <p class="card-text text-muted">건</p>
                 </div>
             </div>
         </div>
     </div>
     <!-- 주요 현황 요약 섹션 끝 -->
-
-    <h2 class="section-title mb-4">⚙️ 핵심 기능 관리</h2>
+    <h2 class="section-title mb-4">:톱니바퀴: 핵심 기능 관리</h2>
     <div class="row g-4">
         <div class="col-lg-3 col-md-6 mb-4">
             <div class="card shadow-sm p-3 text-center h-100">
@@ -276,7 +266,7 @@
                     <div class="card-icon mb-3"><i class="bi bi-people-fill"></i></div>
                     <h5 class="card-title">회원 관리</h5>
                     <p class="card-text text-muted small mb-3">회원 정보 및 권한을 관리합니다.</p>
-                    <a href="index.jsp?main=admin/userManage.jsp" class="btn btn-primary w-100">이동</a>
+                    <a href="index.jsp?main=login/memberList.jsp" class="btn btn-primary w-100">이동</a>
                 </div>
             </div>
         </div>
@@ -291,14 +281,11 @@
             </div>
         </div>
     </div>
-
     <div class="text-center mt-5">
         <a href="../login/logoutAction.jsp" class="btn btn-outline-danger btn-lg px-4">
             <i class="bi bi-box-arrow-right me-2"></i>로그아웃
         </a>
     </div>
 </div>
-
-
 </body>
 </html>
