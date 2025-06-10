@@ -172,8 +172,56 @@ https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
             currentSort = $(this).val();
             loadPopularList(currentSort);
         });
-        
 
+        $(document).on("click", ".list", function() {
+            var num = $(this).attr("id");
+            location.href = "index.jsp?main=place/detailPlace.jsp?place_num=" + num;
+        });
+        
+        loadChartData(currentContinent,c_Sort);
+
+        // ✅ 대륙 변경 시 변수만 갱신
+        $("#continentSelect").change(function() {
+            currentContinent = $(this).val();
+            loadChartData(currentContinent,c_Sort);  // 함수로 분리
+        });
+
+        // ✅ 정렬 기준 변경 시 변수만 갱신
+        $("#c_SortSelect").change(function() {
+            c_Sort = $(this).val();
+            loadChartData(currentContinent,c_Sort);  // 함수로 분리
+        });
+
+        // ✅ 차트 데이터 로드 함수
+        function loadChartData(currentContinent,c_Sort) {
+            $.ajax({
+                type: "post",
+                url: "place/chartAction.jsp",
+                data: { "currentContinent": currentContinent, "c_Sort": c_Sort },
+                dataType: "json",
+                success: function(res) {
+                    currentXAxisData = [];
+                    currentSeriesData = [];
+
+                    for (let i = 0; i < res.length; i++) {
+                        let item = res[i];
+                        currentXAxisData.push(item.place_name);
+                        if (c_Sort === 'views') {
+                            currentSeriesData.push(item.place_count);
+                        } else if (c_Sort === 'likes') {
+                            currentSeriesData.push(item.place_like);
+                        } else if (c_Sort === 'rating') {
+                            currentSeriesData.push(item.place_rating);
+                        }
+                    }
+
+                    drawChart(currentXAxisData, currentSeriesData, currentChartType);
+                },
+                error: function(err) {
+                    console.log("차트 데이터 로딩 에러:", err);
+                }
+            });
+        }
     });
 
     
