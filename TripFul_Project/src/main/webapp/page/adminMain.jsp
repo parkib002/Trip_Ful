@@ -209,7 +209,6 @@ https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
         		dataType:"json",
         		success:function(res){
         			
-        			
         		//alert("성공")	
         		alert(c_Sort)
         
