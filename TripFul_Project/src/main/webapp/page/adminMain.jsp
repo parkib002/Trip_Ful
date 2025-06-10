@@ -123,9 +123,14 @@ https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
     let currentXAxisData = ['이름', '영희', '민수', '지수']; // 초기 데이터
     let currentSeriesData = [70, 80, 100, 30];
     let currentChartType = 'bar'; // 기본 차트 타입 (예: 'bar' 또는 'line')
+    let currentContinent= 'asia';
+    let c_Sort= 'views';
     
     $(function() {
         let currentSort = 'views';
+        
+        //alert(currentContinent)
+        //alert(c_Sort)
         function loadPopularList(sort) {
             $.ajax({
                 type: "post",
@@ -170,34 +175,68 @@ https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
             loadPopularList(currentSort);
         });
         
+        $(document).on("click",".list",function(){
+        	
+        	var num=$(this).attr("id");
+        	
+    		location.href="index.jsp?main=place/detailPlace.jsp?place_num="+num;    	
+        })
+        
         
         
         //document.getElementById("drawLine").addEventListener('click', drawChart);
         //document.getElementById("drawBar").addEventListener('click', drawChart);
         
-        $("#c_sortSelect").change(function(){
+        $("#continentSelect").change(function(){
         	
-        	 if ($(this).val() === 'views') {
-                 currentXAxisData = ['1월', '2월', '3월', '4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-                 currentSeriesData = [100, 120, 150, 130,80,30,90,125,180,200,140,150,130];
-             } else if ($(this).val() === 'new_review') {
-                 currentXAxisData = ['A', 'B', 'C', 'D','A', 'B', 'C', 'D','A', 'B', 'C', 'D','A', 'B', 'C', 'D','A', 'B', 'C', 'D','A', 'B', 'C', 'D'];
-                 currentSeriesData = [90, 110, 80, 140,90, 110, 80, 140,90, 110, 80, 140,90, 110, 80, 140,90, 110, 80, 140,90, 110, 80, 140];
-             } else if ($(this).val() === 'new_member') {
-                 currentXAxisData = ['X', 'Y', 'Z'];
-                 currentSeriesData = [50, 70, 60];
-             }
-        	 drawChart(currentXAxisData, currentSeriesData, currentChartType);
+        	
+        	currentContinent=$(this).val();
+        	
+        	//alert(currentContinent);
+        
+        $("#c_SortSelect").change(function(){
+        	
+        	c_Sort=$(this).val();
+        	
+        	//alert(c_Sort);
+        	
+        	$.ajax({
+        		
+        		
+        		type:"post",
+        		url:"place/chartAction.jsp",
+        		data:{"currentContinent":currentContinent,"c_Sort":c_Sort},
+        		dataType:"json",
+        		success:function(res){
+        			
+        			
+        		//alert("성공")	
+        		alert(c_Sort)
+        
+                   /* currentXAxisData = [''];
+        		
+        		      if (c_Sort === 'views') { 
+                		 
+                         currentSeriesData = [];
+                     } else if (c_Sort === 'likes') {
+                    	 
+                         currentSeriesData = [];
+                     } else if (c_Sort === 'rating') {
+
+                    	 currentSeriesData = [50, 70, 60];
+                     }
+        		      
+                	 drawChart(currentXAxisData, currentSeriesData, currentChartType);  */
+        		
+        		}
+        			
+        	})
+        	
+        }) 
+        
         })
         
     });
-    
-    $(document).on("click",".list",function(){
-    	
-    	var num=$(this).attr("id");
-    	
-		location.href="index.jsp?main=place/detailPlace.jsp?place_num="+num;    	
-    })
     
     function drawChart(xAxisData, seriesData, chartType) {
         var myChart = echarts.init(document.getElementById('chart'));
@@ -216,6 +255,7 @@ https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
         };
         myChart.setOption(option);
     }
+  
     
     </script>
 </head>
@@ -335,11 +375,17 @@ https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
             <div class="card shadow-sm p-3 text-center h-100">
                 <div class="card-body">
                     <div class="card-icon mb-3"><i class="bi bi-bar-chart-fill"></i></div>
-                    <h5 class="card-title"><select id="c_sortSelect" class="sort-dropdown">
-        			<option value="views">리뷰 조회수</option>
-       				<option value="new_review">리뷰 생성 수</option>
-       				<option value="new_member">신규 가입자</option>
+                    <h5 class="card-title"><select id="continentSelect" class="sort-dropdown">
+        			<option value="asia">아시아</option>
+       				<option value="europe">유럽</option>
+       				<option value="nameria">북아메리카</option>
+       				<option value="samerica">남아메리카</option>
         			</select></h5>
+        			<select class="sort-dropdown" id="c_SortSelect">
+        			<option value="views">조회순</option>
+       				<option value="rating">별점순</option>
+        			<option value="likes">좋아요순</option>
+        			</select>
                     <div id="chart" style="width: 100%; height: 500px;"></div>
                     
                 </div>
