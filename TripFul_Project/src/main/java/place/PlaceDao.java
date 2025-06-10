@@ -690,7 +690,7 @@ public class PlaceDao {
 
 		String orderBy = "p.place_count"; // 기본: 조회순 내림차순
 		if ("rating".equals(sort)) {
-			orderBy = "avg_rating IS NULL, avg_rating";
+			orderBy = "avg_rating";
 		} else if ("likes".equals(sort)) {
 			orderBy = "p.place_like";
 		} else if ("name".equals(sort)) {

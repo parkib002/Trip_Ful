@@ -4,8 +4,7 @@
 <%@page import="java.util.List"%>
 <%@page import="place.PlaceDto"%>
 <%@page import="place.PlaceDao"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page contentType="application/json; charset=UTF-8" %>
 <%
 	request.setCharacterEncoding("utf-8");
 
