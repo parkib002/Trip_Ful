@@ -9,10 +9,19 @@
     <link rel="stylesheet" href="css/pagination.css">
     <link rel="stylesheet" href="css/boardListStyle.css">
     <link rel="stylesheet" href="css/noticeStyle.css">
-    <link rel="stylesheet" href="css/style.css">	
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/hero.css">
+    <link rel="stylesheet" href="css/carousel.css">
+    <link rel="stylesheet" href="css/indicators.css">
+    <link rel="stylesheet" href="css/card.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/misc.css">
 
-	
-	<link rel="stylesheet" href="Review/ModalStyle.css">
+
+
+    <link rel="stylesheet" href="Review/ModalStyle.css">
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -24,6 +33,8 @@
 	<link
 	href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Dongle&family=Gaegu&family=Nanum+Pen+Script&display=swap"
 	rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>
 
 </head>
 <body>
@@ -51,12 +62,41 @@
     <%@ include file="layout/footer.jsp" %>
 </div>
 
-<%@ include file="layout/regionModal.jsp" %>
+<div class="floating-buttons">
+    <a href="index.jsp?main=board/boardList.jsp&sub=support.jsp"
+       class="btn btn-light rounded-circle shadow-lg d-flex justify-content-center align-items-center"
+       data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="고객센터">
+        <i class="fas fa-headset fa-lg"></i>
+    </a>
+
+    <a href="#"class="btn btn-light rounded-circle shadow-lg d-flex justify-content-center align-items-center"
+            data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="맨 위로">
+        <i class="fas fa-arrow-up fa-lg"></i>
+        </a>
+</div>
+
+
+
+
+
+<script>
+    document.addEventListener(
+        "DOMContentLoaded", function() {
+        // 툴팁 활성화
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+
+    });
+</script>
+
+
 
 <script src="js/header.js" defer></script>
 <script src="js/selectPlace.js" defer></script>
 <script src="js/mainPageCarousel.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
 
 <script src="Review/JavaScript/ModalJs.js" defer></script>
 <script src="Review/JavaScript/reviewListJs.js" defer></script>
