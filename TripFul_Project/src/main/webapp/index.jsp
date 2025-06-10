@@ -65,7 +65,7 @@
 <div class="floating-buttons">
     <a href="index.jsp?main=/place/selectPlace.jsp"
        class="btn btn-light rounded-circle shadow-lg d-flex justify-content-center align-items-center"
-       data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="대륙 선택">
+       data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="관광지 선택">
         <i class="fas fa-globe fa-lg"></i> </a>
 
     <a href="index.jsp?main=board/boardList.jsp&sub=support.jsp"
