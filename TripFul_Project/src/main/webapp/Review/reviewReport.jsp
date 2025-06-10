@@ -14,36 +14,32 @@
 	$(function() {
 		var review_idx=<%=review_idx%>
 		
-		console.log(review_idx);
+		//console.log(review_idx);
 		$(".report_tr").click(function() {
 			var title=$(this).find(".report_title").text();			
-			var content=$(this).find(".report_text").text();
+			var content=$(this).find(".report_text").text();	
+			
+			//console.log(title, content);
+			$("input[name='review_title']").val(title);
+			$("input[name='review_content']").val(content);		
+			//console.log($("input[name='review_title']").val(),$("input[name='review_content']").val());
 			
 			
+			$("#myform").submit();
 			
-			// 동적으로 폼 생성
-		    var form = $('<form></form>');
-		    form.attr('method', 'post'); 
 		   
-		    form.attr('action', 'index.jsp?main=Review/reportForm.jsp'); 		    
-
-		    // 숨겨진 input 필드에 값 추가
-		    form.append($('<input type="hidden" name="review_idx">').val(review_idx));
-		    form.append($('<input type="hidden" name="report_title">').val(title));
-		    form.append($('<input type="hidden" name="report_content">').val(content));
-
-		    // 생성한 폼을 body에 추가하고 바로 제출
-		    $('body').append(form);
-		    form.submit();
 		});
 		
-	});
+	});	
 </script>
 </head>
 
 <body>
 	<div class="container mt-3 report_box" >
-	
+	<form id="myform" action="Review/reportForm.jsp" method="post" >
+	<input type="hidden" name="review_idx" value="<%=review_idx%>">
+	<input type="hidden" name="review_title" value="">
+	<input type="hidden" name="review_content" value="">
 	<h4 class="report_main_title">리뷰 신고</h4>
 		<table class="table table-hover report_table" >
 			<tr class="report_tr">			
@@ -53,7 +49,7 @@
 							<span class="report_text">해당 비즈니스의 이용 경험과 관련이 없는 리뷰입니다.</span>	
 					</div>
 				</td>
-				<td>					
+				<td>
 					<i class="bi bi-chevron-right report_right"></i>					
 				</td>
 			</tr>
@@ -105,7 +101,8 @@
 					<i class="bi bi-chevron-right report_right"></i>					
 				</td>
 			</tr>
-		</table>		
+		</table>	
+		</form>	
 	</div>
 </body>
 </html>

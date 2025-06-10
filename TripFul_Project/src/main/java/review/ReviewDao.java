@@ -63,6 +63,31 @@ public class ReviewDao {
 		return Place_name;
 	}
 	
+	//place_num가져오기
+	public String getPlaceNum(String review_idx) {
+		String place_num="";
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql="select place_num from tripful_review where review_idx=?";
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, review_idx);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				place_num=rs.getString("place_num");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
+		
+		return place_num;
+	}
+	
 	//관광지 아이디
 	public String getPlaceCode(String place_num)
 	{
