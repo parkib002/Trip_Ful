@@ -120,17 +120,14 @@ https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
     </style>
     <script type="text/javascript">
         
-    let currentXAxisData = ['이름', '영희', '민수', '지수']; // 초기 데이터
-    let currentSeriesData = [70, 80, 100, 30];
+    let currentXAxisData = [];
+	let currentSeriesData = [];
     let currentChartType = 'bar'; // 기본 차트 타입 (예: 'bar' 또는 'line')
     let currentContinent= 'asia';
-    let c_Sort= 'views';
-    
+	let c_Sort= 'views';
     $(function() {
         let currentSort = 'views';
-        
-        //alert(currentContinent)
-        //alert(c_Sort)
+    	
         function loadPopularList(sort) {
             $.ajax({
                 type: "post",
@@ -140,7 +137,7 @@ https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
                 success: function(res) {
                     console.log(sort);
                     console.log(res);
-                    if(res.length > 0) {
+                    if (res.length > 0) {
                         console.log(res[0].place_name);
                     }
                     $('#popularList').empty();
@@ -149,17 +146,17 @@ https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
                         var name = item.place_name;
                         var value = 0;
                         if (sort === 'views') {
-                            value = item.place_count+"회";
+                            value = item.place_count + "회";
                         } else if (sort === 'rating') {
-                            value = item.avg_rating !== null ? item.place_rating.toFixed(1)+"점" : "0.0";
+                            value = item.avg_rating !== null ? item.place_rating.toFixed(1) + "점" : "0.0";
                         } else if (sort === 'likes') {
-                            value = item.place_like+"개";
+                            value = item.place_like + "개";
                         }
 
-                        var li = '<li class="list-group-item d-flex justify-content-between align-items-center list" id='+item.place_num+'>'
-                               + rank + '. ' + name+"("+item.country_name+")"
-                               + '<span class="badge bg-primary rounded-pill">' + value + '</span>'
-                               + '</li>';
+                        var li = '<li class="list-group-item d-flex justify-content-between align-items-center list" id=' + item.place_num + '>'
+                            + rank + '. ' + name + "(" + item.country_name + ")"
+                            + '<span class="badge bg-primary rounded-pill">' + value + '</span>'
+                            + '</li>';
                         $('#popularList').append(li);
                     });
                 },
@@ -168,82 +165,79 @@ https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
                 }
             });
         }
-        // 페이지 최초 로딩 시 인기 리스트 불러오기
+
         loadPopularList(currentSort);
+
         $('#sortSelect').on('change', function() {
             currentSort = $(this).val();
             loadPopularList(currentSort);
         });
-        
-        $(document).on("click",".list",function(){
-        	
-        	var num=$(this).attr("id");
-        	
-    		location.href="index.jsp?main=place/detailPlace.jsp?place_num="+num;    	
-        })
-        
-        
-        
-        //document.getElementById("drawLine").addEventListener('click', drawChart);
-        //document.getElementById("drawBar").addEventListener('click', drawChart);
-        
-        $("#continentSelect").change(function(){
-        	
-        	
-        	currentContinent=$(this).val();
-        	
-        	//alert(currentContinent);
-        
-        $("#c_SortSelect").change(function(){
-        	
-        	c_Sort=$(this).val();
-        	
-        	//alert(c_Sort);
-        	
-        	$.ajax({
-        		
-        		
-        		type:"post",
-        		url:"place/chartAction.jsp",
-        		data:{"currentContinent":currentContinent,"c_Sort":c_Sort},
-        		dataType:"json",
-        		success:function(res){
-        			
-        			
-        		//alert("성공")	
-        		alert(c_Sort)
-        
-                   /* currentXAxisData = [''];
-        		
-        		      if (c_Sort === 'views') { 
-                		 
-                         currentSeriesData = [];
-                     } else if (c_Sort === 'likes') {
-                    	 
-                         currentSeriesData = [];
-                     } else if (c_Sort === 'rating') {
 
-                    	 currentSeriesData = [50, 70, 60];
-                     }
-        		      
-                	 drawChart(currentXAxisData, currentSeriesData, currentChartType);  */
-        		
-        		}
-        			
-        	})
-        	
-        }) 
+        $(document).on("click", ".list", function() {
+            var num = $(this).attr("id");
+            location.href = "index.jsp?main=place/detailPlace.jsp?place_num=" + num;
+        });
         
-        })
-        
+        loadChartData(currentContinent,c_Sort);
+
+        // ✅ 대륙 변경 시 변수만 갱신
+        $("#continentSelect").change(function() {
+            currentContinent = $(this).val();
+            loadChartData(currentContinent,c_Sort);  // 함수로 분리
+        });
+
+        // ✅ 정렬 기준 변경 시 변수만 갱신
+        $("#c_SortSelect").change(function() {
+            c_Sort = $(this).val();
+            loadChartData(currentContinent,c_Sort);  // 함수로 분리
+        });
+
+        // ✅ 차트 데이터 로드 함수
+        function loadChartData(currentContinent,c_Sort) {
+            $.ajax({
+                type: "post",
+                url: "place/chartAction.jsp",
+                data: { "currentContinent": currentContinent, "c_Sort": c_Sort },
+                dataType: "json",
+                success: function(res) {
+                    currentXAxisData = [];
+                    currentSeriesData = [];
+
+                    for (let i = 0; i < res.length; i++) {
+                        let item = res[i];
+                        currentXAxisData.push(item.place_name);
+                        if (c_Sort === 'views') {
+                            currentSeriesData.push(item.place_count);
+                        } else if (c_Sort === 'likes') {
+                            currentSeriesData.push(item.place_like);
+                        } else if (c_Sort === 'rating') {
+                            currentSeriesData.push(item.place_rating);
+                        }
+                    }
+
+                    drawChart(currentXAxisData, currentSeriesData, currentChartType);
+                },
+                error: function(err) {
+                    console.log("차트 데이터 로딩 에러:", err);
+                }
+            });
+        }
     });
+
     
     function drawChart(xAxisData, seriesData, chartType) {
         var myChart = echarts.init(document.getElementById('chart'));
         let option = {
             xAxis: {
                 type: 'category',
-                data: xAxisData // 인자로 받은 x축 데이터
+                data: xAxisData,
+                axisLabel: {
+                    rotate: 30,     // 또는 45도
+                    interval: 0,    // 모든 항목 표시
+                    formatter: function (value) {
+                        return value.length > 6 ? value.substring(0, 6) + "…" : value;
+                    }// 인자로 받은 x축 데이터
+                }
             },
             yAxis: {
                 type: 'value'
@@ -256,7 +250,6 @@ https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
         myChart.setOption(option);
     }
   
-    
     </script>
 </head>
 <body>
@@ -376,9 +369,9 @@ https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
                 <div class="card-body">
                     <div class="card-icon mb-3"><i class="bi bi-bar-chart-fill"></i></div>
                     <h5 class="card-title"><select id="continentSelect" class="sort-dropdown">
-        			<option value="asia">아시아</option>
-       				<option value="europe">유럽</option>
-       				<option value="nameria">북아메리카</option>
+        			<option value="asia">아시아+오세아니아</option>
+       				<option value="europe">유럽+아프리카</option>
+       				<option value="namerica">북아메리카</option>
        				<option value="samerica">남아메리카</option>
         			</select></h5>
         			<select class="sort-dropdown" id="c_SortSelect">
