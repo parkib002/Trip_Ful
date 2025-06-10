@@ -34,6 +34,7 @@
 	href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Dongle&family=Gaegu&family=Nanum+Pen+Script&display=swap"
 	rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>
 
 </head>
 <body>
@@ -95,7 +96,7 @@
 <script src="js/selectPlace.js" defer></script>
 <script src="js/mainPageCarousel.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>
+
 
 <script src="Review/JavaScript/ModalJs.js" defer></script>
 <script src="Review/JavaScript/reviewListJs.js" defer></script>
