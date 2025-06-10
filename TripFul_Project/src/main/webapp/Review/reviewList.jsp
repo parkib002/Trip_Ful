@@ -1,3 +1,4 @@
+<%@page import="review.ReportDao"%>
 <%@page import="review.ReviewDto"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.HashMap"%>
@@ -15,6 +16,7 @@
 
 <title>Insert title her</title>
 <%
+	
 	//place_num 얻기
 	String place_num=request.getParameter("place_num");	
 	ReviewDao rdao=new ReviewDao();
@@ -23,6 +25,7 @@
 	//System.out.println(place_num);
 	//아이디, 로그인상태 세션값 받기
 	String review_id=(String)session.getAttribute("id");
+	
 	String loginok=(String)session.getAttribute("loginok");
 	
 	//관광지 이름 얻기
@@ -149,7 +152,7 @@ function loadReviews() {
 	                    reviewCard += "<div class='img-con mb-2'>";
 	                    if (photos.length > 0) {
 	                        photos.forEach(function(photoUrl) {
-	                        	console.log("photoUrl: "+photoUrl);
+	                        	//console.log("photoUrl: "+photoUrl);
 	                           
 	                            reviewCard += "<img src='save/" + photoUrl + "' class='photo' photo='"+photoUrl+"'>";
 	                            
@@ -163,8 +166,18 @@ function loadReviews() {
                     	{
                     	reviewCard += "<div class='googlechk mb-2'>";
                     	reviewCard += "<span class='googlereview'>"+r.read+"</span>";
-                    	reviewCard += "</div>";
+                    	reviewCard += "</div>";                    	
+                    	}else{	
+                    		var like=Number(r.likeCheck);
+                    		if(like==0){
+                    			reviewCard += "<div class='liked'><i class='bi bi-heart-fill likedicon' review_idx="+r.review_idx+" loginok="+loginok+"></i>&nbsp;";
+                    		}else{
+                    			reviewCard += "<div class='liked'><i class='bi bi-heart-fill likedicon' review_idx="+r.review_idx+" style='color:red' loginok="+loginok+"></i>&nbsp;";
+                    		}
+                    			reviewCard += "<span class='likedcnt'>"+r.likeCnt+"</span></div>";
                     	}
+	                    
+	                    
 	                    reviewCard += "</div>"; // .card 끝
 	                    reviewCard += "</div>"; // .item 끝
 						
@@ -385,9 +398,9 @@ function getStarClass(star) {
 
 				</table>
 			</div>
-			<div class="modal-foot">
-				<button type="button" class="close" id="closeBtn">취소</button>										
+			<div class="modal-foot">														
 				<button type="button" id="btn-write" class="">게시</button>
+				<button type="button" class="close" id="closeBtn">취소</button>
 				
 			</div>
 		</form>

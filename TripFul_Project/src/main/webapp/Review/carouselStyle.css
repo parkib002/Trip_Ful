@@ -211,6 +211,29 @@ i.review_category:hover {
 	background: rgba(0, 0, 0, 0.5);
 }
 
+.liked{
+	display: flex; /* Flex 컨테이너로 설정 */
+    justify-content: center; /* 요소들을 양 끝으로 벌립니다. (예: 날짜와 카테고리 아이콘) */
+    align-items: center; /* 요소들을 수직 중앙 정렬합니다. */
+    
+    flex-wrap: nowrap; 
+    min-width: 80px;
+}
+.liked .likedicon{	
+	width: 30px;
+	height: 30px;
+	cursor: pointer;	
+	pointer-events: all; /* 버튼 클릭 가능하게 설정 */
+	 padding: 5px 7.5px;
+    border-radius: 20%; /* 원형 버튼 */    
+	font-weight: bold;
+	
+}
+.likedcnt{
+	font-size: 14px;
+    color: #666;
+}
+
 /* 별점 평균 스타일 */
 /* rating-summary 컨테이너 */
 .rating-summary {

@@ -103,7 +103,7 @@ submitReviewBtn.click(function(e) {
 
     var frm = $("#modalform")[0];
     if (!frm) {
-        console.error("오류: 폼 요소를 찾을 수 없습니다.");
+       // console.error("오류: 폼 요소를 찾을 수 없습니다.");
         return;
     }
 
@@ -112,12 +112,12 @@ submitReviewBtn.click(function(e) {
 
     if (submitReviewBtn.text() === "게시") {
         actionUrl = "Review/reviewAddAction.jsp";
-        console.log("새 리뷰 데이터 전송:", formData);
+      //  console.log("새 리뷰 데이터 전송:", formData);
     } else if (submitReviewBtn.text() === "수정") {
         actionUrl = "Review/updateReview.jsp";
-        console.log("업데이트 리뷰 데이터 전송:", formData);
+       // console.log("업데이트 리뷰 데이터 전송:", formData);
     } else {
-        console.error("알 수 없는 버튼 상태입니다.");
+       // console.error("알 수 없는 버튼 상태입니다.");
         return;
     }
 
@@ -129,11 +129,11 @@ submitReviewBtn.click(function(e) {
         processData: false,
         contentType: false,
         success: function() {
-            console.log("AJAX 작업 성공");
+           // console.log("AJAX 작업 성공");
             closeModalAndRefresh(); // 성공 시 모달 닫고 목록 새로고침
         },
         error: function(xhr, status, error) {
-            console.error("AJAX 작업 실패:", status, error);
+          //  console.error("AJAX 작업 실패:", status, error);
             alert("작업 중 오류가 발생했습니다.");
         }
     });
