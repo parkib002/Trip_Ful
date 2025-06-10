@@ -4,7 +4,10 @@
 <%
     String myid = null;
     String name = null;
+    String loginok = null;
+
     if (session.getAttribute("loginok") != null) {
+        loginok = (String) session.getAttribute("loginok");
         myid = (String) session.getAttribute("id");
 
         if (myid != null) {
@@ -71,11 +74,14 @@
             <button class="btn btn-sm btn-outline-warning" onclick="location.href='index.jsp?main=login/login.jsp'">Login</button>
             <% } else { %>
             <span class="me-2 d-none d-md-inline">
-              <a href="index.jsp?main=login/MyPage.jsp" class="username-link" >
-                <strong><%= name %></strong>님
-                  페이지
-              </a>
-            </span>
+                    <a href="index.jsp?main=<%=
+                        "admin".equals(loginok)
+                        ? "page/adminMain.jsp"
+                        : "login/MyPage.jsp?id=" + myid
+                    %>" class="username-link">
+                        <strong><%= name %></strong>님 페이지
+                    </a>
+                </span>
             <button class="btn btn-sm btn-outline-danger" onclick="location.href='login/logoutAction.jsp'">Logout</button>
             <% } %>
         </div>
@@ -86,7 +92,7 @@
             <li class="nav-item"><a class="nav-link" href="index.jsp?main=/place/selectPlace.jsp">지역별 관광지</a></li>
             <li class="nav-item"><a class="nav-link" href="index.jsp?main=board/boardList.jsp&sub=event.jsp">이벤트</a></li>
             <li class="nav-item"><a class="nav-link" href="index.jsp?main=board/boardList.jsp&sub=notice.jsp">공지사항</a></li>
-            <li class="nav-item"><a class="nav-link" href="index.jsp?main=board/boardList.jsp&sub=support.jsp">QnA 게시판</a></li>
+            <li class="nav-item"><a class="nav-link" href="index.jsp?main=board/boardList.jsp&sub=support.jsp">고객센터</a></li>
         </ul>
     </div>
 </nav>

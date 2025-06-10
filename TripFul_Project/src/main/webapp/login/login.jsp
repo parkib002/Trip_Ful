@@ -8,15 +8,19 @@
 <head>
 <meta charset="UTF-8">
 <link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link
 	href="https://fonts.googleapis.com/css2?family=Dongle&family=Nanum+Brush+Script&family=Nanum+Myeongjo&family=Nanum+Pen+Script&display=swap"
 	rel="stylesheet">
 <link href="<%=request.getContextPath()%>/login/loginStyle.css" rel="stylesheet">
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<%
+// JavaScript 키를 JSP 변수에 저장 (예시)
+String kakaoJavascriptKey = "7395a37b7d425e6e61d666714ed9c297";
+%>
+<script>
+  // JSP 변수를 JavaScript 코드에 삽입
+  Kakao.init('<%= kakaoJavascriptKey %>');
+</script>
 
 <title>Insert title here</title>
 <%
@@ -91,7 +95,7 @@ if (session.getAttribute("id") != null) {
 						</div>
 						<div class="social_login">
 							<img src="./login/social_img/google.png"> <img
-								src="./login/social_img/kakao.png"> <img
+								src="./login/social_img/kakao.png" onclick="kakaoSign()"> <img
 								src="./login/social_img/naver.png" onclick="naverSign('<%=apiURL%>')">
 						</div>
 					</form>
@@ -131,7 +135,7 @@ if (session.getAttribute("id") != null) {
 						</div>
 						<div class="social_signin">
 							<img src="./login/social_img/google.png" id="google-signin-signup" alt="Google로 회원가입"> <img
-								src="./login/social_img/kakao.png"> <img
+								src="./login/social_img/kakao.png" onclick="kakaoSign()"> <img
 								src="./login/social_img/naver.png" onclick="naverSign('<%=apiURL%>')">
 						</div>
 					</form>

@@ -9,16 +9,25 @@
 </head>
 <body>
 <%
-	String pw = request.getParameter("password");
-	String id = request.getParameter("id");
+	String pw = request.getParameter("newpw");
+	String id = null;
 	
+	if(session.getAttribute("id")!=null){
+		id = (String)session.getAttribute("id");
+	}
+	else{
+		id = request.getParameter("id");
+	}
+
 	LoginDao dao = new LoginDao();
 	dao.changePW(id, pw);
 	
+	
 %>
 <script>
-	window.close();
-	opener.location.href="./login.jsp";
+	alert("비밀번호가 변경되었습니다.");
+	window.location.href="<%=request.getContextPath()%>/index.jsp?main=login/login.jsp";
+	
 </script>
 </body>
 </html>

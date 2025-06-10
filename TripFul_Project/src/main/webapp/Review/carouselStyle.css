@@ -54,18 +54,24 @@
 
 
 
-.review-image-container {
-    max-height: 200px; /* 이미지 컨테이너 최대 높이 */
-    overflow: hidden; /* 넘치는 부분 숨김 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+div.img-con {
+    display: flex;    
+    flex-wrap: wrap;
+    justify-content: inherit;
+    /* max-height:180px;
+    overflow: auto; */
+    
 }
 
-.review-image-container img {      
-    width: 200px; /* 이미지 높이 100% */   
-    height: 200px; /* 이미지 높이 100% */   
+div.img-con img.photo {      
+    width: 170px; /* 이미지 높이 100% */   
+    height: 170px; /* 이미지 높이 100% */   
     border-radius:10px;    
+    margin: 5px;
+    display: inline-flex; /* 인라인 블록처럼 작동하면서 내부 정렬 가능 */
+    align-items: center; /* 내부 아이콘/텍스트 세로 중앙 정렬 */
+    justify-content: center; /* 내부 아이콘/텍스트 가로 중앙 정렬 */
+    box-sizing: border-box; 
 }
 
 /* 별점 스타일 */
@@ -186,7 +192,7 @@ div.categorydate{
 }
 
 /* 카테고리 아이콘 */
-i.category{
+i.review_category{
 	background: rgba(0, 0, 0, 0); /* 투명 배경 */
     color: #CCC; /* 아이콘 색상 */
     border: none;
@@ -201,8 +207,31 @@ i.category{
     height: 30px; /* 버튼의 고정 높이 */
     
 }
-i.category:hover {
+i.review_category:hover {
 	background: rgba(0, 0, 0, 0.5);
+}
+
+.liked{
+	display: flex; /* Flex 컨테이너로 설정 */
+    justify-content: center; /* 요소들을 양 끝으로 벌립니다. (예: 날짜와 카테고리 아이콘) */
+    align-items: center; /* 요소들을 수직 중앙 정렬합니다. */
+    
+    flex-wrap: nowrap; 
+    min-width: 80px;
+}
+.liked .likedicon{	
+	width: 30px;
+	height: 30px;
+	cursor: pointer;	
+	pointer-events: all; /* 버튼 클릭 가능하게 설정 */
+	 padding: 5px 7.5px;
+    border-radius: 20%; /* 원형 버튼 */    
+	font-weight: bold;
+	
+}
+.likedcnt{
+	font-size: 14px;
+    color: #666;
 }
 
 /* 별점 평균 스타일 */

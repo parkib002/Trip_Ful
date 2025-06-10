@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 캐러셀 요소가 존재하는지 확인하여 오류 방지
     if (carousel) {
         const bsCarousel = new bootstrap.Carousel(carousel, {
-            interval: 8000,
+            interval: 5000,
             ride: 'carousel'
         });
 

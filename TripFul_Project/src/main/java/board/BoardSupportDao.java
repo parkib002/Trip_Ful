@@ -6,24 +6,58 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import mysql.db.DbConnect; // 실제 사용하는 DB 연결 클래스 경로로 수정하세요.
 
 public class BoardSupportDao {
 
     DbConnect db = new DbConnect();
-
-    // 전체 원본글갯수 (relevel = 0 인 글)
-    public int getTotalCount() {
+    
+    //미답변 글갯수
+    public int getUnansweredTotalCount() {
         int n = 0;
         Connection conn = db.getConnection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        String sql = "select count(*) from tripful_qna where relevel = 0";
+
+        // 원본글(relevel=0)이면서, 해당 글과 같은 그룹(regroup)에 속한 답변글(relevel > 0)이 존재하지 않는 글의 수를 센다.
+        String sql = "SELECT count(*) FROM tripful_qna q WHERE q.relevel = 0 " +
+                     "AND NOT EXISTS (SELECT 1 FROM tripful_qna r WHERE r.regroup = q.regroup AND r.relevel > 0)";
 
         try {
             pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                n = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("getUnansweredTotalCount 오류: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            db.dbClose(rs, pstmt, conn);
+        }
+        return n;
+    }
+
+    // 전체 원본글갯수 (relevel = 0 인 글) - 필터링 조건 추가
+    public int getTotalCount(String filter) { // filter 파라미터 추가
+        int n = 0;
+        Connection conn = db.getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        StringBuilder sqlBuilder = new StringBuilder("SELECT count(*) FROM tripful_qna q WHERE q.relevel = 0 ");
+
+        // 필터 조건에 따라 WHERE 절 추가
+        if ("answered".equals(filter)) {
+            sqlBuilder.append("AND EXISTS (SELECT 1 FROM tripful_qna r WHERE r.regroup = q.regroup AND r.relevel > 0) ");
+        } else if ("unanswered".equals(filter)) {
+            sqlBuilder.append("AND NOT EXISTS (SELECT 1 FROM tripful_qna r WHERE r.regroup = q.regroup AND r.relevel > 0) ");
+        }
+        // "all" 또는 그 외의 경우 추가 조건 없음
+
+        try {
+            pstmt = conn.prepareStatement(sqlBuilder.toString());
             rs = pstmt.executeQuery();
             if (rs.next()) {
                 n = rs.getInt(1);
@@ -37,8 +71,6 @@ public class BoardSupportDao {
     }
 
     // 새 regroup ID 생성을 위해 현재 qna_idx의 최대값을 가져옴
-    // (실제로는 regroup 컬럼의 최대값을 가져오는 것이 더 정확할 수 있으나,
-    // qna_idx의 MAX + 1을 regroup으로 사용하는 규칙을 따른다고 가정)
     public int getMaxNum() {
         int max = 0;
         String sql = "select ifnull(max(qna_idx),0) from tripful_qna";
@@ -78,57 +110,41 @@ public class BoardSupportDao {
         }
     }
 
-    /**
-     * 새 게시글 또는 답변 글을 DB에 저장합니다.
-     * - 원본 글: DTO에 regroup=0, restep=0, relevel=0 으로 설정하여 호출합니다.
-     * - 답변 글: DTO에 부모 글의 regroup, restep, relevel을 설정하여 호출합니다.
-     */
     public void insertReboard(BoardSupportDto dto) {
         int finalRegroup;
         int finalRestep;
         int finalRelevel;
 
-        // 원본 글인지 답변 글인지 판단 (약속된 DTO 값 기준)
         if (dto.getRegroup() == 0 && dto.getRestep() == 0 && dto.getRelevel() == 0) {
-            // 새 원본 글 처리
-            finalRegroup = this.getMaxNum() + 1; // 새 그룹 ID
+            finalRegroup = this.getMaxNum() + 1;
             finalRestep = 0;
             finalRelevel = 0;
         } else {
-            // 답변 글 처리 (DTO에는 부모 글의 regroup, restep, relevel이 담겨 있어야 함)
-            finalRegroup = dto.getRegroup();   // 부모의 regroup
-            int parentRestep = dto.getRestep();     // 부모의 restep
-            int parentRelevel = dto.getRelevel();   // 부모의 relevel
-
-            // 1. 같은 그룹 내에서 부모의 restep보다 큰 기존 답글들의 순서를 조정
+            finalRegroup = dto.getRegroup();
+            int parentRestep = dto.getRestep();
+            int parentRelevel = dto.getRelevel();
             this.updateRestep(finalRegroup, parentRestep);
-
-            // 2. 새 답글의 restep과 relevel 계산
             finalRestep = parentRestep + 1;
             finalRelevel = parentRelevel + 1;
         }
 
         String sql = "insert into tripful_qna (qna_title, qna_content, qna_img, qna_writer, qna_private, qna_readcount, qna_writeday, qna_category, regroup, restep, relevel) " +
-                     "values (?,?,?,?,?,0,now(),?,?,?,?)"; // qna_idx는 자동 증가
+                     "values (?,?,?,?,?,0,now(),?,?,?,?)";
 
         Connection conn = db.getConnection();
         PreparedStatement pstmt = null;
 
         try {
             pstmt = conn.prepareStatement(sql);
-
             pstmt.setString(1, dto.getQna_title());
             pstmt.setString(2, dto.getQna_content());
-            pstmt.setString(3, dto.getQna_img());       // 파일 없으면 null
+            pstmt.setString(3, dto.getQna_img());
             pstmt.setString(4, dto.getQna_writer());
-            pstmt.setString(5, dto.getQna_private());   // "0" 또는 "1"
-            // qna_readcount는 SQL에서 0으로 자동 설정
-            // qna_writeday는 SQL에서 now()로 자동 설정
+            pstmt.setString(5, dto.getQna_private());
             pstmt.setString(6, dto.getQna_category());
-            pstmt.setInt(7, finalRegroup);      // 계산된 regroup
-            pstmt.setInt(8, finalRestep);       // 계산된 restep
-            pstmt.setInt(9, finalRelevel);      // 계산된 relevel
-
+            pstmt.setInt(7, finalRegroup);
+            pstmt.setInt(8, finalRestep);
+            pstmt.setInt(9, finalRelevel);
             pstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -137,9 +153,8 @@ public class BoardSupportDao {
         }
     }
 
-    // 특정 qna_idx에 해당하는 게시글/답변 정보 가져오기
     public BoardSupportDto getData(String idx) {
-        BoardSupportDto dto = null; // 데이터를 못 찾을 경우 null 반환하도록 초기화
+        BoardSupportDto dto = null;
         String sql = "select * from tripful_qna where qna_idx=?";
         Connection conn = db.getConnection();
         PreparedStatement pstmt = null;
@@ -151,7 +166,7 @@ public class BoardSupportDao {
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                dto = new BoardSupportDto(); // 데이터가 있을 때만 객체 생성
+                dto = new BoardSupportDto();
                 dto.setQna_idx(rs.getString("qna_idx"));
                 dto.setQna_title(rs.getString("qna_title"));
                 dto.setQna_content(rs.getString("qna_content"));
@@ -173,7 +188,6 @@ public class BoardSupportDao {
         return dto;
     }
 
-    // 조회수 1 증가
     public void updateReadCount(String idx) {
         String sql = "update tripful_qna set qna_readcount=qna_readcount+1 where qna_idx=?";
         Connection conn = db.getConnection();
@@ -189,15 +203,31 @@ public class BoardSupportDao {
         }
     }
 
-    // 페이징을 위한 원본 글 목록 가져오기
-    public List<BoardSupportDto> getAllDatas(int startNum, int perPage) {
-        List<BoardSupportDto> list = new Vector<BoardSupportDto>();
-        String sql = "select * from tripful_qna where relevel = 0 order by regroup desc, restep asc limit ?, ?";
+    // 페이징을 위한 원본 글 목록 가져오기 (답변 상태 포함) - 필터링 조건 추가
+    public List<BoardSupportDto> getAllDatas(int startNum, int perPage, String filter) { // filter 파라미터 추가
+        List<BoardSupportDto> list = new ArrayList<BoardSupportDto>();
+
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("SELECT q.*, ");
+        sqlBuilder.append("EXISTS (SELECT 1 FROM tripful_qna r WHERE r.regroup = q.regroup AND r.relevel > 0) as answered_status ");
+        sqlBuilder.append("FROM tripful_qna q ");
+        sqlBuilder.append("WHERE q.relevel = 0 ");
+
+        // 필터 조건에 따라 WHERE 절 추가
+        if ("answered".equals(filter)) {
+            sqlBuilder.append("AND EXISTS (SELECT 1 FROM tripful_qna r WHERE r.regroup = q.regroup AND r.relevel > 0) ");
+        } else if ("unanswered".equals(filter)) {
+            sqlBuilder.append("AND NOT EXISTS (SELECT 1 FROM tripful_qna r WHERE r.regroup = q.regroup AND r.relevel > 0) ");
+        }
+        // "all" 또는 그 외의 경우 추가 조건 없음
+
+        sqlBuilder.append("ORDER BY q.regroup DESC, q.restep ASC LIMIT ?, ?");
+
         Connection conn = db.getConnection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            pstmt = conn.prepareStatement(sql);
+            pstmt = conn.prepareStatement(sqlBuilder.toString());
             pstmt.setInt(1, startNum);
             pstmt.setInt(2, perPage);
             rs = pstmt.executeQuery();
@@ -205,7 +235,6 @@ public class BoardSupportDao {
                 BoardSupportDto dto = new BoardSupportDto();
                 dto.setQna_idx(rs.getString("qna_idx"));
                 dto.setQna_title(rs.getString("qna_title"));
-                // dto.setQna_content(rs.getString("qna_content")); // 목록에서는 보통 내용 전체를 가져오지 않음
                 dto.setQna_img(rs.getString("qna_img"));
                 dto.setQna_writer(rs.getString("qna_writer"));
                 dto.setQna_private(rs.getString("qna_private"));
@@ -215,6 +244,7 @@ public class BoardSupportDao {
                 dto.setRegroup(rs.getInt("regroup"));
                 dto.setRestep(rs.getInt("restep"));
                 dto.setRelevel(rs.getInt("relevel"));
+                dto.setAnswered(rs.getBoolean("answered_status"));
                 list.add(dto);
             }
         } catch (SQLException e) {
@@ -225,9 +255,8 @@ public class BoardSupportDao {
         return list;
     }
 
-    // 특정 regroup에 속한 모든 답변 글 목록 가져오기 (답변은 순서대로)
     public List<BoardSupportDto> getRepliesByRegroup(int regroup) {
-        List<BoardSupportDto> list = new Vector<BoardSupportDto>();
+        List<BoardSupportDto> list = new ArrayList<BoardSupportDto>();
         String sql = "SELECT * FROM tripful_qna WHERE regroup = ? AND relevel > 0 ORDER BY restep asc";
         Connection conn = db.getConnection();
         PreparedStatement pstmt = null;
@@ -240,7 +269,7 @@ public class BoardSupportDao {
                 BoardSupportDto dto = new BoardSupportDto();
                 dto.setQna_idx(rs.getString("qna_idx"));
                 dto.setQna_title(rs.getString("qna_title"));
-                dto.setQna_content(rs.getString("qna_content")); // 답변 내용은 가져옴
+                dto.setQna_content(rs.getString("qna_content"));
                 dto.setQna_img(rs.getString("qna_img"));
                 dto.setQna_writer(rs.getString("qna_writer"));
                 dto.setQna_private(rs.getString("qna_private"));
@@ -260,7 +289,6 @@ public class BoardSupportDao {
         return list;
     }
 
-    // 게시글/답변 수정
     public boolean updateSupport(BoardSupportDto dto) {
         boolean success = false;
         Connection conn = db.getConnection();
@@ -278,7 +306,7 @@ public class BoardSupportDao {
             if (result > 0) {
                 success = true;
             }
-        } catch (SQLException e) { // SQLException 명시
+        } catch (SQLException e) {
             System.out.println("updateSupport 오류: " + e.getMessage());
             e.printStackTrace();
         } finally {
@@ -287,7 +315,6 @@ public class BoardSupportDao {
         return success;
     }
 
-    // 게시글/답변 삭제
     public boolean deleteSupport(String qna_idx) {
         boolean success = false;
         Connection conn = db.getConnection();
@@ -295,101 +322,94 @@ public class BoardSupportDao {
         String sql = "DELETE FROM tripful_qna WHERE qna_idx=?";
         try {
             pstmt = conn.prepareStatement(sql);
-            // qna_idx가 DB에서 숫자형이면 Integer.parseInt(qna_idx) 또는 Long.parseLong(qna_idx) 후 setInt/setLong 사용
             pstmt.setString(1, qna_idx);
             int result = pstmt.executeUpdate();
             if (result > 0) {
                 success = true;
             }
-        } catch (SQLException e) { // SQLException 명시
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             db.dbClose(pstmt, conn);
         }
         return success;
     }
-    
- // BoardSupportDao.java
- // ... (기존 getTotalCount, getMaxNum, updateRestep, insertReboard, getData, updateReadCount, getAllDatas, getRepliesByRegroup, updateSupport, deleteSupport 메소드들은 그대로 둡니다) ...
 
-     // --- 통합 검색용 메소드 (수정된 부분) ---
-     /**
-      * 고객센터(Q&A) 검색 결과의 전체 개수를 반환합니다.
-      * @param keyword 검색어
-      * @return 검색된 총 게시물 수
-      */
-     public int getSearchSupportTotalCount(String keyword) {
-         int total = 0;
-         Connection conn = db.getConnection();
-         PreparedStatement pstmt = null;
-         ResultSet rs = null;
-         // qna_title 또는 qna_content에서 키워드 검색
-         String sql = "select count(*) from tripful_qna where qna_title like ? or qna_content like ?"; // 테이블명 및 컬럼명 수정
+    /**
+     * 고객센터(Q&A) 게시글 검색 결과의 총 개수를 반환합니다.
+     * @param keyword 검색할 키워드 (제목 또는 내용)
+     * @return 검색된 게시글의 총 개수
+     */
+    public int getSearchSupportTotalCount(String keyword) {
+        int total = 0;
+        Connection conn = db.getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        // 제목 또는 내용에 키워드가 포함된 원본글(relevel=0)의 수를 셉니다.
+        String sql = "SELECT count(*) FROM tripful_qna WHERE relevel=0 AND (qna_title LIKE ? OR qna_content LIKE ?)";
 
-         try {
-             pstmt = conn.prepareStatement(sql);
-             pstmt.setString(1, "%" + keyword + "%");
-             pstmt.setString(2, "%" + keyword + "%");
-             rs = pstmt.executeQuery();
-             if (rs.next()) {
-                 total = rs.getInt(1);
-             }
-         } catch (SQLException e) {
-             System.out.println("Support Search Total Count Error: " + e.getMessage());
-             e.printStackTrace();
-         } finally {
-             db.dbClose(rs, pstmt, conn);
-         }
-         return total;
-     }
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + keyword + "%");
+            pstmt.setString(2, "%" + keyword + "%");
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.dbClose(rs, pstmt, conn);
+        }
+        return total;
+    }
 
-     /**
-      * 키워드로 고객센터(Q&A) 게시물을 검색하고 페이징 처리된 목록을 반환합니다.
-      * 검색 결과에는 원글과 답글이 섞여 나올 수 있으며, 정렬은 Q&A 특성에 맞게 regroup, restep 사용.
-      * @param keyword 검색어
-      * @param startNum 가져올 데이터의 시작 위치 (offset)
-      * @param perPage 페이지당 보여줄 게시물 수
-      * @return 검색된 Q&A 목록 (List<BoardSupportDto>)
-      */
-     public List<BoardSupportDto> searchSupport(String keyword, int startNum, int perPage) {
-         List<BoardSupportDto> list = new ArrayList<>(); // 반환 타입에 맞게 ArrayList 사용 가능
-         // 정렬 순서: 원글(regroup) 최신순(DESC), 같은 원글 내에서는 답글(restep) 순서대로(ASC)
-         String sql = "select * from tripful_qna where qna_title like ? or qna_content like ? order by regroup desc, restep asc limit ?,?"; // 테이블명 및 정렬 수정
-         Connection conn = db.getConnection();
-         PreparedStatement pstmt = null;
-         ResultSet rs = null;
+    /**
+     * 고객센터(Q&A) 게시글을 키워드로 검색하여 페이징 처리된 목록을 반환합니다.
+     * @param keyword 검색할 키워드 (제목 또는 내용)
+     * @param startNum 시작 번호
+     * @param perPage 페이지당 게시글 수
+     * @return 검색된 게시글 목록
+     */
+    public List<BoardSupportDto> searchSupport(String keyword, int startNum, int perPage) {
+        List<BoardSupportDto> list = new ArrayList<>();
+        Connection conn = db.getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        // 제목 또는 내용에 키워드가 포함된 원본글(relevel=0)을 찾고, 답변 상태까지 함께 조회합니다.
+        String sql = "SELECT q.*, " +
+                     "EXISTS (SELECT 1 FROM tripful_qna r WHERE r.regroup = q.regroup AND r.relevel > 0) as answered_status " +
+                     "FROM tripful_qna q " +
+                     "WHERE q.relevel = 0 AND (q.qna_title LIKE ? OR q.qna_content LIKE ?) " +
+                     "ORDER BY q.regroup DESC, q.restep ASC LIMIT ?, ?";
 
-         try {
-             pstmt = conn.prepareStatement(sql);
-             pstmt.setString(1, "%" + keyword + "%");
-             pstmt.setString(2, "%" + keyword + "%");
-             pstmt.setInt(3, startNum);
-             pstmt.setInt(4, perPage);
-             rs = pstmt.executeQuery();
-             while (rs.next()) {
-                 BoardSupportDto dto = new BoardSupportDto(); // BoardSupportDto 사용
-                 dto.setQna_idx(rs.getString("qna_idx"));
-                 dto.setQna_category(rs.getString("qna_category"));
-                 dto.setQna_title(rs.getString("qna_title"));
-                 // dto.setQna_content(rs.getString("qna_content")); // 목록에서는 보통 제목만, 필요시 주석 해제
-                 dto.setQna_writer(rs.getString("qna_writer"));
-                 dto.setQna_img(rs.getString("qna_img"));
-                 dto.setQna_private(rs.getString("qna_private"));
-                 dto.setQna_writeday(rs.getTimestamp("qna_writeday"));
-                 dto.setQna_readcount(rs.getInt("qna_readcount"));
-                 dto.setRegroup(rs.getInt("regroup"));
-                 dto.setRestep(rs.getInt("restep"));
-                 dto.setRelevel(rs.getInt("relevel"));
-                 list.add(dto);
-             }
-         } catch (SQLException e) {
-             System.out.println("Search Support Error: " + e.getMessage()); // 에러 메시지 수정
-             e.printStackTrace();
-         } finally {
-             db.dbClose(rs, pstmt, conn);
-         }
-         return list;
-     }
-     
-     
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + keyword + "%");
+            pstmt.setString(2, "%" + keyword + "%");
+            pstmt.setInt(3, startNum);
+            pstmt.setInt(4, perPage);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                BoardSupportDto dto = new BoardSupportDto();
+                dto.setQna_idx(rs.getString("qna_idx"));
+                dto.setQna_title(rs.getString("qna_title"));
+                dto.setQna_content(rs.getString("qna_content"));
+                dto.setQna_writer(rs.getString("qna_writer"));
+                dto.setQna_private(rs.getString("qna_private"));
+                dto.setQna_writeday(rs.getTimestamp("qna_writeday"));
+                dto.setRegroup(rs.getInt("regroup"));
+                dto.setAnswered(rs.getBoolean("answered_status")); // 답변 상태 설정
+                list.add(dto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.dbClose(rs, pstmt, conn);
+        }
+        return list;
+    }
 }

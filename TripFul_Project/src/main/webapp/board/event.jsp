@@ -8,8 +8,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="css/boardCard.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <title>Insert title here</title>
+
 </head>
 <%
 BoardEventDao dao=new BoardEventDao();
@@ -30,7 +32,7 @@ if( session.getAttribute("loginok")!=null)
 //페이징처리
 //전체갯수
 int totalCount=dao.getTotalCount();
-int perPage=5; //한페이지에 보여질 글의 갯수
+int perPage=10; //한페이지에 보여질 글의 갯수
 int perBlock=5; //한블럭당 보여질 페이지의 갯수
 int startNum; //db에서 가져올 글의 시작번호(mysql:0 오라클:1번)
 int startPage; //각블럭당 보여질 시작페이지
@@ -73,10 +75,109 @@ no=totalCount-(currentPage-1)*perPage;
 //전체 리스트
 List<BoardEventDto> list=dao.getList(startNum, perPage);
 
+//카드형 게시판 리스트
+List<BoardEventDto> carouselList = dao.getAllEvents();
+
 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+String keywordFromRequest = request.getParameter("keyword");
 
 %>
 <body>
+<!-- 카드형 게시판 -->
+<div class="container my-5">
+    <h3 style="color: #2C3E50;"><i class="bi bi-x-diamond-fill"></i>&nbsp;<b>진행중인 이벤트</b></h3>
+
+    <div id="cardCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <%
+            if (carouselList.isEmpty()) {
+            %>
+                <div class="carousel-item active">
+                    <div class="alert alert-info text-center" role="alert">
+                        진행중인 이벤트가 없습니다.
+                    </div>
+                </div>
+            <%
+            } else {
+                int cardsPerSlide = 3; // 한 슬라이드에 보여줄 카드 수
+                for (int i = 0; i < carouselList.size(); i++) {
+                    BoardEventDto dto = carouselList.get(i);
+
+                    // 슬라이드(carousel-item) 시작
+                    if (i % cardsPerSlide == 0) {
+                        String activeClass = (i == 0) ? "active" : "";
+            %>
+                        <div class="carousel-item <%= activeClass %>">
+                            <div class="row g-4">
+            <%
+                    }
+            %>
+                                <div class="col-lg-4 col-md-6">
+                                    <a href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=eventDetail.jsp&idx=<%=dto.getEvent_idx() %>" class="card-link">
+                                        <div class="card h-100 cardEvent">
+                                            <img src="<%= dto.getEvent_img() %>" class="card-img-top" alt="<%= dto.getEvent_title() %>">
+                                            <div class="card-body">
+                                                <h5 class="card-title"><%= dto.getEvent_title() %></h5>
+                                                <p class="card-text"><small class="text-muted"><%= sdf.format(dto.getEvent_writeday()) %></small></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+            <%
+                    // 슬라이드(carousel-item) 끝
+                    if (i % cardsPerSlide == (cardsPerSlide - 1) || i == carouselList.size() - 1) {
+            %>
+                            </div>
+                        </div>
+            <%
+                    }
+                }
+            }
+            %>
+        </div>
+
+        <% if (carouselList.size() > 3) { %>
+        <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+        <% } %>
+    </div>
+</div>
+
+<hr style="width: 75%; border-top: 1px solid black; margin: auto;">
+
+<br>
+<!-- 검색창 -->
+<div class="container my-3 board-search-container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <form action="<%= request.getContextPath() %>/index.jsp" method="get" class="d-flex" id="boardPageGlobalSearchForm">
+                <%-- main 파라미터를 boardSearchResults.jsp로 직접 지정 --%>
+                <input type="hidden" name="main" value="board/boardSearchResult.jsp"> 
+                
+                <input class="form-control me-2" type="search"
+                       id="boardPageGlobalSearchInput"
+                       name="keyword"
+                       value="<%= keywordFromRequest != null ? keywordFromRequest.replace("\"", "&quot;") : "" %>" 
+                       placeholder="게시판 통합 검색"
+                       aria-label="게시판 통합 검색">
+                <button class="btn" type="submit"
+                style="width: 100px; height: 50px;
+                background-color: #2c3e50; color: white;">
+                    <i class="bi bi-search"></i> 검색
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <div class="notice-wrapper">
 	<div class="notice-header">
 		<h3><i class="bi bi-x-diamond-fill">  </i><b>이벤트</b></h3>
@@ -84,7 +185,7 @@ SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			if(loginok!=null && loginok.equals("admin"))
 			{%>
 					<a style="float: right; text-decoration: none; color: black;" 
-					href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=eventAddForm.jsp">
+					href="<%= request.getContextPath() %>/board/eventAddForm.jsp">
 						<i class="bi bi-plus-square"></i>&nbsp;추가
 					</a>				
 			<%}
@@ -95,11 +196,10 @@ SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	<table class="table table-hover notice-table">
 		<thead>
 			<tr>
-				<th scope="col" style="width: 8%;">번호</th>
-            	<th scope="col" style="width: 47%;">제목</th>
-            	<th scope="col" style="width: 15%;">작성자</th>
+				<th scope="col" style="width: 10%;">번호</th>
+            	<th scope="col" style="width: 60%;">제목</th>
            		<th scope="col" style="width: 20%;">작성일</th>
-            	<th scope="col" style="width: 10%;">조회수</th>
+            	<th scope="col" style="width: 10%; text-align: center;">조회수</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -111,7 +211,7 @@ SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			if(list.isEmpty())
 			{%>
 				<tr>
-					<td colspan="5" align="center"><b>등록된 게시글이 없습니다</b></td>
+					<td colspan="4" align="center"><b>등록된 게시글이 없습니다</b></td>
 				</tr>
 			<%}else{
 					for(int i=0;i<list.size();i++)
@@ -119,16 +219,15 @@ SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						BoardEventDto dto=list.get(i);
 					%>
 						<tr>
-							<th scope="row"><%=no - i%></th>
+							<th scope="row">&nbsp;<%=no - i%></th>
 							<td>
 								<a href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=eventDetail.jsp&idx=<%=dto.getEvent_idx() %>"
 								style="text-decoration: none; color: black;">
 									<%=dto.getEvent_title() %>
 								</a>
 							</td>
-							<td><%=dto.getEvent_writer() %></td>
 							<td><%=sdf.format(dto.getEvent_writeday()) %></td>
-							<td><%=dto.getEvent_readcount() %></td>
+							<td align="center"><%=dto.getEvent_readcount() %></td>
 						</tr>
 					<%}
 			}

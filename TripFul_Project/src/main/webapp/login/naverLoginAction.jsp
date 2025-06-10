@@ -152,21 +152,35 @@ return;
 } else {
 LoginDto dto = dao.getOneMember(dao.getIdwithIdx(dao.getMemberIdx("naver", providerId)));
 if(dto.getAdmin()==1){
+	System.out.println(dto.getAdmin());
 	session.setAttribute("loginok", "admin");
+	session.setAttribute("social", "naver");
+	session.setAttribute("id", dto.getId());
+	%>
+
+	<script>
+		window.opener.document.location.href = "../index.jsp?main=page/adminMain.jsp";
+		window.close();
+	</script>
+
+	<%
 }
 else{
+	System.out.println(dto.getAdmin());
 	session.setAttribute("loginok", "user");
+	session.setAttribute("social", "naver");
+	session.setAttribute("id", dto.getId());
+	%>
+
+	<script>
+		window.opener.document.location.href = "../index.jsp";
+		window.close();
+	</script>
+
+	<%
 }
-session.setAttribute("social", "naver");
-session.setAttribute("id", dto.getId());
-%>
 
-<script>
-	window.opener.document.location.href = "../index.jsp";
-	window.close();
-</script>
 
-<%
 return;
 }
 

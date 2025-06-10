@@ -1,3 +1,4 @@
+<%@page import="review.ReportDao"%>
 <%@page import="review.ReviewDto"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.HashMap"%>
@@ -10,25 +11,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/Review/carouselStyle.css">
 
-<link
-	href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Dongle&family=Gaegu&family=Nanum+Pen+Script&display=swap"
-	rel="stylesheet">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-<link rel="stylesheet" href="Review/carouselStyle.css">
-<link rel="stylesheet" href="Review/ModalStyle.css">
+
 <title>Insert title her</title>
 <%
+	
 	//place_num 얻기
 	String place_num=request.getParameter("place_num");	
 	ReviewDao rdao=new ReviewDao();
@@ -37,6 +25,7 @@
 	//System.out.println(place_num);
 	//아이디, 로그인상태 세션값 받기
 	String review_id=(String)session.getAttribute("id");
+	
 	String loginok=(String)session.getAttribute("loginok");
 	
 	//관광지 이름 얻기
@@ -111,10 +100,19 @@ function loadReviews() {
 	                    reviewCard += "<div class='item'>"; // Owl Carousel의 'item' 클래스
 	                    reviewCard += "<div class='card h-100 p-3'>";
 	                    reviewCard += "<div class='review-header d-flex justify-content-between align-items-center mb-2'>";
-	                    reviewCard += "<b>" + r.author + "</b>";	                    
+	                    if(r.read =="DB" && r.read !== "")
+                    	{
+	                    reviewCard += "<a class='r_author' href='<%= request.getContextPath() %>/index.jsp?main=login/MyPage.jsp?id="+r.author+"'>" + r.author + "</a>";
+                    	}
+	                    else{
+	                    	reviewCard += "<b>" + r.author + "</b>";
+	                    }
 	                    reviewCard += "<div class='categorydate'>";
 	                    reviewCard += "<span class='review_writeday'>" + r.date + "</span>&nbsp;&nbsp;";
-	                    reviewCard += "<i class='bi bi-three-dots-vertical category' review_id='"+r.author+"'></i>";
+	                    if(r.read!="Google")
+	                    	{
+	                    reviewCard += "<i class='bi bi-three-dots-vertical review_category' review_id='"+r.author+"'></i>";	
+                    	
 	                    reviewCard += "<div class='dropdown-menu'>";
 
 	                    //console.log(r.author, review_id);
@@ -126,10 +124,11 @@ function loadReviews() {
 	                    			        	reviewCard += "<button type='button' class='updateModal' review_idx='"+r.review_idx+"'>수정</button>";
 	                    			        }	                    			        
 
-	                    				}else if(r.author!=review_id && r.read=="DB" || r.read=="Google"){	                    					
-	                    					reviewCard += "<button type='button' class='report'>신고</button>"
+	                    				}else if(r.author!=review_id){	                    					
+	                    					reviewCard += "<button type='button' class='report' review_idx='"+r.review_idx+"' loginok='"+loginok+"'>신고</button>"
 	                    				}
 	                    reviewCard += "</div>";//카테고리 끝
+	                    	}
 	                    reviewCard += "</div></div>"; //날짜 리뷰헤더 끝        
 	                    reviewCard += "<div class='star_rating2 mb-2'>";
 	                    reviewCard += "<span>" + r.rating + "</span>&nbsp;&nbsp;";
@@ -150,18 +149,22 @@ function loadReviews() {
 	                    
 	                    
 	                    var photos = [];
-	                    if (r.photo1 && r.photo1 !== "null" && r.photo1 !== "") photos.push(r.photo1);
-	                    if (r.photo2 && r.photo2 !== "null" && r.photo2 !== "") photos.push(r.photo2);
-	                    if (r.photo3 && r.photo3 !== "null" && r.photo3 !== "") photos.push(r.photo3);
-	                    
+	                    if (r.photo1 && r.photo1 !== "null" && r.photo1 !== "") 
+	                    	photos.push(r.photo1);
+	                    if (r.photo2 && r.photo2 !== "null" && r.photo2 !== "") 
+	                    	photos.push(r.photo2);
+	                    if (r.photo3 && r.photo3 !== "null" && r.photo3 !== "") 
+	                    	photos.push(r.photo3);
+	                    reviewCard += "<div class='img-con mb-2'>";
 	                    if (photos.length > 0) {
 	                        photos.forEach(function(photoUrl) {
-	                            reviewCard += "<div class='img-con mb-2'>";
+	                        	//console.log("photoUrl: "+photoUrl);
+	                           
 	                            reviewCard += "<img src='save/" + photoUrl + "' class='photo' photo='"+photoUrl+"'>";
-	                            reviewCard += "</div>";
+	                            
 	                        });
 	                    }
-	                    
+	                    reviewCard +="</div>";
 
 	                    // 리뷰 텍스트
 	                    reviewCard += "<p class='card-text'>" + r.text.replaceAll("\n", "<br>") + "</p>";
@@ -169,8 +172,18 @@ function loadReviews() {
                     	{
                     	reviewCard += "<div class='googlechk mb-2'>";
                     	reviewCard += "<span class='googlereview'>"+r.read+"</span>";
-                    	reviewCard += "</div>";
+                    	reviewCard += "</div>";                    	
+                    	}else{	
+                    		var like=Number(r.likeCheck);
+                    		if(like==0){
+                    			reviewCard += "<div class='liked'><i class='bi bi-heart-fill likedicon' review_idx="+r.review_idx+" loginok="+loginok+"></i>&nbsp;";
+                    		}else{
+                    			reviewCard += "<div class='liked'><i class='bi bi-heart-fill likedicon' review_idx="+r.review_idx+" style='color:red' loginok="+loginok+"></i>&nbsp;";
+                    		}
+                    			reviewCard += "<span class='likedcnt'>"+r.likeCnt+"</span></div>";
                     	}
+	                    
+	                    
 	                    reviewCard += "</div>"; // .card 끝
 	                    reviewCard += "</div>"; // .item 끝
 						
@@ -262,7 +275,7 @@ function getStarClass(star) {
 </script>
 </head>
 
-<body>
+<body id="review_body">
 
 	<!-- 모달 버튼 -->
 <div>
@@ -330,7 +343,10 @@ function getStarClass(star) {
 		<form id="modalform" class="modalfrm" enctype="multipart/form-data">			
 			<div align="center" class="modal-head">
 				<input type="hidden" name="place_num" value="<%=place_num%>">
-				<input type="hidden" name="review_idx" value="">			
+				<input type="hidden" name="review_idx" value="">		
+				
+				
+				
 				<h4><%=place_name %></h4>
 				<br>
 			</div>
@@ -365,21 +381,21 @@ function getStarClass(star) {
 										<i class="bi bi-camera-fill camera"></i>
 										<input type="file" name="review_img1" id="file1" class="review_img">
 									</label>
-									<input type="hidden" name="photo1" value="" class="upload_img">
+									<input type="hidden" name="delete_img1" value="false" class="delete_img">
 								</div>
 								<div id="show2" class="img-con" >
 									<label class="btn-upload">
 										<i class="bi bi-camera-fill camera"></i>
 										<input type="file" name="review_img2" id="file2" class="review_img">
 									</label>
-									<input type="hidden" name="photo2" value="" class="upload_img">
+									<input type="hidden" name="delete_img2" value="false" class="delete_img">
 								</div>
 								<div id="show3"class="img-con" >
 									<label class="btn-upload">
 										<i class="bi bi-camera-fill camera"></i>
-										<input type="file" name="review_img3" id="file3" class="review_img">
-										<input type="hidden" name="photo3" value="" class="upload_img">
+										<input type="file" name="review_img3" id="file3" class="review_img">										
 									</label>
+									<input type="hidden" name="delete_img3" value="false" class="delete_img">	
 								</div>
 							</div>
 							<br><br>
@@ -388,17 +404,15 @@ function getStarClass(star) {
 
 				</table>
 			</div>
-			<div class="modal-foot">
-				<button type="button" class="close" id="closeBtn">취소</button>										
+			<div class="modal-foot">														
 				<button type="button" id="btn-write" class="">게시</button>
+				<button type="button" class="close" id="closeBtn">취소</button>
 				
 			</div>
 		</form>
+
 	</div>	
-	 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-	 
-	 <script src="Review/JavaScript/ModalJs.js"></script>
-	 <script src="Review/JavaScript/reviewListJs.js"></script>
+
 </body>
 
 </html>

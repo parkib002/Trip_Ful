@@ -1,3 +1,5 @@
+<%@page import="java.util.Arrays"%>
+<%@page import="java.util.Enumeration"%>
 <%@page import="java.io.File"%>
 <%@page import="review.ReviewDao"%>
 <%@page import="review.ReviewDto"%>
@@ -25,75 +27,92 @@
 		 Double review_star=Double.parseDouble(multi.getParameter("review_star"));
 		 String place_num=multi.getParameter("place_num");
 		 String review_idx=multi.getParameter("review_idx");
-		 //System.out.print(review_idx); 
 		 
-		 String review_img1=multi.getFilesystemName("review_img1");		 
-		 String review_img2=multi.getFilesystemName("review_img2");
-		 String review_img3=multi.getFilesystemName("review_img3");
-		 System.out.println("review_img1: "+review_img1);
-		 System.out.println("review_img2: "+review_img2);
-		 System.out.println("review_img3: "+review_img3);
-		 String [] imgs={review_img1,review_img2,review_img3};
-		 String review_img="";
-		 for(int i=0; i<imgs.length; i++)
-		 {
-				if(imgs[i]!=null)
-				{
-					review_img+=imgs[i].trim()+",";
-				}else{
-					review_img+="";
-				}
-				
-		 }
-		 if(imgs.length>0)
-		 {
-		 review_img=review_img.substring(0,review_img.length()-1);
-		 }
-		 System.out.println(review_img);
+		 
+		 
+		 //System.out.print(review_idx); 		 
 		 
 		 //ReviewDao 생성
- 		 ReviewDao dao=new ReviewDao();
- 	     String imgname = dao.getOneData(review_idx).getReview_img();
-	 	 //기존 이미지
-	 	 System.out.print(imgname);
-	 	 String []imgnames=null;
-	 	 
-	 	 
- 		
-		 String final_img="";
+ 		 ReviewDao dao=new ReviewDao();		 
 		
-		 File [] newfile= {multi.getFile(review_img1),multi.getFile(review_img2),multi.getFile(review_img3)}; //새로운 이미지 선택시
+		 //기존 이미지
+		String getimg= dao.getOneData(review_idx).getReview_img();	
+		String [] oldFileNames=new String[3];
+		//기존 이미지 얻기
+		if(getimg!=null)
+	      {
+	       String [] tempArr=getimg.split(",");
+	      
+		 for (int j = 0; j < tempArr.length && j < 3; j++) {
+			 oldFileNames[j] = tempArr[j].trim();
+		        // 빈 문자열은 null로 처리하여 나중에 쉽게 판별
+		        if (oldFileNames[j].isEmpty()) {
+		        	oldFileNames[j] = null;
+		        }
+		    }
+	      }
+		String [] final_imgArr=new String[3];
+		Arrays.fill(final_imgArr, ""); // 모든 요소를 빈 문자열로 초기화
+		
 		 
-		 for(int i=0;i<3;i++)			 
-		 {
+		// 3. 각 이미지 슬롯(1, 2, 3)에 대한 처리
+		for (int i = 0; i < 3; i++) {
+		    // 현재 처리할 input file의 name (review_img1, review_img2, review_img3)
+		    String newFileName = "review_img" + (i + 1);
+			String delete_img=multi.getParameter("delete_img"+(i+1));
 			
-			 imgnames[i]+=imgname.split(",");
-			
-			 if(newfile[i]!=null)
-			 {
-				 final_img+=(review_img+(i+1))+",";
-				 //업로드한 이미지 지우기			
-				 System.out.print("newfile: "+newfile[i]);
-				//파일생성
-				File file = new File(realPath + "\\" + imgnames[i]);
-				//파일삭제
-				if (file.exists()) //파일이 존재하면
-					file.delete(); //파일삭제
-			 }else if(
-				imgnames[i] !=null && !imgnames[i].isEmpty() && !imgnames[i].equals("null")) //기존 이미지가 null이 아니고 비어있지 않을시
-			 { 
-			 final_img+=imgnames[i]+","; //기본이미지 그대로 사용
-			 }else
-			 {
-			 final_img="";
-			 }
-		 }
-		 
-		 if(final_img.length()>0)
-		 {
-			 final_img=final_img.substring(0,final_img.length()-1);
-		 }
-		 System.out.print("final_img: "+final_img);
+			//System.out.println("delete_img"+(i+1)+":"+delete_img);
+		    // 해당 input file로 새로 업로드된 파일명
+		    String newUploadedFileName = multi.getFilesystemName(newFileName);
+		   // System.out.println("Input name: " + newFileName + ", New Uploaded File: " + newUploadedFileName);
+
+		    // 현재 슬롯의 DB에 원래 저장되어 있던 파일명 (existingDbImgArray에서 가져옴)
+		    String dbOriginalFileName = oldFileNames[i];
+		   // System.out.println("DB Original File (slot " + (i + 1) + "): " + dbOriginalFileName);
+		
+		    if(newUploadedFileName!=null)
+		    {
+		    	final_imgArr[i]=newUploadedFileName.trim();
+		    	//System.out.println("final_imgArr "+(i+1)+": "+final_imgArr[i]);
+		    	 // 기존 DB 파일이 존재하고, 새로 업로드된 파일과 이름이 다르면 삭제
+		        if (dbOriginalFileName != null && !dbOriginalFileName.isEmpty() && !dbOriginalFileName.equals(newUploadedFileName)) {
+		            File oldFileToDelete = new File(realPath + File.separator + dbOriginalFileName);
+		            if (oldFileToDelete.exists()) {
+		                oldFileToDelete.delete();
+		                //System.out.println("기존 DB 파일 삭제 (새 파일로 교체): " + oldFileToDelete.getAbsolutePath());
+		            }
+		        }
+		    }else{
+		    	if(dbOriginalFileName!=null && "true".equals(delete_img.trim()))
+		    	{
+		    		final_imgArr[i]=dbOriginalFileName.trim();
+		    	 // DB에 기존 파일이 있었는데, 새로 업로드되지 않았으므로 삭제된 것으로 간주
+		    	}else{
+		    		
+		    	//	System.out.print(i);
+		             File oldFileToDelete = new File(realPath + File.separator + dbOriginalFileName);
+		             if (oldFileToDelete.exists()) {
+		                 oldFileToDelete.delete();
+		                // System.out.println("기존 DB 파일 삭제 ('X' 버튼으로 제거 또는 업로드 없음): " + oldFileToDelete.getAbsolutePath());
+		                // System.out.println(oldFileNames);
+		                 final_imgArr[i]="";
+		             }
+		         }
+		    
+		    }
+		}
+	      
+		// 3. 최종적으로 DB에 저장할 이미지 문자열 생성
+		String final_img = String.join(",", final_imgArr);
+		System.out.println("final_img (before cleanup): " + final_img);
+
+		// 결과 문자열에서 불필요한 연속 콤마 또는 앞뒤 콤마 제거
+		final_img = final_img.replaceAll(",+", ","); // 두 개 이상의 콤마를 하나로
+		final_img = final_img.replaceAll("^,|,$", ""); // 시작/끝의 콤마 제거
+
+		//System.out.println("final_img (after cleanup): " + final_img);
+		
+		// System.out.print("final_img: "+final_img); 
 		 
 		 ReviewDto dto=new ReviewDto();
 		 

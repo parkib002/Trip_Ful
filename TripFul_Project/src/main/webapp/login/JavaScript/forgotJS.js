@@ -4,18 +4,32 @@
 
 function findfunc() {
 
-	window.open("findID.jsp", "popup_findID", "width=400, height=200,scrollbars=no,resizable=no,status=no,top=300,left=800");
+	window.open("./login/findID.jsp", "popup_findID", "width=400, height=200,scrollbars=no,resizable=no,status=no,top=300,left=800");
 
 	$("#findID").attr("target", "popup_findID").submit();
 
 }
 
 function findPass() {
-
-	window.open("findPW.jsp", "popup_findPW", "width=400, height=200,scrollbars=no,resizable=no,status=no,top=300,left=800");
-
-	$("#findPW").attr("target", "popup_findPW").submit();
-
+	$.ajax({
+			type: "get",
+			url: "./login/authentication.jsp",
+			data: { "id": $("#f_id").val(),
+				"name": $("#f_name").val(),
+				"email": $("#f_email").val()
+			 },
+			dataType: "html",
+			success: function(res) {
+				if (res.trim() == "false") {
+					alert("정보가 틀렸습니다.");
+					
+				}
+				else {
+					$("#findPW").attr("action", "/TripFul_Project/index.jsp?main=login/changeForm.jsp?status=1&id="+$("#f_id").val()); // action 재확인
+					$("#findPW").submit(); // 폼을 수동으로 제출
+				}
+			}
+		})
 }
 
 function changePass(){

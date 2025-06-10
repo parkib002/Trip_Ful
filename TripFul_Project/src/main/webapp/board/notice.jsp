@@ -29,7 +29,7 @@ id=(String)session.getAttribute("id");
 //페이징처리
 //전체갯수
 int totalCount=dao.getTotalCount();
-int perPage=3; //한페이지에 보여질 글의 갯수
+int perPage=10; //한페이지에 보여질 글의 갯수
 int perBlock=5; //한블럭당 보여질 페이지의 갯수
 int startNum; //db에서 가져올 글의 시작번호(mysql:0 오라클:1번)
 int startPage; //각블럭당 보여질 시작페이지
@@ -73,8 +73,35 @@ no=totalCount-(currentPage-1)*perPage;
 List<BoardNoticeDto> list=dao.getList(startNum, perPage);
 
 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+String keywordFromRequest = request.getParameter("keyword");
 %>
 <body>
+<br><br>
+<!-- 검색창 -->
+<div class="container my-3 board-search-container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <form action="<%= request.getContextPath() %>/index.jsp" method="get" class="d-flex" id="boardPageGlobalSearchForm">
+                <%-- main 파라미터를 boardSearchResults.jsp로 직접 지정 --%>
+                <input type="hidden" name="main" value="board/boardSearchResult.jsp"> 
+                
+                <input class="form-control me-2" type="search"
+                       id="boardPageGlobalSearchInput"
+                       name="keyword"
+                       value="<%= keywordFromRequest != null ? keywordFromRequest.replace("\"", "&quot;") : "" %>" 
+                       placeholder="게시판 통합 검색"
+                       aria-label="게시판 통합 검색">
+                <button class="btn" type="submit"
+                style="width: 100px; height: 50px;
+                background-color: #2c3e50; color: white;">
+                    <i class="bi bi-search"></i> 검색
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div class="notice-wrapper">
 	<div class="notice-header">
 		<h3><i class="bi bi-x-diamond-fill">  </i><b>공지사항</b></h3>
@@ -82,22 +109,21 @@ SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			if("admin".equals(loginok))
 			{%>
 				<a style="float: right; text-decoration: none; color: black;"
-				href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=noticeAddForm.jsp">
+				href="<%= request.getContextPath() %>/board/noticeAddForm.jsp">
 					<i class="bi bi-plus-square"></i>&nbsp;글쓰기
 				</a>
 			<%}
 		%>
-		<hr>
+		<hr class="mt-2">
 	</div>
 	<br>
 	<table class="table table-hover notice-table">
 		<thead>
 			<tr>
-				<th scope="col" style="width: 8%;">번호</th>
-            	<th scope="col" style="width: 47%;">제목</th>
-            	<th scope="col" style="width: 15%;">작성자</th>
+				<th scope="col" style="width: 10%;">번호</th>
+            	<th scope="col" style="width: 60%;">제목</th>
            		<th scope="col" style="width: 20%;">작성일</th>
-            	<th scope="col" style="width: 10%;">조회수</th>
+            	<th scope="col" style="width: 10%; text-align: center;">조회수</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -109,7 +135,7 @@ SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			if(list.isEmpty())
 			{%>
 				<tr>
-					<td colspan="5" align="center"><b>등록된 게시글이 없습니다</b></td>
+					<td colspan="4" align="center"><b>등록된 게시글이 없습니다</b></td>
 				</tr>
 			<%}else{
 					for(int i=0;i<list.size();i++)
@@ -117,16 +143,15 @@ SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						BoardNoticeDto dto=list.get(i);
 					%>
 						<tr>
-							<th scope="row"><%=no - i%></th>
+							<th scope="row">&nbsp;<%=no - i%></th>
 							<td>
 								<a href="<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=noticeDetail.jsp&idx=<%=dto.getNotice_idx() %>"
 								style="text-decoration: none; color: black;">
 									<%=dto.getNotice_title() %>
 								</a>
 							</td>
-							<td><%=dto.getNotice_writer() %></td>
 							<td><%=sdf.format(dto.getNotice_writeday()) %></td>
-							<td><%=dto.getNotice_readcount() %></td>
+							<td align="center"><%=dto.getNotice_readcount() %></td>
 						</tr>
 					<%}
 			}
