@@ -402,8 +402,10 @@
 		
 
 
-      <button type="submit" class="btn btn-primary w-100 mt-3">수정</button>
-      <button type="button" class="btn btn-secondary" id="btnPreview">미리보기</button>
+      <div class="d-flex justify-content-center gap-3 mt-3">
+  <button type="submit" class="btn btn-primary" style="width: 300px;">수정</button>
+  <button type="button" class="btn btn-secondary" style="width: 300px;" id="btnPreview">미리보기</button>
+</div>
     </div>
   </form>
 </div>

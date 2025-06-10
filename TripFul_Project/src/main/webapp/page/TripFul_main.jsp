@@ -13,7 +13,7 @@
 <!-- Hero Section -->
 <header class="hero">
     <video autoplay muted loop playsinline class="bg-video">
-        <source src="<%= request.getContextPath() %>/image/hero.mp4" type="video/mp4">
+        <source src="<%= request.getContextPath() %>/image/main_video.mp4" type="video/mp4">
     </video>
     <div class="hero-content">
         <h1>Welcome To Our Tripful</h1>
@@ -21,6 +21,14 @@
     </div>
 </header>
 <style>
+
+.bg-video {
+   width: 100%;      /* 원하는 고정 너비 */
+    height: 900px;     /* 원하는 고정 높이 */
+    object-fit: cover; /* 비율 유지하며 꽉 채움 */
+    display: block;
+    margin: 0 auto;    /* 가운데 정렬 */
+}
 /* spotReviewCarousel의 인디케이터 위치를 직접 지정하여 가운데 정렬 */
 #spotReviewCarousel .carousel-indicators {
     /* 1. 위치의 기준점을 왼쪽에서 50% 지점으로 이동 */

@@ -109,6 +109,12 @@
 		  	cursor: pointer;
  		 	transition: all 0.3s ease;
 		}
+		
+		.sort-dropdown:focus {
+ 			outline: none; /* 기본 outline 제거 */
+  			border-color: #2196f3; /* 테두리를 원래 색으로 고정 */
+  			box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2); /* 선택적으로 포커스 효과 */
+		}
         
     </style>
     <script type="text/javascript">
