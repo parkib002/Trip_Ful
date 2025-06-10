@@ -53,7 +53,7 @@
 
         .card-img-top {
             width: 100%;
-            height: 300px;
+            height: 200px;
             object-fit: cover;
         }
     </style>
@@ -89,7 +89,8 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title"><%= dto.getPlace_name() %></h5>
                     <p class="card-text text-muted mb-1">국가: <%= dto.getCountry_name() %></p>
-                    <p class="card-text text-muted mb-1">👁 조회수: <%= dto.getPlace_count() %> | ❤️ 좋아요: <%= dto.getPlace_like() %></p>
+                    <p class="card-text text-muted mb-1">조회수: <%= dto.getPlace_count() %></p>
+                    <p class="card-text text-muted mb-2">좋아요: <%= dto.getPlace_like() %></p>
                     <p class="card-text text-muted mb-2">카테고리: <%= dto.getPlace_tag() %></p>
                 </div>
             </div>
@@ -114,7 +115,8 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title"><%= dto.getPlace_name() %></h5>
                     <p class="card-text text-muted mb-1">국가: <%= dto.getCountry_name() %></p>
-                    <p class="card-text text-muted mb-1">👁 조회수: <%= dto.getPlace_count() %> | ❤️ 좋아요: <%= dto.getPlace_like() %></p>
+                    <p class="card-text text-muted mb-1">조회수: <%= dto.getPlace_count() %></p>
+                    <p class="card-text text-muted mb-2">좋아요: <%= dto.getPlace_like() %></p>
                     <p class="card-text text-muted mb-2">카테고리: <%= dto.getPlace_tag() %></p>
                 </div>
             </div>
@@ -139,7 +141,8 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title"><%= dto.getPlace_name() %></h5>
                     <p class="card-text text-muted mb-1">국가: <%= dto.getCountry_name() %></p>
-                    <p class="card-text text-muted mb-1">👁 조회수: <%= dto.getPlace_count() %> | ❤️ 좋아요: <%= dto.getPlace_like() %></p>
+                    <p class="card-text text-muted mb-1">조회수: <%= dto.getPlace_count() %></p>
+                    <p class="card-text text-muted mb-2">좋아요: <%= dto.getPlace_like() %></p>
                     <p class="card-text text-muted mb-2">카테고리: <%= dto.getPlace_tag() %></p>
                 </div>
             </div>

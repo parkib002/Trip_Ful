@@ -1,0 +1,30 @@
+.navbar-toggler:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.navbar {
+    background-color: #FFFFFF;
+    height: 90px;
+    position: relative;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar-nav .nav-link {
+    color: #212121;
+}
+.navbar-nav .nav-link:hover {
+    color: #FB8C00;
+}
+
+.collapse#mainMenu {
+    position: relative;
+    top: 90px;
+    left: 0;
+    max-width: 30%;
+    background-color: white;
+    z-index: 1050;
+    transition: transform 0.3s ease-out;
+}
