@@ -44,6 +44,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+      
     }
     .selection-buttons button {
       padding: 0.75rem 1.5rem;
@@ -90,7 +91,7 @@
   height: 170px;
   overflow: hidden;
   border-bottom: 0px solid #ccc;
-  margin-bottom: 3px;
+  margin-bottom: 0px;
 }
 
 
@@ -108,16 +109,16 @@
 }
 
 .place-card .caption {
-  padding: 2px 5px; /* 적당히 위아래 패딩 줄임 */
+  padding: 2px 2px; /* 적당히 위아래 패딩 줄임 */
   text-align: center;
-  height: auto; /* 높이 고정 제거 */
+  height: 25px; /* 높이 고정 제거 */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
    .place-card img {
  	width: 100%;
-    height: 150px;
+    height: 200px;
     object-fit: cover;
     transition: transform 0.3s ease; /* 부드러운 애니메이션 */
 	}
@@ -136,7 +137,7 @@
 
 
 .sort-dropdown {
-  padding: 0.65rem 1rem;
+  padding: 0.75rem 1.5rem;
   border: 2px solid #2196f3;
   border-radius: 0.5rem;
   font-size: 1rem;
@@ -144,6 +145,12 @@
   background-color: #fff;
   cursor: pointer;
   transition: all 0.3s ease;
+}
+
+.sort-dropdown:focus {
+  outline: none; /* 기본 outline 제거 */
+  border-color: #2196f3; /* 테두리를 원래 색으로 고정 */
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2); /* 선택적으로 포커스 효과 */
 }
 
 .sort-dropdown:hover {
@@ -154,8 +161,12 @@
 .caption, .rating {
   margin: 0 !important;
   padding: 0 !important;
-  line-height: 1.1;      /* 줄 높이 줄이기 */
+  line-height: 1.0;      /* 줄 높이 줄이기 */
   font-size: 1rem;
+}
+
+.rating{
+	font-size: 0.7rem !important;
 }
 
 .place-card {
@@ -172,7 +183,7 @@
 
 .image-wrapper img {
   width: 100%;
-  height: 150px;
+  height: 180px;
   object-fit: cover;
   display: block;
 }
@@ -278,7 +289,7 @@
   %>
   </div>
 
-  <div id="selection-area" class="text-center mb-3">
+  <div id="selection-area" class="text-center">
     <h4>지도를 클릭하여 대륙을 선택하세요.</h4>
 </div>
 
@@ -418,9 +429,11 @@ $(document).ready(function () {
         }
 
         const $buttonRow = $('<div>').addClass('country-button-row d-flex flex-wrap gap-2');
+        
+        const sortedCountries = Object.keys(data).sort((a, b) => a.localeCompare(b, 'ko'));
 
-        $.each(data, (country, placeList) => {
-            console.log('국가:', country, '관광지 수:', placeList.length);
+        $.each(sortedCountries, (i, country) => {
+            const placeList = data[country];
             $('<button>').addClass('btn btn-outline-dark btn-sm')
                 .text(country)
                 .click(function () {
@@ -479,7 +492,7 @@ $(document).ready(function () {
         $imageWrapper.append($img);
         $card.append($imageWrapper);
 
-        $('<div class="caption">').text(place.place_name).css({ margin: '0', paddingBottom: '2px' }).appendTo($card);
+        $('<div class="caption">').text(place.place_name).css({ marginBottom: '1px', paddingBottom: '0' }).appendTo($card);
 
         const ratingText = (typeof place.avg_rating === 'number' && place.avg_rating >= 0)
             ? '⭐ ' + place.avg_rating.toFixed(1)

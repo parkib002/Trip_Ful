@@ -52,18 +52,6 @@
 	transform: scale(1);
 }
 
-.modal .close, .modal .save , .modal .update{
-	color: #aaa;
-	float: right;	
-	font-size: 28px;
-	font-weight: bold;
-	cursor: pointer;
-	margin-left: 5px;
-}
-
-.modal .close:hover, .modal .save:hover, .modal .update:hover{
-	color: black;
-}
 
 /* 관광지 이름 */
 .modal-head h4{
@@ -80,6 +68,8 @@
 	position: fixed;
 	bottom: 5px;
 	right: 5px;
+	display: inline-flex;
+	justify-content: space-between;
 	
 }
 
@@ -98,7 +88,10 @@
 	display: flex;
 	align-items: center;
 	justify-content: center; 
+	margin: 5px;
+	
 }
+
 .modal-foot button:hover {
 	background : #5877f9;
 	color: #fff;

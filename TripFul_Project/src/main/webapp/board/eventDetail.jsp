@@ -39,14 +39,13 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <style type="text/css">
-/* ... (기존 CSS 스타일 유지) ... */
 .detailContainer { max-width: 1000px; margin: 30px auto; padding: 20px; }
 .card-header h3 { margin-bottom: 0; }
 .event-content img { max-width: 100%; height: auto; border-radius: 8px; margin-top: 10px; margin-bottom: 10px; }
 .comment-item { word-break: break-all; }
 .comment-item p { margin-top: 5px; margin-bottom: 10px; white-space: pre-wrap; }
 .btn-sm i { vertical-align: middle; }
-#commentToggleContainer { display: none; } /* 토글 버튼 컨테이너 초기 숨김 */
+#commentToggleContainer { display: none; }
 </style>
 </head>
 <body>
@@ -62,7 +61,7 @@
         <div class="card-footer text-end bg-light">
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=event.jsp'"><i class="bi bi-list-ul"></i>&nbsp;목록</button>
             <% if (isAdmin) { %>
-            <button type="button" class="btn btn-sm btn-outline-primary" onclick="location.href='<%= request.getContextPath() %>/index.jsp?main=board/boardList.jsp&sub=eventUpdateForm.jsp&idx=<%=idx %>'"> <i class="bi bi-pencil-square"></i>&nbsp;수정</button>
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="location.href='<%= request.getContextPath() %>/index.jsp?main=board/eventUpdateForm.jsp&idx=<%=idx %>'"> <i class="bi bi-pencil-square"></i>&nbsp;수정</button>
             <button type="button" class="btn btn-sm btn-outline-danger" onclick="if(confirm('정말로 이 이벤트를 삭제하시겠습니까?')) { location.href='<%= request.getContextPath() %>/board/eventDeleteAction.jsp?idx=<%=idx %>'; }"><i class="bi bi-trash"></i>&nbsp;삭제</button>
             <% } %>
         </div>
@@ -70,7 +69,14 @@
 
     <%-- 댓글 섹션 --%>
     <div class="card mt-4 shadow-sm">
-        <div class="card-header bg-light"><h5><i class="bi bi-chat-dots-fill"></i> 댓글</h5></div>
+        <%-- ★ 헤더 수정: d-flex, justify-content-between, align-items-center 클래스 추가 및 select 태그 추가 --%>
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h5><i class="bi bi-chat-dots-fill"></i> 댓글</h5>
+            <select class="form-select form-select-sm" id="commentSortOrder" style="width: auto;">
+                <option value="latest" selected>최신순</option>
+                <option value="likes">좋아요순</option>
+            </select>
+        </div>
         <div class="card-body">
             <% if (loggedInUserId != null) { %>
             <form id="commentForm" class="mb-4">
@@ -85,11 +91,8 @@
             <p class="text-muted">댓글을 작성하려면 <a href="<%= request.getContextPath() %>/index.jsp?main=login/login.jsp">로그인</a>해주세요.</p>
             <% } %>
             <hr>
-            <div id="commentListInitial"> <%-- ★ 초기 댓글 로드 위치 --%>
-            </div>
-            <div id="commentListAdditional"> <%-- ★ 추가 댓글 로드 위치 --%>
-            </div>
-            <%-- 더보기/간략히 보기 버튼 컨테이너 --%>
+            <div id="commentListInitial"></div>
+            <div id="commentListAdditional"></div>
             <div class="text-center mt-3" id="commentToggleContainer">
                 <button type="button" class="btn btn-outline-primary btn-sm" id="toggleCommentsButton">더보기</button>
             </div>
@@ -103,32 +106,30 @@ $(document).ready(function() {
     const currentUser = '<%= loggedInUserId == null ? "" : loggedInUserId %>';
     const isAdminUser = <%= isAdmin %>;
     
-    const commentsPerPage = 5;   // 한 페이지에 보여줄 댓글 수
-    let totalServerComments = 0; // 서버의 전체 댓글 수
-    let additionalCommentsVisible = false; // 추가 댓글이 현재 보이는지 여부
+    const commentsPerPage = 5;
+    let totalServerComments = 0;
+    let additionalCommentsVisible = false;
 
-    // 댓글 목록을 화면에 렌더링하는 함수 (내용은 이전과 거의 동일)
+    // 댓글 렌더링 함수 (변경 없음)
     function renderComments(commentsData, targetContainerId, clearContainerFirst) {
         const $targetContainer = $(targetContainerId);
         if (clearContainerFirst) {
             $targetContainer.empty();
         }
-
         if (!commentsData || commentsData.length === 0) {
             if (clearContainerFirst && targetContainerId === '#commentListInitial') {
                  $targetContainer.html('<p class="text-center text-muted">아직 등록된 댓글이 없습니다.</p>');
             }
-            return; // 렌더링할 댓글 없음
+            return;
         }
-
         commentsData.forEach(function(originalComment) {
-            const comment = { ...originalComment }; 
-            let answerIdx = (comment.answer_idx && String(comment.answer_idx).trim()) ? String(comment.answer_idx).trim() : 'ID없음';
-            let writer    = (comment.writer && String(comment.writer).trim()) ? String(comment.writer).trim() : '작성자 익명';
-            let content   = (comment.content && String(comment.content).trim()) ? String(comment.content).trim() : '내용 없음';
-            let likeCount = (comment.likecount !== null && comment.likecount !== undefined) ? Number(comment.likecount) : 0;
-            let writedayRaw = (comment.writeday && String(comment.writeday).trim()) ? String(comment.writeday).trim() : null;
-            let userHasLikedThisComment = comment.userHasLiked === true; 
+            const comment = { ...originalComment };
+            let answerIdx = String(comment.answer_idx || 'ID없음').trim();
+            let writer = String(comment.writer || '작성자 익명').trim();
+            let content = String(comment.content || '내용 없음').trim();
+            let likeCount = Number(comment.likecount || 0);
+            let writedayRaw = String(comment.writeday || '').trim();
+            let userHasLikedThisComment = comment.userHasLiked === true;
             let commentDate = '날짜 미표시';
             if (writedayRaw) {
                 let dateObj = new Date(writedayRaw);
@@ -153,21 +154,22 @@ $(document).ready(function() {
         });
     }
 
-    // 초기 댓글 로드 및 버튼 설정 함수
+    // ★ 초기 댓글 로드 함수: AJAX data에 sort 파라미터 추가
     function loadInitialCommentsAndSetupButton() {
-        $('#commentListAdditional').empty(); // 추가 댓글 영역 비우기
-        additionalCommentsVisible = false; // 상태 초기화
+        $('#commentListAdditional').empty();
+        additionalCommentsVisible = false;
+
+        let sortOrder = $('#commentSortOrder').val(); // ★ 정렬 기준 가져오기
 
         $.ajax({
             url: '<%=request.getContextPath()%>/board/eventAnswerListAction.jsp',
             type: 'GET',
-            data: { event_idx: currentEventId, start: 0, count: commentsPerPage },
+            data: { event_idx: currentEventId, start: 0, count: commentsPerPage, sort: sortOrder }, // ★ sort 파라미터 추가
             dataType: 'json',
             success: function(response) {
                 if(response && response.comments) {
                     renderComments(response.comments, '#commentListInitial', true);
                     totalServerComments = response.totalComments;
-
                     if (totalServerComments > commentsPerPage) {
                         $('#toggleCommentsButton').text('더보기').show();
                         $('#commentToggleContainer').show();
@@ -179,20 +181,20 @@ $(document).ready(function() {
                      $('#commentToggleContainer').hide();
                 }
             },
-            error: function() { /* ... (기존 에러 처리) ... */ $('#commentToggleContainer').hide(); }
+            error: function() { $('#commentListInitial').html('<p class="text-center text-danger">댓글 로딩 중 오류가 발생했습니다.</p>'); $('#commentToggleContainer').hide(); }
         });
     }
 
-    // "더보기/간략히 보기" 버튼 클릭 이벤트
+    // ★ "더보기" 버튼 클릭 이벤트: AJAX data에 sort 파라미터 추가
     $('#toggleCommentsButton').click(function() {
         const $button = $(this);
+        let sortOrder = $('#commentSortOrder').val(); // ★ 정렬 기준 가져오기
         
-        if (!additionalCommentsVisible) { // 현재 "더보기" 상태 (추가 댓글 로드)
+        if (!additionalCommentsVisible) {
             $.ajax({
                 url: '<%=request.getContextPath()%>/board/eventAnswerListAction.jsp',
                 type: 'GET',
-                // 초기 댓글(0~commentsPerPage-1) 다음부터 가져옴
-                data: { event_idx: currentEventId, start: commentsPerPage, count: commentsPerPage },
+                data: { event_idx: currentEventId, start: commentsPerPage, count: commentsPerPage, sort: sortOrder }, // ★ sort 파라미터 추가
                 dataType: 'json',
                 success: function(response) {
                     if (response && response.comments && response.comments.length > 0) {
@@ -201,63 +203,60 @@ $(document).ready(function() {
                         additionalCommentsVisible = true;
                     } else {
                         alert('더 이상 댓글이 없습니다.');
-                        $button.hide(); // 더 로드할 댓글이 없으므로 버튼 숨김
+                        $button.hide();
                     }
                 },
                 error: function() { alert('추가 댓글 로드 중 오류가 발생했습니다.'); }
             });
-        } else { // 현재 "간략히 보기" 상태 (추가 댓글 숨김)
+        } else {
             $('#commentListAdditional').empty();
             $button.text('더보기');
             additionalCommentsVisible = false;
         }
     });
 
+    // ★ 정렬 기준 변경 시 이벤트 핸들러 추가
+    $('#commentSortOrder').on('change', function() {
+        loadInitialCommentsAndSetupButton(); // 정렬 기준이 바뀌면 처음부터 다시 로드
+    });
+
     // 초기 댓글 로드
     loadInitialCommentsAndSetupButton();
 
-    // 댓글 등록 성공 시
+    // --- 이하 댓글 등록/삭제/좋아요 로직은 기존과 동일 ---
     $('#submitComment').click(function() {
         let contentVal = $('#comment_content').val();
         let userIdForComment = $('input[name="user_id"]').val(); 
-
         if (!currentUser) { alert('댓글을 작성하려면 로그인이 필요합니다.'); return; }
         if (!contentVal.trim()) { alert('댓글 내용을 입력해주세요.'); $('#comment_content').focus(); return; }
-
         $.ajax({
             url: '<%=request.getContextPath()%>/board/eventAnswerAddAction.jsp',type: 'POST',
             data: {event_idx: currentEventId,user_id: userIdForComment, comment_content: contentVal},
             success: function(response) {
                 if (response.trim() === "success") {
                     $('#comment_content').val('');
-                    loadInitialCommentsAndSetupButton(); // ★ 변경
+                    loadInitialCommentsAndSetupButton();
                 } else { alert('댓글 등록 실패: ' + response); }
             },
             error: function() { alert('댓글 등록 중 서버 오류가 발생했습니다.'); }
         });
     });
-
-    // 댓글 삭제 성공 시
-    $('#commentListInitial, #commentListAdditional').on('click', '.delete-comment', function() { // 이벤트 위임 대상 변경
+    $('#commentListInitial, #commentListAdditional').on('click', '.delete-comment', function() {
         if (!currentUser) { alert('댓글을 삭제하려면 로그인이 필요합니다.'); return; }
         if (!confirm('정말로 이 댓글을 삭제하시겠습니까?')) { return; }
         let answerIdx = $(this).data('answer-idx');
-
         $.ajax({
             url: '<%=request.getContextPath()%>/board/eventAnswerDeleteAction.jsp', type: 'POST',
             data: { answer_idx: answerIdx }, 
             success: function(response) {
                 if (response.trim() === "success") {
-                    loadInitialCommentsAndSetupButton(); // ★ 변경
+                    loadInitialCommentsAndSetupButton();
                 } else { alert('댓글 삭제 실패: ' + response); }
             },
             error: function() { alert('댓글 삭제 중 서버 오류가 발생했습니다.'); }
         });
     });
-
-    // 댓글 좋아요 (이벤트 위임 대상 변경)
     $('#commentListInitial, #commentListAdditional').on('click', '.like-comment', function() {
-        // ... (기존 좋아요 로직은 거의 동일, 버튼 상태 업데이트 후 필요시 loadInitialCommentsAndSetupButton() 대신 현재 상태만 업데이트 가능)
         if (!currentUser) { alert('좋아요를 누르려면 로그인이 필요합니다.'); return;}
         let answerIdx = $(this).data('answer-idx');
         let button = $(this);

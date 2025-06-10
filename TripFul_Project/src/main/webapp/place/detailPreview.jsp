@@ -73,6 +73,7 @@ body {
 .carousel {
     width: 500px;
     flex-shrink: 0;
+    margin-top: 15px; /* 원하는 만큼 숫자 조정 */
 }
 
 .carousel-inner img {
@@ -134,6 +135,13 @@ body {
     font-size: 14px;
     color: #666;
 }
+
+#map{
+	
+	border: 1px solid gray;
+	border-radius: 10px;
+}
+
 
 </style>
 <script>
@@ -262,16 +270,17 @@ function initMap() {
     <span class="carousel-control-next-icon"></span>
   </button>
 </div>
-		<div id="preview-content">
-		<%=contentWithoutImg %>
-		</div>
 </div>
             <div class="info-box">
                 <p class="description"></p>
-                <p class="location">위치: </p>
-                <div id="map" style="width: 100%; height: 400px;"></div>
+                <div id="map" style="width: 100%; height: 500px;"></div>
                 <p class="address" id="preview-address">주소: <%=address %></p>
             </div>
         </div>
+        
+           <hr>
+		<div id="preview-content">
+		<%=contentWithoutImg %>
+		</div>
 </body>
 </html>

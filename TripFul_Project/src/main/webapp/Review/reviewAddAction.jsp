@@ -19,7 +19,7 @@
 	System.out.println(realPath);	
 	
 	//업로드크기
-	  int uploadSize=1024*1024*5;
+	  int uploadSize=1024*1024*10;
 	
 	  MultipartRequest multi=null;
 	  
@@ -42,15 +42,23 @@
 		 System.out.println("review_img3: "+review_img3);
 		 String [] imgs={review_img1,review_img2,review_img3};
 		 String review_img="";
-		 for(int i=0; i<imgs.length; i++)
+		 if(imgs.length>0)
 		 {
+			 for(int i=0; i<imgs.length; i++)
+			 {
 				if(imgs[i]!=null)
 				{
 					review_img+=imgs[i]+",";
 				}
 				
+		 }		 
+			 if(review_img.endsWith(","))
+			 {
+			 review_img=review_img.substring(0,review_img.length()-1);
+			 }
+		 }else{
+			 review_img="";
 		 }
-		 review_img=review_img.substring(0,review_img.length()-1);
 		 
 		 System.out.println(review_img);
 		 

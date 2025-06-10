@@ -113,45 +113,6 @@ public class EventAnswerDao {
         return success;
     }
 
- // 특정 이벤트의 댓글 목록 가져오기 (로그인 사용자 ID 파라미터 추가)
-    public List<EventAnswerDto> getAnswersByEventIdx(String event_idx, String loggedInUserId) {
-        List<EventAnswerDto> list = new ArrayList<>();
-        Connection conn = db.getConnection();
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        String sql = "select * from tripful_event_answer where event_idx = ? order by writeday asc";
-
-        try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, event_idx);
-            rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                EventAnswerDto dto = new EventAnswerDto();
-                String answerIdx = rs.getString("answer_idx"); // 현재 댓글 ID
-                dto.setAnswer_idx(answerIdx);
-                dto.setContent(rs.getString("content"));
-                dto.setWriter(rs.getString("writer"));
-                dto.setWriteday(rs.getTimestamp("writeday"));
-                dto.setEvent_idx(rs.getString("event_idx"));
-                dto.setLikecount(rs.getInt("likecount"));
-
-                // ★ 현재 로그인한 사용자가 이 댓글에 좋아요를 눌렀는지 확인
-                if (loggedInUserId != null && !loggedInUserId.isEmpty()) {
-                    dto.setUserHasLiked(hasUserLiked(answerIdx, loggedInUserId));
-                } else {
-                    dto.setUserHasLiked(false); // 로그인하지 않았으면 false
-                }
-                list.add(dto);
-            }
-        } catch (SQLException e) {
-            System.out.println("댓글 목록 조회 오류: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            db.dbClose(rs, pstmt, conn);
-        }
-        return list;
-    }
 
     //댓글삭제
     public boolean deleteAnswer(String answer_idx, String writer_id) {
@@ -342,4 +303,67 @@ public class EventAnswerDao {
         }
         return likeCount;
     }
+    
+    /**
+	 * 특정 이벤트의 댓글 목록을 정렬 기준에 따라 페이징하여 가져옵니다.
+	 * @param event_idx 이벤트 ID
+	 * @param loggedInUserId 현재 로그인한 사용자 ID (좋아요 여부 확인용)
+	 * @param start 시작 위치
+	 * @param count 가져올 갯수
+	 * @param sort 정렬 기준 ("latest" 또는 "likes")
+	 * @return 정렬 및 페이징 처리된 댓글 DTO 목록
+	 */
+	public List<EventAnswerDto> getAnswers(String event_idx, String loggedInUserId, int start, int count, String sort) {
+	    List<EventAnswerDto> list = new ArrayList<>();
+	    
+	    String orderByClause;
+	    // sort 파라미터 값에 따라 ORDER BY 절을 동적으로 생성합니다.
+	    if ("likes".equals(sort)) {
+	        // 좋아요순. 좋아요 수가 같으면 최신 댓글(answer_idx가 큰) 순으로 2차 정렬합니다.
+	        orderByClause = "ORDER BY likecount DESC, answer_idx DESC";
+	    } else {
+	        // 기본값은 최신순 (answer_idx가 큰 순서)으로 정렬합니다.
+	        orderByClause = "ORDER BY answer_idx DESC";
+	    }
+
+	    // 동적으로 생성된 ORDER BY 절을 최종 SQL에 포함시킵니다.
+	    String sql = "SELECT * FROM tripful_event_answer WHERE event_idx = ? " + orderByClause + " LIMIT ?, ?";
+	    
+	    Connection conn = db.getConnection();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, event_idx);
+	        pstmt.setInt(2, start);
+	        pstmt.setInt(3, count);
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            EventAnswerDto dto = new EventAnswerDto();
+	            String answerIdx = rs.getString("answer_idx");
+	            dto.setAnswer_idx(answerIdx);
+	            dto.setEvent_idx(rs.getString("event_idx"));
+	            dto.setWriter(rs.getString("writer"));
+	            dto.setContent(rs.getString("content"));
+	            dto.setWriteday(rs.getTimestamp("writeday"));
+	            dto.setLikecount(rs.getInt("likecount"));
+	            
+	            // 현재 로그인한 사용자의 좋아요 여부도 함께 확인하여 DTO에 담습니다.
+	            if (loggedInUserId != null && !loggedInUserId.isEmpty()) {
+                    dto.setUserHasLiked(this.hasUserLiked(answerIdx, loggedInUserId));
+                } else {
+                    dto.setUserHasLiked(false);
+                }
+	            list.add(dto);
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("정렬된 댓글 목록 조회 오류: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        db.dbClose(rs, pstmt, conn);
+	    }
+	    return list;
+	}
 }

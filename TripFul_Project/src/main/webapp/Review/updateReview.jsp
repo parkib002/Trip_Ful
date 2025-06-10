@@ -61,25 +61,25 @@
 		    String newFileName = "review_img" + (i + 1);
 			String delete_img=multi.getParameter("delete_img"+(i+1));
 			
-			System.out.println("delete_img"+(i+1)+":"+delete_img);
+			//System.out.println("delete_img"+(i+1)+":"+delete_img);
 		    // 해당 input file로 새로 업로드된 파일명
 		    String newUploadedFileName = multi.getFilesystemName(newFileName);
-		    System.out.println("Input name: " + newFileName + ", New Uploaded File: " + newUploadedFileName);
+		   // System.out.println("Input name: " + newFileName + ", New Uploaded File: " + newUploadedFileName);
 
 		    // 현재 슬롯의 DB에 원래 저장되어 있던 파일명 (existingDbImgArray에서 가져옴)
 		    String dbOriginalFileName = oldFileNames[i];
-		    System.out.println("DB Original File (slot " + (i + 1) + "): " + dbOriginalFileName);
+		   // System.out.println("DB Original File (slot " + (i + 1) + "): " + dbOriginalFileName);
 		
 		    if(newUploadedFileName!=null)
 		    {
 		    	final_imgArr[i]=newUploadedFileName.trim();
-		    	System.out.println("final_imgArr "+(i+1)+": "+final_imgArr[i]);
+		    	//System.out.println("final_imgArr "+(i+1)+": "+final_imgArr[i]);
 		    	 // 기존 DB 파일이 존재하고, 새로 업로드된 파일과 이름이 다르면 삭제
 		        if (dbOriginalFileName != null && !dbOriginalFileName.isEmpty() && !dbOriginalFileName.equals(newUploadedFileName)) {
 		            File oldFileToDelete = new File(realPath + File.separator + dbOriginalFileName);
 		            if (oldFileToDelete.exists()) {
 		                oldFileToDelete.delete();
-		                System.out.println("기존 DB 파일 삭제 (새 파일로 교체): " + oldFileToDelete.getAbsolutePath());
+		                //System.out.println("기존 DB 파일 삭제 (새 파일로 교체): " + oldFileToDelete.getAbsolutePath());
 		            }
 		        }
 		    }else{
@@ -89,12 +89,12 @@
 		    	 // DB에 기존 파일이 있었는데, 새로 업로드되지 않았으므로 삭제된 것으로 간주
 		    	}else{
 		    		
-		    		System.out.print(i);
+		    	//	System.out.print(i);
 		             File oldFileToDelete = new File(realPath + File.separator + dbOriginalFileName);
 		             if (oldFileToDelete.exists()) {
 		                 oldFileToDelete.delete();
-		                 System.out.println("기존 DB 파일 삭제 ('X' 버튼으로 제거 또는 업로드 없음): " + oldFileToDelete.getAbsolutePath());
-		                 System.out.println(oldFileNames);
+		                // System.out.println("기존 DB 파일 삭제 ('X' 버튼으로 제거 또는 업로드 없음): " + oldFileToDelete.getAbsolutePath());
+		                // System.out.println(oldFileNames);
 		                 final_imgArr[i]="";
 		             }
 		         }
@@ -110,9 +110,9 @@
 		final_img = final_img.replaceAll(",+", ","); // 두 개 이상의 콤마를 하나로
 		final_img = final_img.replaceAll("^,|,$", ""); // 시작/끝의 콤마 제거
 
-		System.out.println("final_img (after cleanup): " + final_img);
+		//System.out.println("final_img (after cleanup): " + final_img);
 		
-		 System.out.print("final_img: "+final_img); 
+		// System.out.print("final_img: "+final_img); 
 		 
 		 ReviewDto dto=new ReviewDto();
 		 

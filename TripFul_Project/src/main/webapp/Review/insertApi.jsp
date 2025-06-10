@@ -1,3 +1,4 @@
+<%@page import="review.ReportDao"%>
 <%@page import="java.util.Collections"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
@@ -71,7 +72,7 @@
      	
      }
  }
- 	
+ 	String member_id=(String)session.getAttribute("id");
  	
     // DB 리뷰에서 키명 맞추기
     for (HashMap<String, String> map : DBlist) {
@@ -102,9 +103,16 @@
             review.put("photo3", "");
         }
         
-        
+        ReportDao rdao=new ReportDao();
+     	int likeCheck=rdao.getlike(member_id, map.get("review_idx"));
+     	int likeCount=rdao.getLikeCount(map.get("review_idx"));
+     	String like=likeCheck+"";
+     	String likeCnt=likeCount+"";
+     	
         review.put("read","DB");
         review.put("review_idx", map.get("review_idx"));
+        review.put("likeCheck",like);
+        review.put("likeCnt",likeCnt);
         merged.add(review);
     } 	
  	
