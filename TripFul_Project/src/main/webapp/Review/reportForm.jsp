@@ -12,6 +12,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>  
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <title>Insert title here</title>
 <%	
@@ -45,8 +46,17 @@
 		{	
 			if(cntcheck>0)
 				{
-				alert("이미 신고한 리뷰입니다");
-				location.href="../index.jsp?main=place/detailPlace.jsp?place_num="+<%=place_num%>;
+				Swal.fire({
+					  position: "center", 
+					  heightAuto: "true",
+					  icon: "error",
+					  title: "이미 신고한 리뷰입니다.",					 
+					  showConfirmButton: false,
+					  timer: 2000
+					}).then(()=>{
+						location.href="../index.jsp?main=place/detailPlace.jsp?place_num="+<%=place_num%>;
+					});				
+				
 				}else{
 					//alert("1234");
 					var review_idx=$("#review_idx").val();
@@ -58,7 +68,16 @@
 						data:{"review_idx":review_idx,"report_content":report_content},
 						success:function(){
 							//alert("1234");
-							location.href="../index.jsp?main=place/detailPlace.jsp?place_num="+<%=place_num%>;
+							Swal.fire({
+								  position: "center", 
+								  heightAuto: "true",
+								  icon: "cussess",
+								  title: "신고를 완료했습니다.",					 
+								  showConfirmButton: false,
+								  timer: 2000
+								}).then(()=>{
+									location.href="../index.jsp?main=place/detailPlace.jsp?place_num="+<%=place_num%>;
+								});				
 						}
 					});
 				}		
@@ -74,7 +93,16 @@
 				data:{"review_idx":review_idx,"report_content":report_content},
 				success:function(){
 					//alert("1234");
-					location.href="../index.jsp?main=place/detailPlace.jsp?place_num="+<%=place_num%>;
+					Swal.fire({
+						  position: "center", 
+						  heightAuto: "true",
+						  icon: "success",
+						  title: "신고를 완료했습니다.",					 
+						  showConfirmButton: false,
+						  timer: 2000
+						}).then(()=>{
+							location.href="../index.jsp?main=place/detailPlace.jsp?place_num="+<%=place_num%>;
+						});				
 				}
 			});
 		}
