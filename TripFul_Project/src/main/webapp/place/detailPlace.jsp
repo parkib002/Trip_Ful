@@ -21,6 +21,16 @@
 	
 	PlaceDto dto=dao.getPlaceData(num);
 	
+	if (dto == null) {
+		%>
+			<script>
+				alert("존재하지 않는 관광지입니다.");
+				location.href = "index.jsp?main=place/selectPlace.jsp";
+			</script>
+		<%
+				return;
+			}
+	
 	String [] img=dto.getPlace_img().split(",");
 	
 	ReviewDao rdao=new ReviewDao();
@@ -32,7 +42,6 @@
 	String loginok=(String)session.getAttribute("loginok");
 	
 	if (loginok == null) loginok = "";
-
 	
 %>
 
@@ -193,6 +202,15 @@ body {
     border: none;
   }
 
+.carousel-indicators {
+    position: absolute;
+    bottom: 10px; /* 원하는 만큼 조정 */
+    left: 35%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
 
 </style>
 </head>

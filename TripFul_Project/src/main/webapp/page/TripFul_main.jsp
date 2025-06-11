@@ -19,14 +19,12 @@
         <source src="<%= request.getContextPath() %>/image/main_video.mp4" type="video/mp4">
     </video>
     <div class="hero-overlay position-absolute w-100 h-100 bg-dark opacity-50"></div>
-    <%-- 여기서 animate-target 클래스를 제거했습니다. --%>
     <div class="hero-content position-absolute top-50 start-50 translate-middle text-center text-white">
         <h1 class="display-4 fw-bold mb-3">Welcome To Our Tripful</h1>
         <p class="lead">IT'S Travel review site</p>
     </div>
 </header>
 
-<%-- 캐러셀과 소개글을 묶는 컨테이너에 애니메이션 클래스 적용 --%>
 <div class="fade-in-left-on-scroll-container">
     <div id="animatedText" class="animate-target container my-5 bg-light text-center p-4 rounded-4 shadow-lg border border-2 border-primary">
         <h2 class="fw-semibold fs-4 text-primary mb-2">✈️ 이번 주 추천 여행지 📍</h2>
@@ -56,7 +54,7 @@
                 <div class="d-flex justify-content-center py-4">
                     <div class="col-md-10">
                         <div class="card border-0 shadow-lg h-100 rounded-4 overflow-hidden d-flex flex-md-row" style="min-height: 450px;">
-                            <div class="carousel-image-wrapper">
+                            <div class="carousel-image-container">
                                 <img src="<%= img[0] %>" alt="<%= place.getPlace_name() %>" class="carousel-image">
                                 <div class="image-overlay"></div>
                             </div>
@@ -72,13 +70,19 @@
                                             String reviewText = Optional.ofNullable(currentReview.get("review_content")).orElse("리뷰 내용 없음");
                                         %>
                                         <p class="fst-italic mb-2 text-secondary">“<%= reviewText.length() > 100 ? reviewText.substring(0, 100) + "..." : reviewText %>”</p>
-                                        <small class="text-muted">by <%= reviewAuthor %>님</small>
+                                        <div class="d-flex justify-content-between align-items-end mt-2">
+                                            <small class="text-muted">by <%= reviewAuthor %>님</small>
+                                            <a href="index.jsp?main=place/detailPlace.jsp&place_num=<%= place.getPlace_num() %>"
+                                               class="btn btn-outline-primary btn-sm">자세히 보기</a>
+                                        </div>
                                         <% } else { %>
                                         <p class="fst-italic mb-2 text-secondary">“아직 등록된 리뷰가 없습니다. 첫 리뷰를 작성해보세요!”</p>
-                                        <small class="text-muted">by Tripful</small>
+                                        <div class="d-flex justify-content-between align-items-end mt-2">
+                                            <small class="text-muted">by Tripful</small>
+                                            <a href="index.jsp?main=place/detailPlace.jsp&place_num=<%= place.getPlace_num() %>"
+                                               class="btn btn-outline-primary btn-sm">자세히 보기</a>
+                                        </div>
                                         <% } %>
-                                        <a href="index.jsp?main=place/detailPlace.jsp&place_num=<%= place.getPlace_num() %>"
-                                           class="btn btn-outline-primary btn-sm mt-3" style="float: right;">자세히 보기</a>
                                     </div>
                                 </div>
                             </div>
@@ -99,10 +103,12 @@
             <% } %>
         </div>
     </div>
-</div> <%-- 캐러셀과 소개글을 묶는 div 끝 --%>
+</div>
 
 
-<div class="container my-5 fade-in-left-on-scroll"> <%-- 핫플레이스 전체를 묶는 div --%>
+
+
+<div class="container my-5 fade-in-left-on-scroll">
     <h2 class="fw-semibold fs-4 text-center text-primary mb-4">🔥 핫플레이스 TOP 5 🌟</h2>
     <% if (hotPlaceList != null && !hotPlaceList.isEmpty()) { %>
     <% for (int i = 0; i < hotPlaceList.size(); i++) {
@@ -116,7 +122,9 @@
             <div class="card shadow-sm rounded-4 overflow-hidden hot-place-card">
                 <div class="row g-0">
                     <div class="col-md-5">
-                        <img src="<%= hotPlaceImg[0] %>" class="img-fluid rounded-start h-100 object-fit-cover" alt="<%= hotPlace.getPlace_name() %>" style="max-height: 250px;">
+                        <div class="hot-place-image-container">
+                            <img src="<%= hotPlaceImg[0] %>" class="hot-place-image rounded-start" alt="<%= hotPlace.getPlace_name() %>">
+                        </div>
                     </div>
                     <div class="col-md-7">
                         <div class="card-body d-flex flex-column justify-content-between">
@@ -142,10 +150,9 @@
         </div>
     </div>
     <% } %>
-</div> <%-- 핫플레이스 전체를 묶는 div 끝 --%>
+</div>
 
-
-<div class="container my-5 fade-in-left-on-scroll"> <%-- **여기에 fade-in-left-on-scroll 클래스 추가** --%>
+<div class="container my-5 fade-in-left-on-scroll">
     <div class="bg-white p-4 rounded-3 shadow-sm">
         <h5 class="fw-bold mb-3 text-primary">✍ 최신 여행자 리뷰</h5>
         <% if (overallLatestReviewList != null && !overallLatestReviewList.isEmpty()) {
@@ -241,114 +248,123 @@
     </div>
 </div>
 
+<style>
+    /* 캐러셀 이미지 컨테이너 스타일 */
+    .carousel-image-container {
+        flex: 0 0 40%;
+        position: relative;
+        height: 450px;
+        overflow: hidden;
+    }
+
+    /* 캐러셀 이미지 스타일 */
+    .carousel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(90%);
+        display: block;
+    }
+
+    /* 이미지 오버레이 스타일 */
+    .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.25);
+    }
+
+    /* 리뷰 카드 위치 조정 */
+    .carousel-review-card {
+        /* top: 270px;  이전 top 속성 제거 */
+        bottom: 1rem; /* 하단에서 1rem 위로 */
+        left: 5%;
+        width: 90%;
+        /* padding-bottom: 3.5rem; /* 버튼 공간 확보 */
+        transform: translateY(0); /* 초기 transform 제거 */
+    }
+
+    /* 핫플레이스 이미지 컨테이너 스타일 */
+    .hot-place-image-container {
+        max-height: 250px;
+        overflow: hidden;
+        border-radius: var(--bs-border-radius) 0 0 var(--bs-border-radius);
+    }
+
+    /* 핫플레이스 이미지 스타일 */
+    .hot-place-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+
+    /* 미디어 쿼리를 이용한 반응형 디자인 */
+    @media (max-width: 767.98px) {
+        .card.flex-md-row {
+            flex-direction: column !important;
+        }
+        .carousel-image-container {
+            height: 250px;
+            flex: 0 0 100%;
+        }
+        .carousel-review-card {
+            position: static !important;
+            width: 100% !important;
+            margin-top: 1rem !important;
+            padding-bottom: 1rem !important; /* 모바일에서 padding-bottom 초기화 */
+        }
+        .hot-place-image-container {
+            max-height: 200px;
+            border-radius: var(--bs-border-radius) var(--bs-border-radius) 0 0;
+        }
+    }
+</style>
+
 <script>
-
     document.addEventListener("DOMContentLoaded", () => {
-
-// hero-content에서 animate-target 클래스가 제거되었으므로, 이 스크립트는 더 이상 필요 없습니다.
-
-// const heroContent = document.querySelector('.hero-content');
-
-// heroContent.classList.add('animate__animated', 'animate__fadeInDown');
-
-// heroContent.style.visibility = 'visible';
-
-// heroContent.addEventListener('animationend', () => {
-
-// heroContent.classList.remove('animate__animated', 'animate__fadeInDown');
-
-// }, { once: true });
-
-
-
-// 기존 animate-target 처리 (hero-content 제외)
-
-// hero-content에 animate-target이 없으므로, 이 셀렉터는 이제 hero-content를 포함하지 않습니다.
-
         const existingAnimateTargets = document.querySelectorAll('.animate-target');
-
         const existingObserver = new IntersectionObserver((entries) => {
-
             entries.forEach(entry => {
-
                 if (entry.isIntersecting) {
-
                     const el = entry.target;
-
                     el.style.visibility = 'visible';
-
                     el.classList.add('animate__animated', 'animate__fadeInUp');
-
                     el.addEventListener('animationend', () => {
-
                         el.classList.remove('animate__animated', 'animate__fadeInUp');
-
                     }, { once: true });
-
-                    existingObserver.unobserve(el); // 한 번 애니메이션 후 관찰 중단
-
+                    existingObserver.unobserve(el);
                 }
-
             });
-
-        }, { threshold: 0.2 }); // 애니메이션이 더 일찍 시작되도록 임계값 조정
-
-
+        }, { threshold: 0.2 });
 
         existingAnimateTargets.forEach(el => existingObserver.observe(el));
 
-
-
-// 캐러셀과 소개글을 묶는 새로운 애니메이션 처리
-
         const fadeInLeftContainerTargets = document.querySelectorAll('.fade-in-left-on-scroll-container');
-
         const fadeInLeftContainerObserver = new IntersectionObserver((entries) => {
-
             entries.forEach(entry => {
-
                 if (entry.isIntersecting) {
-
                     entry.target.classList.add('is-visible');
-
-                    fadeInLeftContainerObserver.unobserve(entry.target); // 한 번 애니메이션 후 관찰 중단
-
+                    fadeInLeftContainerObserver.unobserve(entry.target);
                 }
-
             });
-
-        }, { threshold: 0.1 }); // 임계값 조정
-
-
+        }, { threshold: 0.1 });
 
         fadeInLeftContainerTargets.forEach(el => fadeInLeftContainerObserver.observe(el));
 
-
-
-// 핫플레이스 전체를 묶는 애니메이션 처리 (기존 클래스 이름 사용)
-
         const fadeInLeftTargets = document.querySelectorAll('.fade-in-left-on-scroll');
-
         const fadeInLeftObserver = new IntersectionObserver((entries) => {
-
             entries.forEach(entry => {
-
                 if (entry.isIntersecting) {
-
                     entry.target.classList.add('is-visible');
-
-                    fadeInLeftObserver.unobserve(entry.target); // 한 번 애니메이션 후 관찰 중단
-
+                    fadeInLeftObserver.unobserve(entry.target);
                 }
-
             });
-
-        }, { threshold: 0.1 }); // 임계값 조정
-
-
+        }, { threshold: 0.1 });
 
         fadeInLeftTargets.forEach(el => fadeInLeftObserver.observe(el));
-
     });
-
 </script>
