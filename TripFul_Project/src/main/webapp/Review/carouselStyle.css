@@ -120,6 +120,7 @@ div.img-con img.photo {
     white-space: pre-wrap; /* 공백 및 줄바꿈 유지 */
     max-height: 200px; 
     overflow: auto; /* 넘치는 부분 숨김 */
+     pointer-events: all; 
 }
 
 

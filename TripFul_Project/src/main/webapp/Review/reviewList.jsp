@@ -335,8 +335,8 @@ function getStarClass(star) {
 </div>
 		<div >
 			<label class="radio-label">
-				<input type="radio" class="sort" name="sort" value="latest">
-				<i class="bi bi-check-circle"></i>최신순
+				<input type="radio" class="sort" name="sort" value="latest" checked="checked">
+				<i class="bi bi-check-circle-fill"></i>최신순
 			</label>
 			<label class="radio-label" >
 				<input type="radio" class="sort" name="sort" value="likes">
