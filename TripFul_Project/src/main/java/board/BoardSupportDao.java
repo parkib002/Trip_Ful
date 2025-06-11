@@ -152,7 +152,9 @@ public class BoardSupportDao {
             db.dbClose(pstmt, conn);
         }
     }
-
+    
+    
+    //idx기반으로 하나의 데이터 가져오기 삭제,수정
     public BoardSupportDto getData(String idx) {
         BoardSupportDto dto = null;
         String sql = "select * from tripful_qna where qna_idx=?";
@@ -186,6 +188,50 @@ public class BoardSupportDao {
             db.dbClose(rs, pstmt, conn);
         }
         return dto;
+    }
+    
+    //id기반으로 전체 데이터 가져오기 
+    public List<BoardSupportDto> getAllDataForMyPage(String writer) {
+    	List<BoardSupportDto> list = new ArrayList<BoardSupportDto>();
+    	
+        String sql = "SELECT q.*, " +
+                "EXISTS (SELECT 1 FROM tripful_qna r WHERE r.regroup = q.regroup AND r.relevel > 0) as answered_status " +
+                "FROM tripful_qna q " +
+                "WHERE q.qna_writer = ? ORDER BY q.regroup DESC, q.restep ASC";
+        Connection conn = db.getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, writer);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+            	BoardSupportDto dto=new BoardSupportDto();
+            	
+                dto.setQna_idx(rs.getString("qna_idx"));
+                dto.setQna_title(rs.getString("qna_title"));
+                dto.setQna_content(rs.getString("qna_content"));
+                dto.setQna_img(rs.getString("qna_img"));
+                dto.setQna_writer(rs.getString("qna_writer"));
+                dto.setQna_private(rs.getString("qna_private"));
+                dto.setQna_readcount(rs.getInt("qna_readcount"));
+                dto.setQna_writeday(rs.getTimestamp("qna_writeday"));
+                dto.setQna_category(rs.getString("qna_category"));
+                dto.setRegroup(rs.getInt("regroup"));
+                dto.setRestep(rs.getInt("restep"));
+                dto.setRelevel(rs.getInt("relevel"));
+                dto.setAnswered(rs.getBoolean("answered_status"));
+                
+                list.add(dto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            db.dbClose(rs, pstmt, conn);
+        }
+        return list;
     }
 
     public void updateReadCount(String idx) {

@@ -45,8 +45,7 @@
                 for (int i = 0; i < placeList.size(); i++) {
                     PlaceDto place = placeList.get(i);
                     String activeClass = (i == 0) ? "active" : "";
-                    // DAO는 그대로 사용하고, place_num을 String으로 변환하여 전달
-                    HashMap<String, String> currentReview = reviewDao.getLatestReviewForPlace(String.valueOf(place.getPlace_num()));
+                    HashMap<String, String> currentReview = reviewDao.getLatestReviewForPlace(place.getPlace_name());
                     String[] img = place.getPlace_img().split(",");
                     String content = place.getPlace_content();
                     String displayContent = content.length() > 300 ? content.substring(0, 300) + "..." : content;
@@ -66,11 +65,9 @@
                                     <p class="text-dark"><%= displayContent %></p>
                                     <div class="bg-light p-3 mt-4 rounded-4 shadow-sm border-start border-5 border-info position-absolute w-90 carousel-review-card">
                                         <h6 class="fw-bold mb-2 text-dark"><%= place.getPlace_name() %>에 대한 여행자의 리뷰</h6>
-                                        <%
-                                            // currentReview가 null이 아니고, 비어있지 않은지 한 번 더 확인합니다.
-                                            if (currentReview != null && !currentReview.isEmpty()) {
-                                                String reviewAuthor = Optional.ofNullable(currentReview.get("author")).orElse("익명");
-                                                String reviewText = Optional.ofNullable(currentReview.get("text")).orElse("리뷰 내용 없음");
+                                        <% if (currentReview != null) {
+                                            String reviewAuthor = Optional.ofNullable(currentReview.get("review_id")).orElse("익명");
+                                            String reviewText = Optional.ofNullable(currentReview.get("review_content")).orElse("리뷰 내용 없음");
                                         %>
                                         <p class="fst-italic mb-2 text-secondary">“<%= reviewText.length() > 100 ? reviewText.substring(0, 100) + "..." : reviewText %>”</p>
                                         <div class="d-flex justify-content-between align-items-end mt-2">
@@ -107,6 +104,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 <div class="container my-5 fade-in-left-on-scroll">
     <h2 class="fw-semibold fs-4 text-center text-primary mb-4">🔥 핫플레이스 TOP 5 🌟</h2>
@@ -163,7 +163,7 @@
                 String text = Optional.ofNullable(review.get("text")).orElse("리뷰 내용 없음");
                 String date = Optional.ofNullable(review.get("date")).orElse("").substring(0, 10);
                 String placeNum = review.get("place_num");
-                String placeName = reviewDao.getPlaceName(placeNum); // PlaceName을 가져오는 메서드는 place_num 기반으로 작동해야 합니다.
+                String placeName = reviewDao.getPlaceName(placeNum);
                 double rating = 0.0;
                 try {
                     rating = Double.parseDouble(review.get("rating"));
@@ -290,7 +290,7 @@
     .hot-place-image-container {
         max-height: 250px;
         overflow: hidden;
-
+        border-radius: var(--bs-border-radius) 0 0 var(--bs-border-radius);
     }
 
     /* 핫플레이스 이미지 스타일 */
@@ -319,7 +319,7 @@
         }
         .hot-place-image-container {
             max-height: 200px;
-
+            border-radius: var(--bs-border-radius) var(--bs-border-radius) 0 0;
         }
     }
 </style>
