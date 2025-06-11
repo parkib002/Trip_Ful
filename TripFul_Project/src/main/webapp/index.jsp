@@ -9,13 +9,11 @@
     <link rel="stylesheet" href="css/pagination.css">
     <link rel="stylesheet" href="css/boardListStyle.css">
     <link rel="stylesheet" href="css/noticeStyle.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/style.css">  
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/hero.css">
     <link rel="stylesheet" href="css/carousel.css">
     <link rel="stylesheet" href="css/indicators.css">
-    <link rel="stylesheet" href="css/card.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/misc.css">
 

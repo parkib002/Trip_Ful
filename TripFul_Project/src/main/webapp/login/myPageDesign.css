@@ -141,7 +141,8 @@ body {
 	background-color: #F0F4F8;
 }
 
-.MyInfo, .MyReview, .WishList {
+.MyInfo, .MyReview, .WishList,
+.MyQuestion {
 	border: 2px black solid;
 	box-shadow: gray 10px 10px 10px;
 	border-radius: 50px;
@@ -151,7 +152,8 @@ body {
 	font-family: 'Nanum Pen Script';
 }
 
-.MyInfo>h1, .MyReview>h1, .WishList>h1 {
+.MyInfo>h1, .MyReview>h1, .WishList>h1,
+.MyQuestion>h1 {
 	font-weight: bold;
 }
 
