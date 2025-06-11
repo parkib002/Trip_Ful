@@ -46,6 +46,7 @@ String id = (String)session.getAttribute("id");
 
 BoardSupportDao dao = new BoardSupportDao();
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+List<BoardSupportDto> mypagelist=dao.getAllDataForMyPage(id);
 
 // 답변 상태 필터 값 가져오기
 String filter = request.getParameter("filter");
