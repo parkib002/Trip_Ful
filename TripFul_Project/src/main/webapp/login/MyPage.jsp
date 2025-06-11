@@ -162,10 +162,6 @@
 	// myPage.jsp의 <script> 태그 안에 추가
 	let allQnaList = []; // 서버에서 가져온 모든 Q&A 데이터를 저장할 배열
 	
-	$(function(){
-		loadMyQuestions();
-		displayMyList(allQnaList);
-	})
 	
 	// 내 질문 (Q&A)을 로드하고 표시하는 함수
 	function loadMyQuestions() {
@@ -253,6 +249,9 @@
     }
     
     $(function() {
+    	
+    	loadMyQuestions();
+		displayMyList(allQnaList);
         
         $('.side-bar ul ul a').on('click', function(e) {
             // data-target 속성이 있는 링크에만 작동
