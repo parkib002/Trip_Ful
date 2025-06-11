@@ -172,7 +172,7 @@ public class PlaceDao {
 
 	public PlaceDto getPlaceData(String num)
 	{
-		PlaceDto dto=new PlaceDto();
+		PlaceDto dto=null;
 
 		Connection conn=db.getConnection();
 		PreparedStatement pstmt=null;
@@ -189,6 +189,8 @@ public class PlaceDao {
 
 			if(rs.next())
 			{
+				dto=new PlaceDto();
+				
 				dto.setContinent_name(rs.getString("continent_name"));
 				dto.setCountry_name(rs.getString("country_name"));
 				dto.setPlace_num(rs.getString("place_num"));
@@ -738,9 +740,9 @@ public class PlaceDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 
 		return list;
 	}
-
 
 }

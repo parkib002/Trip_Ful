@@ -248,6 +248,22 @@ https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js
             }]
         };
         myChart.setOption(option);
+        
+        // 👉 클릭 이벤트 추가
+        myChart.on('click', function (params) {
+        	
+            if (params.componentType === 'series') {
+                // x축 항목 (예: 관광지 이름)
+                let xValue = params.name;
+                // y축 값 (예: 방문자 수)
+                let yValue = params.value;
+
+                // 원하는 동작 수행
+                console.log("클릭한 항목:", xValue, "값:", yValue);
+                // 예: 상세 페이지로 이동
+                // location.href = '/detail.jsp?place=' + encodeURIComponent(xValue);
+            }
+        });
     }
   
     </script>
