@@ -290,9 +290,9 @@ function initMap() {
 <div class="container">
         <h1 class="place-title" align="center" id="preview-name"><%=name %></h1>
         <div class="category-views d-flex justify-content-between align-items-center mb-2">
-    	<p class="category m-0" id="preview-tag">카테고리: <%=tag %></p>
-   	 	<p class="views m-0 count"></p>
-   	 	<p class="views m-0">별점: 없음</p>
+    	<p class="category m-0" id="preview-tag">🏷️카테고리: <%=tag %></p>
+   	 	<p class="views m-0 count">👁조회수: 0</p>
+   	 	<p class="views m-0">⭐별점: 없음</p>
 <!-- 좋아요 아이콘과 좋아요 수 -->
 <div class="d-flex align-items-center gap-1">
   <img id="likeIcon" src="../image/places/white_heart.png" style="width: 25px; height: 25px; cursor: pointer;" alt="좋아요">

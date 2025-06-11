@@ -252,8 +252,8 @@
 
 <div class="d-flex justify-content-center mb-3" style="gap:10px; align-items:center;">
   <input id="autocomplete" type="text" class="form-control" placeholder="추가할 관광지를 검색하세요" style="max-width: 300px;" />
-  <button type="button" class="btn btn-primary" onclick="searchPlace()">검색</button>
-  <button type="button" class="btn btn-success" onclick="savePlace()">추가</button>
+  <button type="button" class="btn btn-outline-primary" onclick="searchPlace()">검색</button>
+  <button type="button" class="btn btn-outline-success" onclick="savePlace()">추가</button>
 </div>
 
 <div id="map" style="height: 400px; width: 100%; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;"></div>
@@ -307,8 +307,9 @@
 <input type="hidden" id="input-content" name="preview_content">
 
       <div class="d-flex justify-content-center gap-3 mt-3">
-  <button type="submit" class="btn btn-primary" style="width: 300px;">추가</button>
-  <button type="button" class="btn btn-secondary" style="width: 300px;" id="btnPreview">미리보기</button>
+  <button type="submit" class="btn btn-outline-primary" style="width: 300px;">추가</button>
+  <button type="button" class="btn btn-outline-info" style="width: 300px;" id="btnPreview">미리보기</button>
+  <button type="button" class="btn btn-outline-warning" style="width: 300px;" onclick="history.back()">뒤로가기</button>
 </div>
     </div>
   </form>

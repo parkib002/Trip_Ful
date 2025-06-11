@@ -45,7 +45,7 @@
         .container {
             padding: 2rem;
             max-width: 1000px;
-            margin: auto;
+            margin-top: -100px; !important;
         }
 
         .selection-buttons,
@@ -233,7 +233,7 @@
 </head>
 <body>
 
-  <header>
+  <header style="margin-top: -50px; margin-bottom: 70px;">
     <h1>관광지 선택</h1>
   </header>
 
