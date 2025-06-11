@@ -213,7 +213,7 @@ public class ReportDao {
 		}		
 	}
 	
-	//report_idx 구하기
+	//멤버아이디와 리뷰인덱스 값이 일치한 report_idx 구하기
 	public String getReportIdx(String member_id,String review_idx)
 	{
 		String report_idx="";
@@ -271,7 +271,7 @@ public class ReportDao {
 		try {
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setInt(1, dto.getLike());
-			pstmt.setString(2, dto.getReport_idx());
+			pstmt.setString(2, dto.getReport_idx());			
 			pstmt.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -303,6 +303,31 @@ public class ReportDao {
 			db.dbClose(pstmt, conn);
 		}
 		
+	}
+	
+	//모든 report_idx 값 가져오기
+	public String getAllReportIdx()
+	{
+		String report_idx="";
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql="select report_idx from tripful_review_report";
+		try {
+			pstmt=conn.prepareStatement(sql);			
+			rs=pstmt.executeQuery();
+			while(rs.next())
+			{
+				report_idx=rs.getString("report_idx");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
+		return report_idx;
 	}
 	
 	

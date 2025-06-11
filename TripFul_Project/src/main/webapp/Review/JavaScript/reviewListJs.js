@@ -107,12 +107,16 @@ $(document).on("click",".likedicon",function(){
 						//console.log(r.likeCnt);
 						if(like=="1")
 							{
+								likeIcon.removeClass("bi-heart");
+								likeIcon.addClass("bi-heart-fill");
 								likeIcon.css("color","red");
 							}else{
+								likeIcon.removeClass("bi-heart-fill");
+								likeIcon.addClass("bi-heart");								
 								likeIcon.css("color","black");
 							}
 						
-						$(".likedcnt").text(r.likeCnt);
+						likeIcon.siblings(".likedcnt").text(r.likeCnt);
 					}
 				});
 		}

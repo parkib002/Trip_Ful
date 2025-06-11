@@ -172,7 +172,7 @@ public class PlaceDao {
 
 	public PlaceDto getPlaceData(String num)
 	{
-		PlaceDto dto=new PlaceDto();
+		PlaceDto dto=null;
 
 		Connection conn=db.getConnection();
 		PreparedStatement pstmt=null;
@@ -189,6 +189,8 @@ public class PlaceDao {
 
 			if(rs.next())
 			{
+				dto=new PlaceDto();
+				
 				dto.setContinent_name(rs.getString("continent_name"));
 				dto.setCountry_name(rs.getString("country_name"));
 				dto.setPlace_num(rs.getString("place_num"));
@@ -671,6 +673,76 @@ public class PlaceDao {
 			System.err.println("좋아요 기준 핫플레이스 조회 중 오류 발생: " + e.getMessage());
 		}
 		return hotPlaceList;
+	}
+	
+	public List<PlaceDto> getCountContinent(String sort, String continent_name) {
+		
+		List<PlaceDto> list = new Vector<>();
+		
+		String continent = "aisa"; // 기본: 조회순 내림차순
+		if ("aisa".equals(continent)) {
+			continent = "asia";
+		} else if ("europe".equals(continent)) {
+			continent = "europe";
+		} else if ("namerica".equals(continent)) {
+			continent = "namerica";
+		} else if ("samerica".equals(continent)) {
+			continent = "samerica";
+		}
+
+		String orderBy = "p.place_count"; // 기본: 조회순 내림차순
+		if ("rating".equals(sort)) {
+			orderBy = "avg_rating";
+		} else if ("likes".equals(sort)) {
+			orderBy = "p.place_like";
+		} else if ("name".equals(sort)) {
+			orderBy = "p.place_name ASC";
+		} else if ("views".equals(sort)) {
+			orderBy = "p.place_count";
+		}
+
+		System.out.println("getCountPlace orderBy: " + orderBy);  // 여기 꼭 찍어보기
+
+		String sql =
+				"SELECT p.*, avg_rating_table.avg_rating " +
+						"FROM tripful_place p " +
+						"LEFT JOIN ( " +
+						"  SELECT place_num, ROUND(AVG(review_star), 1) AS avg_rating " +
+						"  FROM tripful_review " +
+						"  GROUP BY place_num " +
+						") avg_rating_table ON p.place_num = avg_rating_table.place_num " +
+						"WHERE p.continent_name = ? " +
+						"ORDER BY " + orderBy;
+
+		try (Connection conn = db.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			
+			 pstmt.setString(1, continent_name); // ✅ 바인딩
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					PlaceDto dto = new PlaceDto();
+
+					// 여기에 PlaceDto의 모든 필드를 매핑하도록 추가해야 합니다.
+					// 현재는 country_name, place_name, place_count, place_like, avg_rating만 매핑되어 있습니다.
+					// JSP에서 다른 정보 (이미지, 내용, 태그 등)가 필요하다면 추가해주세요.
+					dto.setPlace_num(rs.getString("place_num")); // JSP에서 상세 페이지 연결 시 필요
+					dto.setCountry_name(rs.getString("country_name"));
+					dto.setPlace_name(rs.getString("place_name"));
+					dto.setPlace_count(rs.getInt("place_count")); // 조회수
+					dto.setContinent_name(rs.getString("continent_name")); // 대륙명
+					dto.setPlace_like(rs.getInt("place_like"));   // 좋아요
+					dto.setAvg_rating(rs.getDouble("avg_rating")); // 별점
+
+					list.add(dto);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+
+		return list;
 	}
 
 }

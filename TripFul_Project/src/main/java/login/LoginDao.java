@@ -542,4 +542,77 @@ public class LoginDao {
 			db.dbClose(pstmt, conn);
 		}
 	}
-}
+	
+	// 오늘 회원가입한 사람의 수를 얻는 메서드
+	public int getTodayNewMembersCount() {
+			int count = 0;
+			Connection conn = db.getConnection();
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			// MySQL의 CURDATE() 함수를 사용하여 현재 날짜와 joindate의 날짜 부분만 비교
+			String sql = "SELECT COUNT(*) FROM tripful_member WHERE DATE(joindate) = CURDATE()";
+
+			try {
+				pstmt = conn.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					count = rs.getInt(1); // 첫 번째 컬럼의 값을 int로 가져옴
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				db.dbClose(rs, pstmt, conn);
+			}
+			return count;
+		}
+
+		// 이번 주에 회원가입한 사람의 수를 얻는 메서드 (월요일 기준)
+		public int getThisWeekNewMembersCount() {
+			int count = 0;
+			Connection conn = db.getConnection();
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			// MySQL의 WEEK() 함수를 사용하여 주차를 비교
+			// WEEK(date, 1)은 월요일을 한 주의 시작으로 간주 (ISO 8601 표준)
+			// YEAR() 함수도 함께 사용하여 연도가 바뀌는 경우를 정확히 처리
+			String sql = "SELECT COUNT(*) FROM tripful_member WHERE WEEK(joindate, 1) = WEEK(CURDATE(), 1) AND YEAR(joindate) = YEAR(CURDATE())";
+
+			try {
+				pstmt = conn.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					count = rs.getInt(1);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				db.dbClose(rs, pstmt, conn);
+			}
+			return count;
+		}
+
+		// 이번 달에 회원가입한 사람의 수를 얻는 메서드
+		public int getThisMonthNewMembersCount() {
+			int count = 0;
+			Connection conn = db.getConnection();
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			// MySQL의 MONTH() 함수를 사용하여 월을 비교
+			// YEAR() 함수도 함께 사용하여 연도가 바뀌는 경우를 정확히 처리
+			String sql = "SELECT COUNT(*) FROM tripful_member WHERE MONTH(joindate) = MONTH(CURDATE()) AND YEAR(joindate) = YEAR(CURDATE())";
+
+			try {
+				pstmt = conn.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					count = rs.getInt(1);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				db.dbClose(rs, pstmt, conn);
+			}
+			return count;
+		}
+	}
+

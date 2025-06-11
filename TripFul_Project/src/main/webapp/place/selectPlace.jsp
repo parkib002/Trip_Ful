@@ -4,6 +4,8 @@
 <html lang="ko">
 <%
   	String loginok=(String)session.getAttribute("loginok");
+
+
   %>
 <head>
   <meta charset="UTF-8">
@@ -17,258 +19,221 @@
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e9f5ff;
+            color: #212529;
+        }
 
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-    header {
-      background-color: #2196f3;
-      padding: 1rem;
-      color: white;
-      text-align: center;
-    }
-    .container {
-      padding: 2rem;
-      max-width: 1000px;
-      margin: auto;
-    }
-    .selection-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      
-    }
-    .selection-buttons button {
-      padding: 0.75rem 1.5rem;
-      background-color: #fff;
-      border: 2px solid #2196f3;
-      color: #2196f3;
-      cursor: pointer;
-      border-radius: 0.5rem;
-      transition: all 0.3s ease;
-    }
-    .selection-buttons button:hover {
-      background-color: #2196f3;
-      color: white;
-    }
-    .places {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-    
-    .views, .likes {
-  font-size: 0.2em;
-  color: #555;
-  margin: 2px 0 0 0;
-}
-.place-card {
-  padding: 0;
-  margin: 0;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; /* 위쪽 정렬 */
-  height: 230px;
-}
-.place-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end; /* 맨 아래 정렬 */
-  height: 230px;
-}
-.image-wrapper {
-  height: 170px;
-  overflow: hidden;
-  border-bottom: 0px solid #ccc;
-  margin-bottom: 0px;
-}
+        header {
+            background-color: transparent;
+            color: #212529;
+            text-align: center;
+            padding: 2rem 1rem 1rem;
+            margin-bottom: 1.5rem;
+        }
 
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
 
-.image-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  border-radius: 0.5rem 0.5rem 0 0;
-}
+        .container {
+            padding: 2rem;
+            max-width: 1000px;
+            margin-top: -100px; !important;
+        }
 
-.allshow{
-	margin: 10px 10px;
-}
+        .selection-buttons,
+        .continent-row,
+        .country-button-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
 
-.place-card .caption {
-  padding: 2px 2px; /* 적당히 위아래 패딩 줄임 */
-  text-align: center;
-  height: 25px; /* 높이 고정 제거 */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-   .place-card img {
- 	width: 100%;
-    height: 200px;
-    object-fit: cover;
-    transition: transform 0.3s ease; /* 부드러운 애니메이션 */
-	}
-	.top-button-row, .continent-row {
-   display: flex;
-   flex-wrap: wrap;
-   gap: 1rem;
-   justify-content: center;
-   margin-bottom: 1rem;
-   }
+        .selection-buttons button,
+        .country-button-row button {
+            padding: 0.75rem 1.5rem;
+            background-color: #fff;
+            border: 2px solid #2196f3;
+            color: #2196f3;
+            cursor: pointer;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
 
-   .place-card:hover .image-wrapper img {
-  transform: scale(0.95);
-}
-   
+        .selection-buttons button:hover,
+        .country-button-row button:hover {
+            background-color: #2196f3;
+            color: white;
+        }
 
+        .country-button-row button.active {
+            background-color: #1976d2;
+            color: white;
+            font-weight: 500;
+        }
 
-.sort-dropdown {
-  padding: 0.75rem 1.5rem;
-  border: 2px solid #2196f3;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  color: #2196f3;
-  background-color: #fff;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
+        .sort-dropdown {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #2196f3;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            color: #2196f3;
+            background-color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-.sort-dropdown:focus {
-  outline: none; /* 기본 outline 제거 */
-  border-color: #2196f3; /* 테두리를 원래 색으로 고정 */
-  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2); /* 선택적으로 포커스 효과 */
-}
+        .sort-dropdown:focus {
+            outline: none;
+            border-color: #2196f3;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        }
 
-.sort-dropdown:hover {
-  background-color: #2196f3;
-  color: #fff;
-}
+        /*.sort-dropdown:hover {*/
+        /*    background-color: #2196f3;*/
+        /*    color: #fff;*/
+        /*}*/
 
-.caption, .rating {
-  margin: 0 !important;
-  padding: 0 !important;
-  line-height: 1.0;      /* 줄 높이 줄이기 */
-  font-size: 1rem;
-}
+        .places {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
 
-.rating{
-	font-size: 0.7rem !important;
-}
+        .place-card {
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 270px;
+            background: #fff;
+        }
 
-.place-card {
-  width: 200px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-}
+        .image-wrapper {
+            height: 210px;
+            overflow: hidden;
+        }
 
-.image-wrapper img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  display: block;
-}
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
 
-.text-container {
-  display: block !important;
-  padding: 0 3px 3px 3px !important;
-}
+        .place-card:hover .image-wrapper img {
+            transform: scale(0.95);
+        }
 
-.caption {
-  font-weight: 600;
-  font-size: 1.1em;
-  margin: 8px 10px 6px;
-  flex-grow: 0;
-  color: #333;
-  text-align: center;
-}
+        .text-container {
+            padding: 0 3px 3px 3px !important;
+        }
 
+        .caption {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin: 8px 10px 6px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #333;
+        }
 
-.info-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-}
+        .rating {
+            font-size: 0.7rem;
+            color: #f39c12;
+            margin: 2px 0;
+            text-align: center;
+        }
 
-.info-item.rating {
-  color: #f39c12; /* 골드 별색 */
-  font-weight: 700;
-}
+        .text-area {
+            background-color: #f9f9f9;
+            padding: 8px 10px;
+            border-top: 1px solid #ddd;
+            border-radius: 0 0 0.5rem 0.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #555;
+        }
 
-.info-item.no-rating {
-  color: #bbb;
-  font-style: italic;
-}
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
 
-.info-item.views {
-  color: #3498db; /* 파란색 */
-}
+        .info-item.rating {
+            color: #f39c12;
+            font-weight: 700;
+        }
 
-.info-item.likes {
-  color: #e74c3c; /* 빨강 */
-}
+        .info-item.no-rating {
+            color: #bbb;
+            font-style: italic;
+        }
 
-.text-area .icon {
-  font-size: 0.5em;  /* 아이콘만 작게 */
-  margin-right: 3px;
-}
+        .info-item.views {
+            color: #3498db;
+        }
 
-.rating {
-  color: #f39c12;
-  font-size: 0.9rem;
-  margin-top: 2px;
-  text-align: center;
-}
-.text-area {
-  background-color: #f9f9f9;
-  padding: 8px 10px;
-  border-top: 1px solid #ddd;
-  border-radius: 0 0 0.5rem 0.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+        .info-item.likes {
+            color: #e74c3c;
+        }
 
-.country-button-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center; /* 버튼들을 수평 중앙에 정렬 */
-  gap: 1rem; /* 버튼 간 간격 */
-}
-.place-card .text-area {
-  display: block; /* 또는 flex */
-  font-size: 0.85rem;
-  color: #555;
-}
+        .text-area .icon {
+            font-size: 0.5em;
+            margin-right: 3px;
+        }
 
-  </style>
+        .top-button-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .allshow {
+            margin: 10px 10px;
+        }
+
+        #selection-area h4 {
+            text-align: center;
+            color: #333;
+            font-weight: 500;
+            margin: 2rem 0 1rem;
+        }
+    </style>
 
 </head>
 <body>
 
-  <header>
+  <header style="margin-top: -50px; margin-bottom: 70px;">
     <h1>관광지 선택</h1>
   </header>
 
@@ -297,14 +262,36 @@
     <div class="lb-row lb-row-max-large lb-snap"> 
         <div class="lb-col lb-tiny-24 lb-mid-24"> 
             <div id="aws-world-map" class="m-map-dark m-gi-map">
-                <svg class="m-gi-map-svg" version="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 710" preserveAspectRatio="xMidYMid meet" role="img" focusable="false" aria-labelledby="m-gi-asset-title-aws-element-b7ba4e20-ac1f-45cd-97c4-09c619e1bf87">
+                <svg class="m-gi-map-svg"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 710" preserveAspectRatio="xMidYMid meet" role="img" focusable="false" aria-labelledby="m-gi-asset-title-aws-element-b7ba4e20-ac1f-45cd-97c4-09c619e1bf87">
                     <title id="m-gi-asset-title-aws-element-b7ba4e20-ac1f-45cd-97c4-09c619e1bf87">World Map</title>
                     <style>
-                        .m-gi-map-svg .m-gi-map-area { fill:#7d8998; transition:all .3s .2s; cursor: pointer; }
-                        .m-gi-map-svg .m-gi-map-area:hover, .m-gi-map-svg .m-gi-map-area:focus { fill:#9ba7b6; stroke:#fbfbfb; stroke-width:2px; paint-order: stroke; }
-                        /* 선택된 대륙 스타일 (JavaScript로 추가/제거) */
-                        .m-gi-map-svg .m-gi-map-area.selected-continent { fill: #ec7211; /* AWS 오렌지색 또는 원하는 색상 */ }
+                        /* 기본 지도 스타일 */
+                        .m-gi-map-svg .m-gi-map-area {
+                            fill: #b0bec5; /* 부드러운 블루그레이 */
+                            cursor: pointer;
+                            transition: fill 0.3s ease, stroke 0.3s ease;
+                        }
+
+                        /* 호버 및 포커스 */
+                        .m-gi-map-svg .m-gi-map-area:hover,
+                        .m-gi-map-svg .m-gi-map-area:focus {
+                            fill: #90a4ae; /* 살짝 진한 그레이블루 */
+                            stroke: #ffffff;
+                            stroke-width: 2.5px;
+                            paint-order: stroke;
+                            filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.15));
+                            outline: none;
+                        }
+
+                        /* 선택된 대륙 */
+                        .m-gi-map-svg .m-gi-map-area.selected-continent {
+                            fill: #1e88e5; /* 진한 블루 (명확하게 강조) */
+                            stroke: #ffffff;
+                            stroke-width: 3px;
+                            filter: drop-shadow(0 0 6px rgba(30, 136, 229, 0.5));
+                        }
                     </style>
+
                     <rect fill="transparent" x="0" y="0" width="100%" height="100%"></rect>
                     <path class="m-gi-map-area" data-id="na" data-continent-name="namerica" d="M427 385l-1-1 1 1zm0 1h-1 1zm-48-21v-1h-1v1h1zm-2-2l1 1v-3h-1v2h-1 1zm13 6l-1 1h1v-1zm-10-13l-2-1 2 1v2s0 1 0 0l1-1-1-1zm9 12l1 1-1-1zm-3-1l1 1v-1l-1-1v1zm-4-7h-1l2 1-1-1zm2 6h1-1zm-4-5h-1 1zm5 2v1h1l-1-1s0-1 0 0zm-9-7h-1l1 1 2-1h-2zm17 14h1-2 1zm0 2zm-2 2h1l1-1-1 1h-1zm42 24h1-1zM225 261h-1v2h1v1l-1-1v1l1-1v-2zm188 35v-1h-1l1 1zm-172-18l-1-1 1 1zm-5-4v-1 1zm-12-13h-1c0 1 1 1 0 0h1zm187 33l1 1-1-1zm21-4v-1c0-1 0 0 0 0h-1v-1h-1v1c0 1 0 0 0 0l-1 1s-1 0 0 0v-1h1v-1l1-2v-1c-2 0-2 2-3 3l-1 2 2 1h1l2-1zm-7-2h1-3l-2-1h-1v-2l-1 1v1l1 1 2 1v-1h1v1h1l1-1zm-184-10c-1 0 0 1 0 0 0 1 0 0 0 0zm-3-3l1 1c0-1-1-2-2-1h1zm189 2l-2-1-2-1-2-1h-3l2 1 1 1 1 1h5zm-191-4h-1l1 1v-1zm2 7h3v-1l-2-2s-3-1-2-2l-1-1-2-2h-3c-1-1-3-2-4-1v1h1v1h2v1h1l1 1s0 1 0 0l-1-1v1l1 1h2l-1 1h1l1 1 2-1-1 2 2 1zm216 3h-2l1-1v-1l-1 1-1 1h-1l1-1h-1l1-1 1-1h1v-1h-1c0 1 0 0 0 0l-1 1h-1l1-1h-2l2-1v-1h-2v-1h-1l-1 1h-1v-1c0 1 0 0 0 0h-2v-1l1-1h-2v-1 1l-2 1c1 0 0 0 0 0l1-1v-1l1-1 1-1 1-2h-1l1-1 1-1-1 1h-2l-1 1-1 1v1h-1l-1 2-1 2 1 1h-2l1 1v1l-1-1-1 1v1h-1v1h2l-2 1-1 1 1 1h8l1-1s0 1 0 0v2h2v-1h2l-1 1-1 1-2 1h1l2-1v-1l2-1-1 1 1-1 1-1v4l1-1v2h2v-2l1-2zm-227-15v-1 1zm-9-3zm8-1l1-1-1 1zm140-2l3 1h1l-1-1-2-1-1 1zm-148 3h-1l1-1c-1 0 0 0 0 0h-1v-1h-1l-1-1h1v-1h-2v1h1c-1 1 0 1 1 1l1 2h1zm4-4l-1-1h-1l1 1h1zm-2-3v-1l-1 1h1zm-6 3h1l1-2v-2l-1 1v1h-1c-1 0 0 0 0 0l1-1-1-1h-2v1l1 2 1 1h-1 1zm5-6l-1 1 1-1zm156-7l-1-1-1 2v-2 2l-1 1 1-1-1 1h1l1-1v1l1-1v-1zm0 1l1-1-1 1zm-1-26l-1-2-2 1v2l1 1 2-2zm-8-4l-1-1h-2v1h-1l-1 1-1 1 1 1h1l1-1 2-1 1-1zm12-1l1-1-1-1h-2l2 2zm2-3c0 1 1 2 2 1l-2-1zm-1-1v-1s-2 1 0 1zm-8 1v-1h-1l-1-1h-3l1-1-1-2h-2l-1-1-2-1h-2l-1-2-1 1-1-1v-2h-1l-2 3v5l-1 1-2 2h4c1 0 0 3 2 3l2-1 1-1 1-1v-1l1-1h2l1 1 1 1h1l3 1 1-1h1zm-10-11l-2-1h-1l1 1v1h2c-1 0-1 0 0 0h1s-2 0-1-1zm27-9h3l1-1-1-1h-3v2zm-4-3h-2l-1 1v4h3c2 0 3-1 2-3v-2h-2zm-9 0h-1v1l1-1zm12-1l-1-1v1l1 1v-1zm-12-3l-1 1 2-1v-1l-1 1zm7-2h-2v1c1 1 2-1 2-1zm-6 0l1-1v-1l-1 1-1 1h1zm-3-2h-4l1 1h1v1l1-1s2 0 1-1zm-50 3l-2-2h-2l-2-1v2l-1-1v1l-1 1-2 1v1h4v1h1l2 1h2l1-1h1l2-1h-1l-2-2zm112 83l1-1h1l2-1h2l1-1 2-1 1-1-1-1h1-2l1-1v-1l1-1-1-1-1-1h-1l-2 1-1-1h1l-1-2h-1l-1 1h-1l-2 1-2 1-1 1v-1h1l-1-1h1l2-1h2v-1h1l1-1h1l1-1h-2v-1h-1v1l-1-1c-1 0-1-2-2-1l-1 1h-1l2-1h-4 1v-3l-1 1v-1h-2v-1h-1c-1-1 0-1 1-1h-2l1-1h-1l-2-1h2l1 1 1-1v-1h-1l-1-1c1-1-1-1-2-1l2-1v-1h-1l-1-1h-1l-1 1 2-2h-3 1l1-1v-1h-1v-1h-2 2l-1-1h-1l1-1-1-1h-1v-1h-1v-1h-1v2s-2-1-2 1l2 1-1-1v1h-1l1 1h-1v1h-1v2l-1-2-1 2h-2l-1 1v-1l-1 1v-1c-1-1-1 0-1 1l-1 1h-1l2-1v-2l-1-1h-2l-1 1h-1v-1h1l1-1h-1l1-1h-1v-3h-3l3-1v-4 1h-1l-1-1h-3l-1-1c-2 0 0-1 0-1l-1-1-1 1v-1l-1-1-1 1 1-1-1-1-1-1h-2l-2 1h-4 1l-3-1-3-1c-1 1-2 1-2 3l2 2v1l-1 1-1 1h2l-1 1 1 1v2h1v1h-1l1 1-1-1-1 1v1s1 0 0 0v1l-1 1-1 1 1 1 3 2c2 1 2 4 2 6l-1 3-2 2-3 2h-2l-1 1v1l1 1 1 1c-1 0 0 0 0 0v4h1v4l-1 1 1 1h-3v1l1 2-2-2h-3l1-1-1-1-1-1-1-1h-1l1-1h-1v-1l-1-1v-4l-1-1 1-1v-3h-2l-3-1-2 1-1-1-1 1v-1h-1l-2-1-2-1-2-1-2-2-2-1-3-1-2-1h-3l-2 1h-2l1-2-1-3-1-1v-1h-3l-1-1h-1v-7h1v-1l1-1v-2c1 0 0 0 0 0h1v-1l1-1h1l-1-1h1c-1 0 0 0 0 0v-1h1l-1-1h1l1 1v-1c-1 0-1 0 0 0v-1h1v-1c-1 0 0 0 0 0h2l2-1 1-1-2-1h-1l-1-1-2 1 1-1-2-1h-2v-1l2 1h3l1 1h4v-1h1l-1-1h2l1 1v-1c1 1 3 0 4-1l3-4-4-1h-3l-1-2-3-1s-2 0-1 1l-2-1h6l1 1h1l1 1h1l1 1h2l2-2s3-2 1-2l-1-1v-1s-1 0 0 0h3l2 1 1 1v-1l2 1v-2l-1-1h-1v-1h-1v-1l2 1v1h1v1l1 1 1-1h2l1-2h2l1-2-1-2-1-1v-2l-1 1v-1c-1 0 0 0 0 0l-1-1h2l2-1-2-1 2-1-1-1h-2v-1h-2l2-1h-2l-3-1h-5v1l1 2 1 1-1 1h1l-1 1-1-1v2l-1 2-2 2v1l-1 1-1 1-1-1-2-2v-3c1 1 1 0 1-1l-1-2-1-1-2-1-2 2v2l-1 1-1-1v-2l-1-1-1-1 1-1h-2l1-1h-5l3-2h-2v-1h3l-1-1s0 1 0 0c-1 0 0 0 0 0l-1-1-1-1-1-1v-1l-1-2-2-1v-1h-1l-1-1h-2l-1 1-1 2h1v1l-1-1-1 1h-1v3h2v1h-1l-1 2 1 1 1 1h1l2 1h1l1 1h2l-1 1v-1l-1 1v1l-1 1h2s0-1 0 0l1 1-1 1-1 1-2 1h-1l-1 2v1l1 2-1 1h-2c0 1 2 1 1 2l-1-2v-1 1h2v-1h-1v-1h-1l-1-1 1-1v-1l1-2-2 1h-1l1-1h-1l-1-1h-2l-1 1h-1v1l1 1h3l-1 1c-1 1-2-1-3-1l-1-1 1 1-1 1h-2l-3-1-2 1h-3l-2-1-1-1h-3a2 2 0 0 1-1 0l-1-1h-1l-1-1v-1l-1-1-4 1h-3l-1 2v1h2v-1h2l1-1 1 1v-1l1-1 1 1h-1l-1 1c0 1 0 0 0 0l-1 1h-3v2l1 1v2h1s-1 0 0 0v1h-2l2 3-2-2-2-2h1v1h1v-3l-1-1v1l1 1h-2v-1h-1c0 1 0 0 0 0-1-2-2-1-3-1v-1h-1l-2 1-1-1-2 1h-8l-1-1h-2 1v-1l1-1h3l-1-1-1-1-3-1-2-1v1h-3l-3-1-2-1h-2l-3-1-3-2h-4l-1 1-1 1h-3l1-1-1-1v-2h-1l-1 1h1l-1 1-1 1v1l-2-1-2-2-2-2-2-1v1l1 1h-1l-1 1-1 1h-1l1-1-4 1-3 3v-1h-1c1 0 0 0 0 0h-1l-3 2v1h-1v1l-1-1 1-1 1-1h1l2-2h3l2-1 2-2h-1l-1 1-1-1-2 1h-1l-1 1-1 1h-2l-1 1h-2l-1 1v-2h-1v1h-2l-1 1h-1v1h1c-1 0-2 0-1 1h1l1 1-3-1h-2l-5-2-2-1-3-1h-4l-1-1h-1l-1-1h-2l-1-1h-1l-1 1h-3l-2-1h-6v-1h-3l-1-1h-1l-2 1-1-1h-2l-1 1h-2l1-1h-2v-1l-1-1h-3l-1 1-2-1-1-1h-1l-1 1h-1l1-1-1-1h-2l1-1-3 2-2 1h-1l-1 1h-2v-1l-1 1-1 1h1v1h-1v-1c-1-1-2 1-3 1l-2 1h-1 1-1l-2 1-1 2-1 1-1 2-3 1h-5l-1 3v-1 1h1l1 1h1l4 2 1 1 1 2 2 1h1l1-1h1l1 1v1c-1 0 0 0 0 0l1 1 1-1 1 1h1c1 1 0 1-1 1l-2-1h-1l-1-1-1-1v1l1 1 1 1h1l1 1-1-1h-1v1h-7v-2h-3l-1 1h-1v1h-3l-1 1h-1l-1 1h-1c-1 1 1 1 2 2h4-1v1h-2l2 1v1l3 1h7l-1-1 1 1 1 1v-1l2-1h2l1-1 1 1-1 1h-1l1 1v1l1 1c0 2-2 2-3 2h-2l-1 1-2 1h-1v-1h-2v1c-1-1-2 1-1 2v1h-2l-1 2-1 1h1c-1 1-2 0-1 1v1h1v1l1-1v1h1v1h3l2 1h-3v-1h-1l-1 1-1 1h1l1 1h1v1h1v1h1l2-1h2l-1-1c1 0 1-3 2-2l-1 2 1 1v4h1v1l-1 1h2l1-1h1l1-1v1h3l1 2 1-1v-1l1-1 1 1h-1l1 1 2-1 2-1-1 2-1 1c-1 1 0 1 1 1h-2v1l1 2h-2v1h-1l-1 2h-1l-1 1h-1l-2 2v1h-2c0-1 0 0 0 0h-1a1362 1362 0 0 0-2 0l-2 2-1 1h-1v1l1-1h2c0 1 0 0 0 0l2-1v-1h2c-1 0-2 1 0 1h1v-1h1a8 8 0 0 1 2-1v1l1-1h2l1-1s-1 0 0 0v-1l1-1s1 0 0 0h1l1-1 2-1 1-1v-1h2v-1l2-1h1v-1h2-1l1-1 1-1 1-1-1-1h-1v-1l1-1 1-1v1l1-1 1-1c1-1 0-1-1-1h1l1-1 1-1h1v-1l2-1 1-1h3l1-1-1 1h-1v1l2 1h1-3l-1-1-2 1-1 1v1l-1 2v2l1-1h1l-1 1h-1v2l1-1h2v-1h2v-1h1v-1 1l1-1h3v-1h1v-1h-2l1-1c1 0 0 0 0 0v-2h1l1-1v2h1l1-1s0 1 0 0h2l-1 1h1v1h2v1h2l1-1v2l2 1c-1 0 0 0 0 0h7l1-1v1c1 1 3 2 4 1h1l1-1 1 1-1 1v-1l-1 1 2 1 2 1 2 1 2 2 1 1 1-1h1l-1-1-1-1h-1v-1l2 1c1 1 1 0 1-1v1h1l-1 1h1v1h1l1 1v-2l-1-2v-1l1 2v1l1 1h1v1l2-1-1 1 1 1s0 1 0 0h2l-1 1 1 1-1-1v3h2v1h1v1l1 1h1l1 1h-1l-1 1v1l1-1 2-1v1l1 1v1c0 1 0 0 0 0l-1 1 1 1h1l1-1v-3 3l1-2 1 1-2 1v1l-1 1v2h1v1l-1 1 2 1 1 1 1-1v-1l2-1-1 1 1 1 2 1-2-1h-1v-1h-1v1l1 1 1 1h1v2h1-1v1h-1l1 2 1-2h1l1-2v1l1 1h-1l-1-1-1 2v2l1-1-1 2 2 1h2v1s-1 0 0 0h2l-2 1h2l1-1 1 1 1-2v1l-1 1 1 1v1l2 1 1-1v-1 1l1 1-1 1h1l1-1v1h1l-1 1v1h1l1 2h-1 1v1l1 1h-1v3h-2 1v-2h1v-1l-1 1-1 1h1-1l1-2v-1h-4l-2-1v2l1 1 1 3h1l-1 1h1v1l-1-1v1h2l1 1-1-1h-2l1 2v1l-1 3v5l-1 1v3l1 1v4l-1 2 1 1 1 2v2l1 1 1 1 1 1-1-1v1l2 1v-1h3-3l1 1v1l-1-1v2l2 2c-1 1 0 1 1 2l1 1 1 1v2l1 1h1l2 1h1l1 1h1l1 1 1 1 1 1 1 1v1l1 1v1l1 1v1l1 1v2h1v1l1 1 1 1 1 1 2 1v3s-1 0 0 0h-3l2 2 1 1h1v1h1l1-1 2 2 1 3v1l1 1v1h1l1 1 1 1 1 1 2 2 1-1v-1l-1-1a5 5 0 0 0-1-1c-1 0 0 0 0 0h-1l-1-1v-2l-1-1v-1l-1-2v-1h-1s1 1 0 0l-1-1v-2h-1l-1-1v-2h-1v-1h-1l-3-2-1-3v-4l2 1h1l1 1h1v1l1 2 1 2v1l1 1 1 2h1l1 1 2 1v2l1 1h1v1h1l1 1c-1 1-1 3 1 2l-1 1h2l1 1v1l1 1 3 2 1 2 2 2 1 1v2l1 1v1l-1 1h1l-1 1v1l1 2 3 1 2 2 2 1 2 1h1l1 1h1l2 1 3 2h3l1 1 1 1h2l2 1 2-1 2-1h1v-1 1h1l2 1-2-1 7 5 3 2h2l2 1 2 1h5l1 1h-1l1 1 1 1 1 2 2 1v1l1 1-1 1 1 1c1 1 1 2 2 1v-1l-1-1 2 2v1h2l1 1v1h-1l2 1-1-1 1 1 1 1 1-1h1l1 1h1v1h1l1-1v2h2l1-1-2-1 1-1 1-1 1-1h2l1 1 1 1 1 1-1-1-1 1 2 2 1-1h1v-3l-3-2h-2l-1-1h-1l-1 1h-1l-1 1-1 1h-2l-1-1h-1v-1l-1-1h-1l-2-3-1-1v-1l1-1-1-1h1v-5l1-1v-2s0-1 0 0v-1l-1-1h-1l-1-1 1 1-2-2h-10l-1 1-1-1c0 1 0 0 0 0h-1l1-1 1-2v-5l1-1v2l1-2v-1c0-1 0 0 0 0v-3l1-2 1-1v-2h-1v1l-2-1h-2l-1 1-4 1-1 2v2l-1 1v1l-2 1h1c-1 0 0 0 0 0l-1 1h-1v-1h-1l-2 1h-3l-1 1-2-1-1-1h-2l-1-1v-1l-1-2-1-1-2-3-1-2 1 1v1l1-1h-1l-1-2v-5l1-4 1-2v-1l-1-3v-1h-1 1l1-1v-2 1l1-1v-1h1v-1 1h2-1l3-1 1-1v-2 1h2l1-1v-1 1h3l2 1 1-1h1l1 1v1h2s0-1 0 0h1v-1h2l1 2v-1h1l-1-1h-1v-1h1l-1-1h-3l1-1h1l1 1 1-1h3l1-1v1h2l1-1-1 1h2l2 1 1-1v1l1 1h-1 4v-1h2l1 2 1 1v5l1-1h1l-1 1 1 2h1v1c0 1 0 0 0 0v1l1 2h1v1l1 1h-1 2l1-1v-1l1-3-1-2-2-5 1 2v-1l-2-3v-3l-1-1v-2h1v-2s1 0 0 0h1v-2h1c0 1 1 0 0 0h1l1-1 1-1h1v-1l2-2h1l1-1v1l2-2v-1 1h1c0-1 0 0 0 0l2-1h-2v-1h1v-1h-1 2l1-1c0-1 0 0 0 0v-1h-2v-1 1h1v-1l1 1v-2 1l1 2-1-2-1-2h-1v-1h-2 2l1 1-2-2h2l-3-2 2 1h1l-1-1-1-1h-1l1-2-1 1 1 1 2 1-1-2 1 1-1-1v-2c0 1 1 1 0 0l1-1h1s-1 0 0 0l-1 1v3h1v1h1c0 1-2 2-1 3v-1h1v-2l1-1h1l-1-1v-2l-1-1v-1l2-1-2 1v1l2 1v1l1-1 1-1 1-2v-1l-1-1 1-2v1l2-1h2l2-1h1l1-1v1h1v-1l1 1 1-1h1l-1-1 1 1h-2v-1l-1-1v-1h1c0-1 0 0 0 0l-1-1 1-2 1-1 1-1s0 1 0 0h1l2-1v-1l1 1v-1h3v-1h2v-1c-1 0 0 0 0 0l-1-1h1v1h1l1-1s1 0 0 0l1-1-1 1h2l1-1h1l1-1v-1l1 1-2 2h5l-3 1v-1h-1l-1 1-2 1h-1l-1 1h1l-1 1 1 2h2l1-1 1-1h1v-1h1v-1 1l1-1h3l2-1 2-1h-1l1-1h-1l-1-1h-1l-1 1v-1h-3l-1-1-1-1h-1v-1h-1v-2h-1l1-1 1-1-1-1-2 1v-1h-2v-1l-1 1 1-1h1l1 1 1-1h1l1-1v-2l1 1-1-2h-6l-7 3-1 1-1 2-1 1-2 1-3 2h-2v1h-1l-2 1-1 2h-1v1h-1l-1 1 1-1 1-1h-1 1l1-1h1v-1h1l1-1 2-1 2-1 1-1 2-1 1-2v-1h-1l-1-1h-1l2 1 3-1 1-2h1l1-1h1l2-1v-1l1-1h1l1-1h19l1-1 2-2zM393 381h-1 1zm0-4zm-10 6l-3-1h-3v1h1l1 1h3-1 2v-1zm41 2l-1 1h1v-1zm5 11zm-14-13zm0-1h-5v2h3l1-1h1v-1zm-19-10v-1 1zm-1 0v-1 1zm2 0l-1-1 1 1zm-26-12l-1 2 1-2zM208 240h-1 1zm-67 134h-1v1l1-1zm-10-3zm9 3l-1-1v1h1zm-2-1l-1-1h-1l1 1h1zm5 2l-1-1h-1l1 1h1zm-11-5v1h1l-1-1zm14 8v-1h-2c-1-1 0 0 0 0l-1 2v1l1 1 1-1 1-1h1l-1-1zm248-71h1l-1 1h-3l-1 1c1 0 0 0 0 0h3l3-2v1l-1-1-1 1v-1zm6-1h-1 1zm2 1v-1h-1v1h1zm-158-26h-1l1 1v-1h-1v-1l1 1zm-1 0zm0-2c-1 0-1 0 0 0zm-1 0h1-1zM82 266v1h1l-1-1zm0 0l1 1-1-1zm-4 1l-2-1 1 1h1zm2-1l-1 1h-1 2v-1zm3 0c0-1-1 0 0 0h-1 1zm-2 0v1h-1v1l1-1 1-1h-1zm10 0l-1-1-1 1h2zm3-2l-1 1h1v-1zm-5 0l-1 1h-1l-2 1h2l2-1c-1 0 0 0 0 0v-1zm13-2l-1 1 1-1zm6-2h-2v1h-1v1l-1 1 2-2h1l1-1zm4-2h-2c-1 1 1 1 1 1h-1v1l-2 1 2-1h1l1-1h-1 1v-1zm1 0l-1 1 1-1zm2-1h-2v1l2-1zm9-3zm-1 2l1-1-1 1zm-1-1l-1-1h-3l-1 1v1l2-1h3zm11-1v-1 1zm-1-1s-1 0 0 0h-1l-1 1 1-1h1zm0 0h1-1zm86 0v-2l-1-1-1 1v2l1-1v1c0-1 0 0 0 0s0-1 0 0v1c0-1 0 0 0 0h1v-1zm-6 1l-1-2 1 1v1zm-83-2v1h1v-1h-1zm1 0zm81 0v-1l-1 1v1l1-1zm-67-2c1 0 1 0 0 0zm66 0h1l-1 1h2v1s1 0 0 0l1 1 1 1 1 1v-3h-2l1-1 1 1-1-1v-1l-1-1h-1v-1h-1v1l-1 1zm3-3v-1l-1 1 1 1c-1-1-1 0 0 0 0 0 1-1 0 0v-1zm1 3h1v-2l-1-1v1l-1 1 1 1zm-66-3zm0 0s-2 1 0 0zm62-1v1h1c2 0 0 0 0-1l1 1v-2h-3l1 1h-2l1 2v1l1-2v-1zm-59-2v1h1v-1h-1zm56 2c0-1 0-3-2-3l-1 1v1h1v-1 1h1l-1 1h1l1 1-1 1h1v-2zm-53-4c-1 0 0 0 0 0h-1l-1-1h-1c1 1 0 0 0 0l1 1h-1l-1-1-1 1h1v2l-1-1v-1l-2 1v1l1 1c1 1 1 0 0 0h2l-1 1 1-1 1-1h2l-1-1h3l-1-1zm50 1c0-2 1 0 2 0l1-1h-2 1v-1l-1-1-1 1v-1h-2v2l1 1h1zm5 1h1l-1-1h1l-1-2c-1 0-1-1 0 0l1 1-1-2h-2v2l1 1v2l1-1zm-55-6h-1l1 1v-1zm1 1h-2v1h-2l2 1 1-1h1v-1zm-41-8l-1-1h-1l-1 1h-2l2 1 1 1h1c-1-1 1 0 1-1v-1zm314 167s0 1 0 0c1 0 1 0 0 0zm-10-14h-1 1zm153-176v-2h-2v-1h-1v-1l-1-1v-1h1-3l-1-1-1 1-1 1h-1l-1 1-1-1h-2l1 2-1-1-1-1h-2v1c0 2-2 0-2-1-2-1 0 3-1 3l-1-1-1 1v1l-1-1-1-1h1v-2h-1l-1-1-1-1-2 1h2c-1 0-2 0-1 1l1 1h-1c0-1 0 0 0 0h-1v-1h-1v1l-1-1 1 1c-1 0-2 0-1 1h-1l1 1h-1 6v1l-1 1h2-3l-1 1h-2v1h1l1-1 2 1v1l2-1-1 1v1h2l-2 1h-2l1 1h5l1 1s0-1 0 0c-1 0 0 0 0 0l3 1h4-1 1l1-1 1-1h2l2-1 2-1h1l2-1v-1l2-1 1-1h-1zM429 394l-1-1 1 1c-1 0 0 0 0 0s0 1 0 0zm-2-5zm1 0l-1-1v1h1z"/>
                     <g class="m-gi-map-area" data-id="sa" data-continent-name="samerica">
@@ -328,7 +315,7 @@
         </div>
     </div>
 </div>
-
+</div>
 <div id="placeContainer" class="places"></div>
 <script>
 $(document).ready(function () {
@@ -414,19 +401,9 @@ $(document).ready(function () {
         const $area = $('#selection-area');
         $area.empty();
 
-        if (showBackButton) {
-            $('<button>').addClass('btn btn-sm btn-outline-info allshow')
-                .text('대륙 전체 보기')
-                .click(() => {
-                    currentCountry = null;
-                    let allPlaces = [];
-                    $.each(continentDataMap[continent], (_, placeList) => {
-                        allPlaces = allPlaces.concat(placeList);
-                    });
-                    showPlaces(continent + ' 전체', allPlaces);
-                    showCountries(continent, continentDataMap[continent], false);
-                }).appendTo($area);
-        }
+
+
+
 
         const $buttonRow = $('<div>').addClass('country-button-row d-flex flex-wrap gap-2');
         
@@ -446,6 +423,31 @@ $(document).ready(function () {
         });
 
         $area.append($buttonRow);
+
+        if (showBackButton) {
+
+            const continentNameMap = {
+                "asia": "아시아",
+                "europe": "유럽",
+                "namerica": "북아메리카",
+                "samerica": "남아메리카",
+
+            };
+
+            const koreanName = continentNameMap[continent] || continent; // 매핑 실패 시 원래 이름 사용
+
+            $('<button>').addClass('btn btn-sm btn-outline-info allshow')
+                .text(koreanName + ' 전체 보기') // 한글로 표시
+                .click(() => {
+                    currentCountry = null;
+                    let allPlaces = [];
+                    $.each(continentDataMap[continent], (_, placeList) => {
+                        allPlaces = allPlaces.concat(placeList);
+                    });
+                    showPlaces(koreanName + ' 전체', allPlaces); // 표시되는 제목도 한글로
+                    showCountries(continent, continentDataMap[continent], false);
+                }).appendTo($area);
+        }
 
         if (!showBackButton) {
             $('#placeContainer').empty();
@@ -488,7 +490,7 @@ $(document).ready(function () {
         const imgPath = fileName ? (fileName) : 'https://via.placeholder.com/200x150?text=No+Image';
 
         const $imageWrapper = $('<div>').addClass('image-wrapper');
-        const $img = $('<img>').attr('src', imgPath).attr('alt', place.place_name);
+        const $img = $('<img>').attr('src', imgPath).attr('alt', place.place_name).css("border-radius","0.5rem");
         $imageWrapper.append($img);
         $card.append($imageWrapper);
 

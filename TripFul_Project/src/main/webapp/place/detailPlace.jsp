@@ -21,6 +21,16 @@
 	
 	PlaceDto dto=dao.getPlaceData(num);
 	
+	if (dto == null) {
+		%>
+			<script>
+				alert("존재하지 않는 관광지입니다.");
+				location.href = "index.jsp?main=place/selectPlace.jsp";
+			</script>
+		<%
+				return;
+			}
+	
 	String [] img=dto.getPlace_img().split(",");
 	
 	ReviewDao rdao=new ReviewDao();
@@ -32,7 +42,6 @@
 	String loginok=(String)session.getAttribute("loginok");
 	
 	if (loginok == null) loginok = "";
-
 	
 %>
 
@@ -193,6 +202,15 @@ body {
     border: none;
   }
 
+.carousel-indicators {
+    position: absolute;
+    bottom: 10px; /* 원하는 만큼 조정 */
+    left: 35%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
 
 </style>
 </head>
@@ -213,7 +231,7 @@ $(function(){
 			
 			var count=res.place_count;
 			
-			$(".count").text("조회수: "+count);
+			$(".count").text("👁조회수: "+count);
 			
 		}
 		
@@ -336,9 +354,9 @@ $(function(){
 
 
         <div class="category-views d-flex justify-content-between align-items-center mb-2">
-    	<p class="category m-0">카테고리: <%=dto.getPlace_tag() %></p>
+    	<p class="category m-0">🏷️카테고리: <%=dto.getPlace_tag() %></p>
    	 	<p class="views m-0 count"></p>
-   	 	<p class="views m-0">별점: <%=star==-1.0?"없음":star%></p>
+   	 	<p class="views m-0">⭐별점: <%=star==-1.0?"없음":star%></p>
    	 	<input type="hidden" id="num" value="<%=dto.getPlace_num()%>">
 <!-- 좋아요 아이콘과 좋아요 수 -->
 <div class="d-flex align-items-center gap-1">

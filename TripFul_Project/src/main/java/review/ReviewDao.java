@@ -268,8 +268,7 @@ public class ReviewDao {
 		ResultSet rs = null;
 
 		try {
-			// 테이블 이름을 'tripful_review'로 변경하고, select하는 컬럼명도 정확히 맞춰줍니다.
-			// review_read_type이 없다면 쿼리에서 제거하거나, DB에 추가해야 합니다.
+			
 			String sql = "SELECT review_idx, review_id, review_content, review_img, review_star, review_writeday, place_num " +
 					"FROM tripful_review ORDER BY review_writeday DESC";
 			pstmt = conn.prepareStatement(sql);
@@ -328,6 +327,47 @@ public class ReviewDao {
 			db.dbClose(rs, pstmt, conn);
 		}
 		return review;
+	}
+	
+	
+	
+	
+	public  List<HashMap<String, String>> getReportReview()
+	{
+		List<HashMap<String, String>> reportList=new ArrayList<HashMap<String,String>>();
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql="SELECT r.review_idx, r.review_id, r.review_content, r.review_img, r.review_star, r.review_writeday, r.place_num, "
+				+ "GROUP_CONCAT(t.report_content SEPARATOR ' / ') AS report_contents "
+				+ "FROM tripful_review r join tripful_review_report t on r.review_idx=t.review_idx where r.review_idx in (select distinct review_idx from tripful_review_report where report_cnt=1)"
+				+ "GROUP BY r.review_idx";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			
+			rs = pstmt.executeQuery();
+
+			while(rs.next()) {
+				HashMap<String, String> review = new HashMap<>();
+				review.put("review_num", rs.getString("review_idx"));
+				review.put("author", rs.getString("review_id"));
+				review.put("rating", rs.getString("review_star"));
+				
+				review.put("text", rs.getString("review_content"));
+				review.put("photo", rs.getString("review_img"));
+				review.put("date", rs.getString("review_writeday"));
+				review.put("place_num", rs.getString("place_num"));
+				review.put("report_content",rs.getString("report_contents"));
+				reportList.add(review);  // 리스트에 추가
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		return reportList;
 	}
 
 }
