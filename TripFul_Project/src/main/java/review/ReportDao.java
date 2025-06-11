@@ -271,7 +271,7 @@ public class ReportDao {
 		try {
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setInt(1, dto.getLike());
-			pstmt.setString(2, dto.getReport_idx());
+			pstmt.setString(2, dto.getReport_idx());			
 			pstmt.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

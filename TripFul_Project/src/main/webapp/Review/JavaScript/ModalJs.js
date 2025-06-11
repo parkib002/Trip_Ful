@@ -109,12 +109,15 @@ submitReviewBtn.click(function(e) {
 
     var formData = new FormData(frm);
     var actionUrl = "";
+	var title="";
 
     if (submitReviewBtn.text() === "게시") {
-        actionUrl = "Review/reviewAddAction.jsp";
+        actionUrl = "Review/reviewAddAction.jsp";			
+		title="리뷰 작성을 완료했습니다 🎉";
       //  console.log("새 리뷰 데이터 전송:", formData);
     } else if (submitReviewBtn.text() === "수정") {
         actionUrl = "Review/updateReview.jsp";
+		title="리뷰 수정을 완료했습니다 🎉";
        // console.log("업데이트 리뷰 데이터 전송:", formData);
     } else {
        // console.error("알 수 없는 버튼 상태입니다.");
@@ -128,42 +131,52 @@ submitReviewBtn.click(function(e) {
         data: formData,
         processData: false,
         contentType: false,
-        success: function() {
+        success: function(res) {
            // console.log("AJAX 작업 성공");
+		   var flag=res.trim();
+		   console.log(flag)
+		   if(flag=="true"){
+			
+		   shootConfetti();
+		   Swal.fire({
+		     position: "center",
+		     icon: "success",
+		     title: title,
+		     showConfirmButton: false,
+		     timer: 2000
+		   });
             closeModalAndRefresh(); // 성공 시 모달 닫고 목록 새로고침
+			}else{
+				Swal.fire({
+						     position: "center",
+						     icon: "error",
+						     title: "리뷰를 입력해 주세요",
+						     showConfirmButton: false,
+						     timer: 2000
+						   });
+			}
         },
         error: function(xhr, status, error) {
           //  console.error("AJAX 작업 실패:", status, error);
             alert("작업 중 오류가 발생했습니다.");
         }
+		
     });
 });
 
-// 마우스가 눌렸을 때 (mousedown) 모달 내에 있었는지 여부 추적
-$(modal).mousedown( function(e) {
-    // 클릭된 요소가 모달(회색 배경) 자신일 때만 mouseEvent를 true로 설정
-    // 즉, 모달 콘텐츠 내부를 클릭하면 mouseEvent는 false로 유지됩니다.
-    if ($(e.target).is(modal)) {
-        mouseEvent = true;
-    } else {
-        mouseEvent = false;
-    }
+let mouseDownInsideModalBackground = false;
+
+// 배경 눌렀는지 여부 확인
+$(modal).on('mousedown', function(e) {
+    mouseDownInsideModalBackground = $(e.target).is(modal); // 회색 배경 눌렀을 때만 true
 });
 
-//stopPropagation()메서드로 이벤트가 부모 요소로 전파되는 것을 막기
-$('#myModal .modal-content').mousedown( function(e) {
-    e.stopPropagation(); 
-});
-
-
-$(window).click(function(e) {
-	
-    // 모달의 검은색 배경 부분이 클릭된 경우 닫히도록 하는 코드
-    if ($(e.target).is(modal) && !mouseEvent) {
+$(window).on('click', function(e) {
+    if ($(e.target).is(modal) && mouseDownInsideModalBackground) {
         closeModalAndRefresh();
     }
+    mouseDownInsideModalBackground = false;
 });
-
 
 
 
@@ -232,3 +245,14 @@ $(document).on("click", ".updateModal", function() {
     // 모달 열기
     openModal();
 });
+
+
+// 리뷰 작성 성공 시 팡파레 애니메이션 실행
+            function shootConfetti() {
+                confetti({
+                    particleCount: 100, // 터지는 조각의 개수
+                    spread: 70,         // 조각이 퍼지는 정도
+                    origin: { y: 0.6 }, // 애니메이션 시작 위치 (페이지 중앙 하단)
+                    colors: ['#a864fd', '#29cdff', '#78ff44', '#ff718d', '#fdff6a'] // 색상 배열
+                });
+				}

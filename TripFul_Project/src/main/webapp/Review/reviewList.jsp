@@ -12,6 +12,8 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="<%=request.getContextPath() %>/Review/carouselStyle.css">
+<!-- 팡파레 cnd -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 
 <title>Insert title her</title>
@@ -37,7 +39,7 @@
 %>
 <script type="text/javascript">
 $(function() {
-	
+		loadReviews();
 	   $("#modalBtn").click(function() {	  
 		   
 		// 폼 초기화 로직
@@ -65,20 +67,30 @@ $(function() {
 			        })
 		}
 		 
-	});  	   	
-	   loadReviews();
+	}); 	   
+	   
+	   $(document).on('change', '.sort', function() {
+		    loadReviews(); // 정렬 변경 시 리뷰 새로 불러오기
+		    $(this).siblings("i.bi").addClass("bi-check-circle-fill");
+		    $(this).siblings("i.bi").removeClass("bi-check-circle");
+		    $(this).parent(".radio-label").siblings().find("i.bi").addClass("bi-check-circle");
+		});
+	   
+	   
 });
 
 function loadReviews() {
 	var place_num="<%=place_num%>";
 	var review_id="<%=review_id%>";
 	var loginok="<%=loginok%>";
+	var sort = $(".sort:checked").val(); // 선택된 정렬 방식
+	
 	//console.log(place_num);
 	$.ajax({
 		type:"post",
 		dataType:"json",
 		url:"Review/insertApi.jsp",
-		data:{"place_num":place_num},
+		data:{"place_num":place_num,"sort":sort},
 		success:function(res){
 			 var carouselItemsHtml = ""; // 각 카드를 직접 여기에 넣음
 	            var reviews = res.reviews; // 리뷰 리스트
@@ -124,7 +136,7 @@ function loadReviews() {
 	                    			        	reviewCard += "<button type='button' class='updateModal' review_idx='"+r.review_idx+"'>수정</button>";
 	                    			        }	                    			        
 
-	                    				}else if(r.author!=review_id){	                    					
+	                    				}else if(r.author!=review_id && r.read=="DB"){	                    					
 	                    					reviewCard += "<button type='button' class='report' review_idx='"+r.review_idx+"' loginok='"+loginok+"'>신고</button>"
 	                    				}
 	                    reviewCard += "</div>";//카테고리 끝
@@ -176,7 +188,7 @@ function loadReviews() {
                     	}else{	
                     		var like=Number(r.likeCheck);
                     		if(like==0){
-                    			reviewCard += "<div class='liked'><i class='bi bi-heart-fill likedicon' review_idx="+r.review_idx+" loginok="+loginok+"></i>&nbsp;";
+                    			reviewCard += "<div class='liked'><i class='bi bi-heart likedicon' review_idx="+r.review_idx+" loginok="+loginok+"></i>&nbsp;";
                     		}else{
                     			reviewCard += "<div class='liked'><i class='bi bi-heart-fill likedicon' review_idx="+r.review_idx+" style='color:red' loginok="+loginok+"></i>&nbsp;";
                     		}
@@ -213,7 +225,7 @@ function loadReviews() {
                     $('.progress-bar.' + getStarClass(i)).css('width', percentage + '%');
                     $('.progress-bar.' + getStarClass(i)).closest('.rating-row').find('.rating-percentage').text(percentage + "% ("+starCounts[i]+")");
                 }
-
+				
 	        	 // 기존 캐러셀 파괴 및 새 HTML 삽입 후 Owl Carousel 초기화
 	            var owl = $('#reviewCarousel');
 	            if (owl.data('owl.carousel')) { // Owl Carousel이 이미 초기화되어 있다면
@@ -279,7 +291,7 @@ function getStarClass(star) {
 
 	<!-- 모달 버튼 -->
 <div>
-	<button id="modalBtn">리뷰 작성</button>	
+	<button id="modalBtn"><i class="bi bi-pencil-square"></i>&nbsp;리뷰 작성</button>	
 	<div class="rating-summary">
     <h4>별점 통계</h4>
     <div class="rating-row">
@@ -321,7 +333,20 @@ function getStarClass(star) {
         <strong>평균 별점: <span id="avgRating">0.0</span></strong> (<span id="totReview">0</span>개 리뷰)
     </div>
 </div>
-	
+		<div >
+			<label class="radio-label">
+				<input type="radio" class="sort" name="sort" value="latest">
+				<i class="bi bi-check-circle"></i>최신순
+			</label>
+			<label class="radio-label" >
+				<input type="radio" class="sort" name="sort" value="likes">
+				<i class="bi bi-check-circle"></i>좋아요순
+			</label>			
+			<label class="radio-label">
+				<input type="radio" class="sort" name="sort" value="rating">
+				<i class="bi bi-check-circle"></i>별점순
+			</label>			
+		</div>
 	<div class="container mt-3">
 			
 			<div id="reviewCarousel" class="owl-carousel owl-theme">  
@@ -371,7 +396,7 @@ function getStarClass(star) {
 					</tr>
 					<tr>
 						<td><textarea class="review_content" name="review_content"
-								required="required" placeholder="이곳에 다녀온 경험을 자세히 공유해 주세요."></textarea></td>
+							 placeholder="이곳에 다녀온 경험을 자세히 공유해 주세요." required="required"></textarea></td>
 					</tr>
 					<tr>
 						<td>
@@ -410,7 +435,6 @@ function getStarClass(star) {
 				
 			</div>
 		</form>
-
 	</div>	
 
 </body>

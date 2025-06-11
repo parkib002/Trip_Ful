@@ -10,7 +10,14 @@
     min-height: 420px; /* 카드 최소 높이 설정 (내용이 적을 때 보기 좋게) */
     display: flex;
     flex-direction: column;
-    
+    padding-bottom: 40px; 
+    pointer-events: none;
+}
+
+a.r_author{
+	text-decoration: none;
+	color: black;
+	
 }
 .googlechk{
 	align-content: flex-end;	
@@ -29,26 +36,26 @@
     border: 1px solid #ddd;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     z-index: 10;
-    min-width: 80px; /* 메뉴 너비 조정 */
+    min-width: 60px; /* 메뉴 너비 조정 */
     border-radius: 4px;
     overflow: hidden;
     
 }
 
-.dropdown-menu button {
+.item .categorydate .dropdown-menu button{
     display: block;
     width: 100%;
     padding: 8px 12px;
     text-align: left;
     border: none;
     background: none;
-    cursor: pointer;
+    cursor:pointer;
     font-size: 14px;
-    color: #333;
-    
+    color: #333;    
+    pointer-events: all;
 }
 
-.dropdown-menu button:hover {
+.item .categorydate .dropdown-menu button:hover {
     background-color: #f0f0f0;
 }
 
@@ -196,19 +203,20 @@ i.review_category{
 	background: rgba(0, 0, 0, 0); /* 투명 배경 */
     color: #CCC; /* 아이콘 색상 */
     border: none;
-    padding: 5px 7.5px;
+    
+    padding: 3.3px 8px;
     border-radius: 50%; /* 원형 버튼 */    
     cursor: pointer;
     pointer-events: all; /* 버튼 클릭 가능하게 설정 */
     transition: background-color 0.3s ease; /* 호버 효과 */ 
   	flex-shrink:0;
       
-    width: 30px; /* 버튼의 고정 너비 */
-    height: 30px; /* 버튼의 고정 높이 */
+    width: 32px; /* 버튼의 고정 너비 */
+    height: 32px; /* 버튼의 고정 높이 */
     
 }
 i.review_category:hover {
-	background: rgba(0, 0, 0, 0.5);
+	background: rgba(0, 0, 0, 0.4);
 }
 
 .liked{
@@ -218,6 +226,11 @@ i.review_category:hover {
     
     flex-wrap: nowrap; 
     min-width: 80px;
+    
+    position: absolute; /* 부모인 .card 기준으로 위치 지정 */
+    bottom: 10px;       /* .card의 하단에서 10px 위로 떨어뜨림 */
+    left: 0;            /* .card의 왼쪽 끝에 정렬 */
+    width: 100%; 
 }
 .liked .likedicon{	
 	width: 30px;
@@ -226,7 +239,8 @@ i.review_category:hover {
 	pointer-events: all; /* 버튼 클릭 가능하게 설정 */
 	 padding: 5px 7.5px;
     border-radius: 20%; /* 원형 버튼 */    
-	font-weight: bold;
+	font-weight:bold;
+	transition: background-color 0.3s ease; /* 호버 효과 */ 
 	
 }
 .likedcnt{
@@ -298,4 +312,26 @@ i.review_category:hover {
     text-align: center;
     font-size: 1.1em;
     color: #333;
+}
+
+/* 라디오 스타일 */
+.radio-label {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.radio-label input[type="radio"] {
+    display: none; /* 기본 라디오 숨기기 */
+}
+
+.radio-label i {
+    font-size: 24px;
+    color: gray;
+    transition: color 0.2s ease;
+}
+.radio-label input[type="radio"]:checked + i {
+    color: dodgerblue; /* 선택된 경우 색상 변경 */
 }

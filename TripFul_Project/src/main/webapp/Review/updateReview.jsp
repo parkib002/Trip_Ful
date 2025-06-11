@@ -15,7 +15,7 @@
 	  int uploadSize=1024*1024*5;
 	
 	  MultipartRequest multi=null;
-	  
+	  boolean flag=true;
 	  try{
 		 
 		 multi=new MultipartRequest(request,realPath,uploadSize,"utf-8",
@@ -28,8 +28,11 @@
 		 String place_num=multi.getParameter("place_num");
 		 String review_idx=multi.getParameter("review_idx");
 		 
-		 
-		 
+		 if(review_content==null || review_content=="" || review_content.isEmpty())
+		 {
+			 flag=false;
+			 return;
+		 }
 		 //System.out.print(review_idx); 		 
 		 
 		 //ReviewDao 생성
@@ -135,3 +138,4 @@
 	  }
 	  
 %>
+<%=flag%>
