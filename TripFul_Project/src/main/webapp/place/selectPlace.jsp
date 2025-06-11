@@ -101,10 +101,10 @@
             box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
         }
 
-        .sort-dropdown:hover {
-            background-color: #2196f3;
-            color: #fff;
-        }
+        /*.sort-dropdown:hover {*/
+        /*    background-color: #2196f3;*/
+        /*    color: #fff;*/
+        /*}*/
 
         .places {
             display: grid;
