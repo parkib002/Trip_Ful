@@ -14,10 +14,13 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/login/myPageDesign.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
 <title>내 정보</title>
 </head>
@@ -41,7 +44,7 @@
 		loginok = (String) session.getAttribute("loginok");
 	}
 	%>
-    <%-- [수정됨] 사이드바 메뉴에 data-target 속성 추가 --%>
+	<%-- [수정됨] 사이드바 메뉴에 data-target 속성 추가 --%>
 	<aside class="side-bar">
 		<section class="side-bar__icon-box">
 			<section class="side-bar__icon-1">
@@ -56,8 +59,8 @@
 					<li><a href="#" data-target=".MyInfo">내 정보</a></li>
 					<li><a href="#" data-target=".MyReview">내 리뷰</a></li>
 					<li><a href="#" data-target=".WishList">위시리스트</a></li>
-                    <%-- 현재 '내 코스' 섹션이 없으므로 링크는 비워두거나 나중에 해당 섹션을 추가할 수 있습니다. --%>
-					<li><a href="#">맨 위로</a></li> 
+					<%-- 현재 '내 코스' 섹션이 없으므로 링크는 비워두거나 나중에 해당 섹션을 추가할 수 있습니다. --%>
+					<li><a href="#" data-target=".MyQuestion">내 질문</a></li>
 				</ul></li>
 		</ul>
 	</aside>
@@ -77,8 +80,7 @@
 				%><button class="btn btn-info"
 					onclick="location.href='http://localhost:8080/TripFul_Project/index.jsp?main=login/changeForm.jsp?userid=<%=id%>'">정보
 					수정</button>
-					<button class="btn btn-danger"
-					onclick="btnDel()">회원 탈퇴</button>
+				<button class="btn btn-danger" onclick="btnDel()">회원 탈퇴</button>
 				<%
 				}
 				%>
@@ -110,26 +112,120 @@
 
 		<div class="WishList">
 			<h1>위시리스트</h1>
-            <div class="asia-wishlist">
-                <h3>아시아 위시리스트</h3>
-                <div class="owl-carousel"></div>
-            </div>
-            <div class="namerica-wishlist">
-                <h3>북미 위시리스트</h3>
-                <div class="owl-carousel"></div>
-            </div>
-            <div class="samerica-wishlist">
-                <h3>남미 위시리스트</h3>
-                <div class="owl-carousel"></div>
-            </div>
-            <div class="europe-wishlist">
-                <h3>유럽 위시리스트</h3>
-                <div class="owl-carousel"></div>
-            </div>
+			<div class="asia-wishlist">
+				<h3>아시아 위시리스트</h3>
+				<div class="owl-carousel"></div>
+			</div>
+			<div class="namerica-wishlist">
+				<h3>북미 위시리스트</h3>
+				<div class="owl-carousel"></div>
+			</div>
+			<div class="samerica-wishlist">
+				<h3>남미 위시리스트</h3>
+				<div class="owl-carousel"></div>
+			</div>
+			<div class="europe-wishlist">
+				<h3>유럽 위시리스트</h3>
+				<div class="owl-carousel"></div>
+			</div>
 		</div>
+
+		<div class="MyQuestion">
+    <h1>내 질문 </h1>
+    <select id="answerFilter" name="filter" onchange="filterMyList()"
+        style="max-width: 120px;" class="form-control">
+        <option value="all">전체</option>
+        <option value="answered">답변 완료</option>
+        <option value="unanswered">미답변</option>
+    </select>
+    <br>
+    <table class="table table-hover notice-table">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 8%;">번호</th>
+                <th scope="col" style="width: 12%; text-align: center;">문의유형</th>
+                <th scope="col" style="width: 30%;">제목</th>
+                <th scope="col" style="width: 15%; text-align: center;">작성자</th>
+                <th scope="col" style="width: 15%;">작성일</th>
+                <th scope="col" style="width: 10%; text-align: center;">상태</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+</div>
 	</div>
 
-    <script type="text/javascript">
+
+	<script type="text/javascript">
+	
+	// myPage.jsp의 <script> 태그 안에 추가
+	let allQnaList = []; // 서버에서 가져온 모든 Q&A 데이터를 저장할 배열
+	
+	$(function(){
+		loadMyQuestions();
+		displayMyList(allQnaList);
+	})
+	
+	// 내 질문 (Q&A)을 로드하고 표시하는 함수
+	function loadMyQuestions() {
+	    var userId = "<%=id%>";
+	    $.ajax({
+	        type: "post",
+	        dataType: "json",
+	        url: "<%=request.getContextPath()%>/board/myQna.jsp",
+	        data: { "id": userId },
+	        success: function(res) {
+	            console.log("Q&A 응답 데이터:", res);
+	            allQnaList = res.qna || [];
+	            },
+	        error: function(xhr, status, error) {
+	            console.error("Q&A 데이터를 불러오는 중 오류 발생:", status, error);
+	            console.log("응답 텍스트:", xhr.responseText);
+	            var tableBody = $('.notice-table tbody');
+	            tableBody.empty();
+	            tableBody.append('<tr><td colspan="6" class="text-center text-danger">질문을 불러오는데 실패했습니다.</td></tr>');
+	        }
+	    });
+	}
+	
+	// 답변 필터링 함수 (기존 HTML에 추가된 select 태그와 연동)
+	function filterMyList() { 
+	    var filterValue = $('#answerFilter').val(); 
+	    
+	    // allQnaList에서 필터링할 데이터를 선택
+	    let filteredQna = [];
+
+	    if (filterValue === 'all') {
+	        filteredQna = allQnaList;
+	        
+	    } else if (filterValue === 'answered') {
+	        filteredQna = allQnaList.filter(qna => qna.is_answered === true);
+	        
+	    } else if (filterValue === 'unanswered') {
+	        filteredQna = allQnaList.filter(qna => qna.is_answered === false);
+	    }
+	    displayMyList(filteredQna);
+	}
+	
+	function displayMyList(filteredQna){
+		$(".notice-table>tbody").empty();
+		for(var i = 0; i < filteredQna.length; i++){
+        	var html = "<tr><td>"+filteredQna[i].qna_idx+"</td><td>"+filteredQna[i].qna_category+"</td>";
+        	html += "<td>"+filteredQna[i].qna_title+"</td>";
+        	html += "<td>"+filteredQna[i].qna_writer+"</td>";
+        	html += "<td>"+filteredQna[i].qna_writeday+"</td>";
+        	if(filteredQna[i].is_answered === true){
+        		html += "<td style='color:green'>답변완료</td>";
+        	}
+        	else{
+        		html += "<td style='color:red'>답변없음</td>";
+        	}
+        	$(".notice-table>tbody").append(html);
+        }
+	}
+
+	
     function btnDel(){
     	if(confirm("정말로 삭제하시겠습니까?")){
     		var pw = prompt("삭제하려면 비밀번호를 입력하세요.");
@@ -317,55 +413,86 @@ function loadWishList(continent) {
                     let imageUrl = place.place_img && place.place_img.split(',').length > 0 ? place.place_img.split(',')[0] : '';
                     imageUrl = imageUrl.replace('/TripFul_Project', ''); 
                     
-                    carouselItemsHtml += "    <img src='<%=request.getContextPath()%>" + imageUrl + "' class='card-img-top' alt='" + place.place_name + "'>";
-                    carouselItemsHtml += "    <div class='card-body'>";
-                    
-                    // [수정됨] 상세 페이지로 이동할 URL을 생성하고 a 태그로 장소 이름을 감싸줍니다.
-                    var detailUrl = "index.jsp?main=place/detailPlace.jsp&place_num=" + place.place_num;
-                    carouselItemsHtml += "        <h5 class='card-title'><a href='" + detailUrl + "'>" + place.place_name + "</a></h5>";
-                    
-                    carouselItemsHtml += "        <p class='card-text'><small class='text-muted'>" + place.country_name + " - " + place.continent_name + "</small></p>";
-                    
-                    if (processedContent && processedContent !== place.place_name) {
-                        carouselItemsHtml += "        <p class='card-text'>" + processedContent + "</p>";
-                    }
+                    carouselItemsHtml += "<img src='<%=request.getContextPath()%>"
+													+ imageUrl
+													+ "'class='card-img-top' alt='"
+													+ place.place_name + "'>";
+											carouselItemsHtml += "    <div class='card-body'>";
 
-                    carouselItemsHtml += "        <p class='card-text'><small class='text-muted'>좋아요: " + place.place_like + " | 조회수: " + place.place_count + "</small></p>";
-                    carouselItemsHtml += "    </div>";
-                    carouselItemsHtml += "</div>";
-                    carouselItemsHtml += "</div>";
-                });
-            } else {
-                carouselItemsHtml = "<div class='item'><div class='card p-3 m-2 text-center'><p>아직 등록된 " + continent + " 위시리스트가 없습니다.</p></div></div>";
-            }
+											// [수정됨] 상세 페이지로 이동할 URL을 생성하고 a 태그로 장소 이름을 감싸줍니다.
+											var detailUrl = "index.jsp?main=place/detailPlace.jsp&place_num="
+													+ place.place_num;
+											carouselItemsHtml += "<h5 class='card-title'><a href='" + detailUrl + "'>"
+													+ place.place_name
+													+ "</a></h5>";
 
-            var owl = $(targetDivClass);
-            if (owl.data('owl.carousel')) {
-                owl.owlCarousel('destroy');
-            }
-            owl.html(carouselItemsHtml);
-            owl.owlCarousel({
-                loop: false,
-                margin: 10,
-                nav: true,
-                dots: false,
-                responsive: {
-                    0: { items: 1, slideBy: 1 },
-                    768: { items: 2, slideBy: 1 },
-                    992: { items: 3, slideBy: 1 }
-                }
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error("AJAX 실패 (WishList):", status, error);
-            console.log("응답 텍스트:", xhr.responseText);
-            var targetDiv = $(targetDivClass);
-            if (targetDiv.data('owl.carousel')) { targetDiv.owlCarousel('destroy'); }
-            targetDiv.html("<div class='item'><div class='card p-3 m-2 text-center'><p>위시리스트를 불러오는데 실패했습니다.</p></div></div>");
-        }
-    });
+											carouselItemsHtml += "<p class='card-text'><small class='text-muted'>"
+													+ place.country_name
+													+ " - "
+													+ place.continent_name
+													+ "</small></p>";
 
-    }
-    </script>
+											if (processedContent
+													&& processedContent !== place.place_name) {
+												carouselItemsHtml += "<p class='card-text'>"
+														+ processedContent
+														+ "</p>";
+											}
+
+											carouselItemsHtml += "<p class='card-text'><small class='text-muted'>좋아요: "
+													+ place.place_like
+													+ " | 조회수: "
+													+ place.place_count
+													+ "</small></p>";
+											carouselItemsHtml += "</div>";
+											carouselItemsHtml += "</div>";
+											carouselItemsHtml += "</div>";
+										});
+							} else {
+								carouselItemsHtml = "<div class='item'><div class='card p-3 m-2 text-center'><p>아직 등록된 "
+										+ continent
+										+ " 위시리스트가 없습니다.</p></div></div>";
+							}
+
+							var owl = $(targetDivClass);
+							if (owl.data('owl.carousel')) {
+								owl.owlCarousel('destroy');
+							}
+							owl.html(carouselItemsHtml);
+							owl.owlCarousel({
+								loop : false,
+								margin : 10,
+								nav : true,
+								dots : false,
+								responsive : {
+									0 : {
+										items : 1,
+										slideBy : 1
+									},
+									768 : {
+										items : 2,
+										slideBy : 1
+									},
+									992 : {
+										items : 3,
+										slideBy : 1
+									}
+								}
+							});
+						},
+						error : function(xhr, status, error) {
+							console.error("AJAX 실패 (WishList):", status, error);
+							console.log("응답 텍스트:", xhr.responseText);
+							var targetDiv = $(targetDivClass);
+							if (targetDiv.data('owl.carousel')) {
+								targetDiv.owlCarousel('destroy');
+							}
+							targetDiv
+									.html("<div class='item'><div class='card p-3 m-2 text-center'><p>위시리스트를 불러오는데 실패했습니다.</p></div></div>");
+						}
+					});
+
+		}
+	</script>
 </body>
 </html>
