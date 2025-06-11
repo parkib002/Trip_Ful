@@ -231,7 +231,7 @@ $(function(){
 			
 			var count=res.place_count;
 			
-			$(".count").text("조회수: "+count);
+			$(".count").text("👁조회수: "+count);
 			
 		}
 		
@@ -354,9 +354,9 @@ $(function(){
 
 
         <div class="category-views d-flex justify-content-between align-items-center mb-2">
-    	<p class="category m-0">카테고리: <%=dto.getPlace_tag() %></p>
+    	<p class="category m-0">🏷️카테고리: <%=dto.getPlace_tag() %></p>
    	 	<p class="views m-0 count"></p>
-   	 	<p class="views m-0">별점: <%=star==-1.0?"없음":star%></p>
+   	 	<p class="views m-0">⭐별점: <%=star==-1.0?"없음":star%></p>
    	 	<input type="hidden" id="num" value="<%=dto.getPlace_num()%>">
 <!-- 좋아요 아이콘과 좋아요 수 -->
 <div class="d-flex align-items-center gap-1">
