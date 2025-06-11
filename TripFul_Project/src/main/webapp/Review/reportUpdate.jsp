@@ -1,3 +1,4 @@
+<%@page import="review.ReviewDao"%>
 <%@page import="review.ReportDto"%>
 <%@page import="review.ReportDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -23,7 +24,7 @@
 	
 	//리포트 Dao
 	ReportDao dao=new ReportDao();
-	
+	ReviewDao rdao=new ReviewDao();
 	//신고 체크
 	int report_cnt=dao.getCntCheck(member_id, review_idx);
 	
@@ -45,7 +46,7 @@
 	//하나의 리뷰에 대한 신고 횟수 조회
 	int totreport_cnt=dao.getAllreportCnt(review_idx);
 	if(totreport_cnt>=10){
-		dao.deleteReport(review_idx);
+		rdao.deleteReview(review_idx);
 	}
 	
 	

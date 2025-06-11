@@ -25,7 +25,7 @@
 	
 	//리포트 Dao
 	ReportDao dao=new ReportDao();	
-	
+	ReviewDao rdao=new ReviewDao();
 	//신고체크
 	int report_cnt=dao.getCntCheck(member_id, review_idx);
 	
@@ -48,7 +48,7 @@
 	
 	//System.out.println("totCnt: "+totreport_cnt);	
 	if(totreport_cnt>=10){
-		dao.deleteReport(review_idx);
+		rdao.deleteReview(review_idx);		
 	}
 	
 %>
