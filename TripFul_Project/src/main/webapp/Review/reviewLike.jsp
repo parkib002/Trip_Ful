@@ -27,8 +27,8 @@
 		//System.out.println("idcheck: "+idcheck);
 		if(idcheck!=0)
 		{
-			System.out.println("123");
-			if(like>0)
+			//System.out.println("123");
+			if(like!=0)
 			{
 				dto.setLike(--like);
 				dto.setReport_idx(report_idx);
@@ -39,10 +39,9 @@
 				dao.updateLike(dto);
 			}
 		}else{
-			System.out.println("1234");
+			//System.out.println("1234");
 			dto.setLike(++like);
-			dao.insertLike(dto);
-			
+			dao.insertLike(dto);	
 		}
 		int likeCount=dao.getLikeCount(review_idx);
 		String likeCnt=likeCount+"";

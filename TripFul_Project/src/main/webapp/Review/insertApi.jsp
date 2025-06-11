@@ -1,3 +1,4 @@
+<%@ page pageEncoding="UTF-8" %>
 <%@page import="review.ReportDao"%>
 <%@page import="java.util.Collections"%>
 <%@page import="java.util.ArrayList"%>
@@ -10,6 +11,12 @@
 <%@ page import="java.net.*, java.io.*, org.json.*" %>
 <%@ page contentType="application/json; charset=UTF-8" %>
 	<%
+	//정렬
+	String sort=request.getParameter("sort");
+	if (sort == null || sort.trim().equals("")) {
+	    sort = "latest"; // 기본 정렬: 최신순
+	}
+	//관광지값
 	String place_num=request.getParameter("place_num");
 	ReviewDao dao=new ReviewDao();
 	//관광지 이름
@@ -62,10 +69,13 @@
              date = sdf.format(d);
          }
          apilist.put("date", date);
-       	 apilist.put("photo1", "null");
-         apilist.put("photo2", "null");
-         apilist.put("photo3", "null");
+       	 apilist.put("photo1", "");
+         apilist.put("photo2", "");
+         apilist.put("photo3", "");
          apilist.put("read", "Google");
+         apilist.put("review_idx", "");  // 임시값
+         apilist.put("likeCheck", "0");
+         apilist.put("likeCnt","0");
          //api 리뷰 리스트 병합 리스트에 추가
          merged.add(apilist);    // Google 리뷰
       	
@@ -73,7 +83,7 @@
      }
  }
  	String member_id=(String)session.getAttribute("id");
- 	
+ 	ReportDao rdao=new ReportDao();
     // DB 리뷰에서 키명 맞추기
     for (HashMap<String, String> map : DBlist) {
         HashMap<String, String> review = new HashMap<>();
@@ -85,7 +95,7 @@
         review.put("date", reviewData);               
         
         String review_img=map.get("review_img");
-        if(review_img!=null && review_img!="null")
+        if(review_img!=null && !"null".equals(review_img))
         {
         	String [] review_imgs=review_img.split(",");
         	for(int i=0;i<review_imgs.length;i++)
@@ -103,7 +113,7 @@
             review.put("photo3", "");
         }
         
-        ReportDao rdao=new ReportDao();
+        
      	int likeCheck=rdao.getlike(member_id, map.get("review_idx"));
      	int likeCount=rdao.getLikeCount(map.get("review_idx"));
      	String like=likeCheck+"";
@@ -116,14 +126,46 @@
         merged.add(review);
     } 	
  	
-    // 날짜순 정렬   
-    Collections.sort(merged, (m1, m2) -> {
-        try {
-            return sdf.parse(m2.get("date")).compareTo(sdf.parse(m1.get("date")));
-        } catch (Exception e) {
-            return 0;
-        }
-    });
+    // 병합 리스트 정렬
+    if ("latest".equals(sort)) {
+        Collections.sort(merged, (m1, m2) -> {
+            try {
+                return sdf.parse(m2.get("date")).compareTo(sdf.parse(m1.get("date")));
+            } catch (Exception e) {
+                return 0;
+            }
+        });
+    } else if ("rating".equals(sort)) {
+        Collections.sort(merged, (m1, m2) -> {
+            try {
+                double r1 = Double.parseDouble(m1.get("rating"));
+                double r2 = Double.parseDouble(m2.get("rating"));
+                return Double.compare(r2, r1); // 높은 별점 우선
+            } catch (Exception e) {
+                return 0;
+            }
+        });
+    } else if ("likes".equals(sort)) {
+        Collections.sort(merged, (m1, m2) -> {
+        	   try {
+                   // 리뷰 출처 우선순위: DB > Google
+                   String source1 = m1.get("read");
+                   String source2 = m2.get("read");
+					
+                   if (!source1.equals(source2)) {
+                       // DB가 앞에 오도록: "DB"이면 -1, 아니면 1
+                       return "DB".equals(source1) ? -1 : 1;
+                   }
+
+                   // 같은 출처(DB끼리 or Google끼리)라면 likeCnt 내림차순
+                   int l1 = Integer.parseInt(m1.getOrDefault("likeCnt", "0"));
+                   int l2 = Integer.parseInt(m2.getOrDefault("likeCnt", "0"));
+                   return Integer.compare(l2, l1);
+               } catch (Exception e) {
+                   return 0;
+               }
+        });
+    }
 
     // JSONArray로 변환
     JSONArray jsonArr = new JSONArray();
