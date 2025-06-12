@@ -16,7 +16,7 @@
 
 </head>
 <body>
-<%	
+<%
 		
 	session.invalidate();
 	session = request.getSession(true);
@@ -24,6 +24,7 @@
 	String id = request.getParameter("user");
 	String pw = request.getParameter("pass");
 	String chk = request.getParameter("check");
+	String redirect = request.getParameter("redirect");
 		
 	//System.out.println(chk);
 	LoginDao dao = new LoginDao();
@@ -42,9 +43,11 @@
 		session.setAttribute("id",id);
 		if(chk!=null){
 			session.setAttribute("rememberId", "ok");
-		}
-		response.sendRedirect("../index.jsp");
-
+		 }
+		response.sendRedirect(redirect);
+		
+		
+	
 	}
 	else if (flag == 2) {
 		System.out.println("어드민");

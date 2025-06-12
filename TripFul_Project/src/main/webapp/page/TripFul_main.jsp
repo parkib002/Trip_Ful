@@ -7,7 +7,7 @@
     PlaceDao placeDao = new PlaceDao();
     BoardEventDao eventDao = new BoardEventDao();
 
-    List<PlaceDto> placeList = placeDao.getRandomPlaces(30);
+    List<PlaceDto> placeList = placeDao.getRandomPlaces(5);
     List<HashMap<String, String>> overallLatestReviewList = reviewDao.getAllReviews();
     List<BoardEventDto> eventList = eventDao.getAllEvents();
 
