@@ -17,7 +17,11 @@
         }
     }
 %>
-
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+</head>
 <nav class="navbar navbar-light shadow px-4">
     <div class="container-fluid position-relative d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center flex-grow-1" style="min-width: 0; position: relative;">
@@ -71,7 +75,17 @@
         <div class="d-flex align-items-center gap-2 flex-shrink-0">
             <% if (myid == null) { %>
             <span class="me-2 d-none d-md-inline">로그인을 해주세요</span>
-            <button class="btn btn-sm btn-outline-warning" onclick="location.href='index.jsp?main=login/login.jsp'">Login</button>
+           <button class="btn btn-sm btn-outline-warning" id="loginBtn">Login</button>
+
+		<script>
+  		document.getElementById('loginBtn').addEventListener('click', function() {
+    	// 현재 페이지 URL (쿼리 포함)
+    	const currentUrl = window.location.href;
+    	// 로그인 페이지 주소 + redirect 파라미터로 현재 URL 전달
+    	const loginUrl = 'index.jsp?main=login/login.jsp&redirect=' + encodeURIComponent(currentUrl);
+    	location.href = loginUrl;
+  		});
+		</script>
             <% } else { %>
             <span class="me-2 d-none d-md-inline">
                     <a href="index.jsp?main=<%=
