@@ -72,4 +72,5 @@
 	</div>
 </body>
 <script src="./login/JavaScript/forgotJS.js"></script>
+
 </html>

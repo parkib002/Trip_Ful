@@ -187,7 +187,9 @@ $("#newpw").keyup(function() {
 	$.ajax({
 		type: "get",
 		url: "./login/PwDuplicate.jsp",
-		data: { "currpw": inputCurrPw.val() },
+		data: { "currpw": inputCurrPw.val(),
+			"id":$("#id").val()
+		 },
 		dataType: "html",
 		success: function(res) {
 			if (res.trim() == 1) {
