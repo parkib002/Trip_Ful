@@ -26,6 +26,7 @@ String kakaoJavascriptKey = "7395a37b7d425e6e61d666714ed9c297";
 <title>Insert title here</title>
 <%
 String login = request.getParameter("login");
+String redirect = request.getParameter("redirect");
 String id = null;
 String clientId = "IajLk4vELxMTjBeM9JGp";//애플리케이션 클라이언트 아이디값";
 String redirectURI = URLEncoder.encode("http://localhost:8080/TripFul_Project/login/naverLoginAction.jsp", "UTF-8");
@@ -74,6 +75,7 @@ if (session.getAttribute("id") != null) {
 				<div class="sign-in-htm">
 					<form action="<%=request.getContextPath() %>/login/loginAction.jsp" method="post"
 						onsubmit="return chkSignIn()">
+						<input type="hidden" name="redirect" value="<%=redirect%>">
 						<div class="group">
 							<label for="user" class="label">아이디</label> <input id="user"
 								type="text" class="input" name="user">

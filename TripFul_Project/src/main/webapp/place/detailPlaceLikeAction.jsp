@@ -10,7 +10,6 @@ PlaceDao dao = new PlaceDao();
 JsonObject ob = new JsonObject();
 
 if (user_id == null) {
-    ob.addProperty("error", "로그인이 필요합니다.");
 } else {
     if ("check".equals(action)) {
         // 좋아요 여부만 확인 (토글 아님)

@@ -22,7 +22,7 @@
 <title>모든 여행자 리뷰</title>
 <%
 ReviewDao rdao = new ReviewDao();
-ReportDao dao=new ReportDao();
+
 // 아이디, 로그인상태 세션값 받기 (리뷰 수정/삭제/신고 기능에 사용됨)
 String review_id_session = (String) session.getAttribute("id"); // 세션 ID와 충돌 방지
 String loginok = (String) session.getAttribute("loginok");
@@ -30,8 +30,6 @@ String loginok = (String) session.getAttribute("loginok");
 // 모든 리뷰 가져오기
 List<HashMap<String, String>> list = rdao.getAllReviews();
 
-/* //신고 report_idx 가져오기
-String report_idx=dao.getAllReportIdx(); */
 
 //신고한 review_idx값중 중복제거
 List<HashMap<String, String>> reportList=rdao.getReportReview();
@@ -73,6 +71,8 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 			var getauthor=$(this).closest(".col2").find(".getauthor").text();
 			console.log(getauthor);
 			var getcontent=$(this).closest(".col2").find(".getreport_content").val();
+			var review_idx=$(this).closest(".col2").find(".dropdown-menu .delete_btn2").attr("review_idx");
+			
 			var content=[]
 			content =getcontent.split("/");
 			console.log(getcontent);
@@ -96,6 +96,7 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 			    
 			    $(".reportmodal").find(".report_content").html(s);
 			    $(".reportmodal").find(".report_cnt").text("신고 횟수: "+content.length+"개");
+			    $(".reportmodal").find(".delete_btn2").attr("review_idx",review_idx);
 		});
 		
 		$("#closeBtn").click(function() {
@@ -139,7 +140,9 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 }
 
 .card1 .categorydate {
-	display: flex; /* Flex 컨테이너로 설정 */
+	position: relative;
+ 	display: inline-block;
+	
 	justify-content: space-between;
 	/* 요소들을 양 끝으로 벌립니다. (예: 날짜와 카테고리 아이콘) */
 	align-items: center; /* 요소들을 수직 중앙 정렬합니다. */
@@ -211,8 +214,8 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 .card1 .dropdown-menu {
 	position: absolute;
 	/* top: calc(100% + 5px); /* category 아이콘 아래에 위치 (아이콘 높이 + 여백) */
-	top: 45px;
-	right: 35px; /* category 아이콘 옆에 위치 */
+	top: 25px;
+	right: 20px; /* category 아이콘 옆에 위치 */
 	background-color: #fff;
 	border: 1px solid #ddd;
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -284,7 +287,7 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 	/* 스타일 - customize */
 	max-width: 600px;
 	width: 100%;
-	height: 800px;
+	height: 70%;
 	background-color: white;
 	padding: 20px;
 	border-radius: 5px;
@@ -378,12 +381,19 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 
 <body>
 	<div class="container mt-5">
+	<%
+		if(loginok!=null && loginok.equals("admin"))
+		{
+	%>
 		<div>
 			<label class="checkbox-label">
 				<input type="checkbox" class="reportListBtn" name="report" value="report">
 				<i class="bi bi-check-circle"></i>&nbsp;신고된 리뷰
 			</label>
 		</div>
+		<%
+		}
+		%>
 		<h3 class="text-center mb-4">모든 여행자 리뷰</h3>
 			
 		<div class="container mt-3 allReviewList" >
@@ -435,25 +445,28 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 
 									<div class='dropdown-menu'>
 										<%
+										if(review_id_session!=null)
+										{
 										if (review_id_session.equals(r.get("author")) || loginok.equals("admin")) {
 										%>
-										<button type="" class="delete-btn"
+										<button type="button" class="delete-btn2"
 											review_id='<%=r.get("author")%>'
 											review_idx='<%=r.get("review_num")%>'>삭제</button>
 
-										<%
-										if (review_id_session.equals(r.get("author"))) {
+										
+										<%-- if (review_id_session.equals(r.get("author"))) {
 										%>
 										<button type='button' class='updateModal'
 											review_idx='<%=r.get("author")%>'>수정</button>
 										<%
-										}
+										} --%>
 
-										} else if (!review_id_session.equals(r.get("author"))) {
+										<%} else if (!review_id_session.equals(r.get("author"))) {
 										%>
 										<button type='button' class='report'
 											review_idx='<%=r.get("review_num")%>' loginok='<%=loginok%>'>신고</button>
 										<%
+										}
 										}
 										%>
 									</div>
@@ -524,16 +537,20 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 
 							<hr class="my-3">
 							<div class="text-end">
-								<small class="text-muted"> 여행지: **<%=placeName%>** <%
-								if (currentPlaceNum != null && !currentPlaceNum.trim().isEmpty() && !placeName.equals("알 수 없는 여행지")) {
-								%>
-									<a
-									href="index.jsp?main=place/detailPlace.jsp?place_num=<%=currentPlaceNum%>"
-									class="btn btn-sm btn-outline-info ms-2">자세히 보기</a> <%
- }
- %>
+								<small class="text-muted"> 여행지: **<%=placeName%>** 
+								
 								</small>
 							</div>
+							<%
+								if (currentPlaceNum != null && !currentPlaceNum.trim().isEmpty() && !placeName.equals("알 수 없는 여행지")) {
+								%>
+								<div style="margin: 5px; float: right;">
+								<a 	href="index.jsp?main=place/detailPlace.jsp?place_num=<%=currentPlaceNum%>"
+									class="btn btn-sm btn-outline-info ms-2">자세히 보기</a> 
+							
+								</div>
+								 <%}%>
+								
 						</div>
 					</div>
 					
@@ -580,8 +597,7 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 					%>
 					<div class="col2">
 						<div class='card1 h-100 p-3'>
-							<div
-								class='review-header d-flex justify-content-between align-items-center mb-2'>
+							<div class='review-header d-flex justify-content-between align-items-center mb-2'>
 								<b class="getauthor"><%=a.get("author") != null ? a.get("author") : "익명"%></b>
 								<%
 								if (a.get("read") != null && !a.get("read").equals("DB") && !a.get("read").trim().isEmpty()) {
@@ -602,25 +618,30 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 
 									<div class='dropdown-menu'>
 										<%
+										if(review_id_session!=null)
+										{
 										if (review_id_session.equals(a.get("author")) || loginok.equals("admin")) {
 										%>
-										<button type="button" class="delete-btn"
+
+
+										<button type="button" class="delete-btn2"
 											review_id='<%=a.get("author")%>'
 											review_idx='<%=a.get("review_num")%>'>삭제</button>
 
-										<%
-										if (review_id_session.equals(a.get("author"))) {
+										
+										<%-- if (review_id_session.equals(a.get("author"))) {
 										%>
 										<button type='button' class='updateModal'
 											review_idx='<%=a.get("author")%>'>수정</button>
 										<%
-										}
+										} --%>
 
-										} else if (!review_id_session.equals(a.get("author"))) {
+										<%} else if (!review_id_session.equals(a.get("author"))) {
 										%>
 										<button type='button' class='report'
 											review_idx='<%=a.get("review_num")%>' loginok='<%=loginok%>'>신고</button>
 										<%
+										}
 										}
 										%>
 									</div>
@@ -691,12 +712,19 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 
 							<hr class="my-3">
 							<div class="text-end">
-								<small class="text-muted"> 여행지: **<%=placeName%>** <%
-								if (currentPlaceNum != null && !currentPlaceNum.trim().isEmpty() && !placeName.equals("알 수 없는 여행지")) {
+								<small class="text-muted"> 여행지: **<%=placeName%>** 
+								
+								</small>
+								
+							</div>
+							<%if (currentPlaceNum != null && !currentPlaceNum.trim().isEmpty() && !placeName.equals("알 수 없는 여행지")) {
 								%>
-									<a
-									href="index.jsp?main=place/detailPlace.jsp?place_num=<%=currentPlaceNum%>"
+								<div style="margin: 2px; float: right;">
+								<a 	href="index.jsp?main=place/detailPlace.jsp?place_num=<%=currentPlaceNum%>"
 									class="btn btn-sm btn-outline-info ms-2">자세히 보기</a> 
+							<input type="hidden" class="getreport_content" value="<%=a.get("report_content")%>">
+									<button type="button" class="modalBtn btn btn-sm btn-outline-danger ms-2">신고 리스트</button>
+							</div>	
 									
 									
 									
@@ -704,10 +732,7 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 									<%
  								}
  								%>
-								</small>
-								<input type="hidden" class="getreport_content" value="<%=a.get("report_content")%>">
-								<button style="margin-top: 5px;" type="button" class="modalBtn btn btn-sm btn-outline-danger ms-2">신고 리스트</button>
-							</div>
+							
 						</div>
 					</div>
 							
@@ -763,14 +788,13 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 										</table>
 									</div>
 									<div class="modal-foot">														
-										<button type="button" id="Delete_btn" class="delete_btn">삭제</button>
+										<button type="button" id="Delete_btn" class="delete-btn2" review_idx="">삭제</button>
 										<button type="button" class="close" id="closeBtn">취소</button>
 									</div>
 								</form>
-							</div>	
-	
-	
-	
+							</div>		
+
+
 	
 	
 	
@@ -778,7 +802,7 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 	<%-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --%>
 	<%-- <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script> --%>
 	<%-- <script src="Review/JavaScript/ModalJs.js"></script> --%>
-	<script src="Review/JavaScript/reviewJs.js"></script>
+	<script src="Review/JavaScript/reviewListJs.js" defer></script>
 
 </body>
 
