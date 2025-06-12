@@ -22,7 +22,7 @@
 <title>모든 여행자 리뷰</title>
 <%
 ReviewDao rdao = new ReviewDao();
-ReportDao dao=new ReportDao();
+
 // 아이디, 로그인상태 세션값 받기 (리뷰 수정/삭제/신고 기능에 사용됨)
 String review_id_session = (String) session.getAttribute("id"); // 세션 ID와 충돌 방지
 String loginok = (String) session.getAttribute("loginok");
@@ -30,8 +30,6 @@ String loginok = (String) session.getAttribute("loginok");
 // 모든 리뷰 가져오기
 List<HashMap<String, String>> list = rdao.getAllReviews();
 
-/* //신고 report_idx 가져오기
-String report_idx=dao.getAllReportIdx(); */
 
 //신고한 review_idx값중 중복제거
 List<HashMap<String, String>> reportList=rdao.getReportReview();
@@ -383,12 +381,19 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 
 <body>
 	<div class="container mt-5">
+	<%
+		if(loginok!=null && loginok.equals("admin"))
+		{
+	%>
 		<div>
 			<label class="checkbox-label">
 				<input type="checkbox" class="reportListBtn" name="report" value="report">
 				<i class="bi bi-check-circle"></i>&nbsp;신고된 리뷰
 			</label>
 		</div>
+		<%
+		}
+		%>
 		<h3 class="text-center mb-4">모든 여행자 리뷰</h3>
 			
 		<div class="container mt-3 allReviewList" >
@@ -440,6 +445,8 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 
 									<div class='dropdown-menu'>
 										<%
+										if(review_id_session!=null)
+										{
 										if (review_id_session.equals(r.get("author")) || loginok.equals("admin")) {
 										%>
 										<button type="button" class="delete-btn2"
@@ -459,6 +466,7 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 										<button type='button' class='report'
 											review_idx='<%=r.get("review_num")%>' loginok='<%=loginok%>'>신고</button>
 										<%
+										}
 										}
 										%>
 									</div>
@@ -529,19 +537,20 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 
 							<hr class="my-3">
 							<div class="text-end">
-								<small class="text-muted"> 여행지: **<%=placeName%>** <%
-								if (currentPlaceNum != null && !currentPlaceNum.trim().isEmpty() && !placeName.equals("알 수 없는 여행지")) {
-								%>
-									 <%
- }
- %>
+								<small class="text-muted"> 여행지: **<%=placeName%>** 
+								
 								</small>
 							</div>
-							<div style="margin: 5px; float: right;">
+							<%
+								if (currentPlaceNum != null && !currentPlaceNum.trim().isEmpty() && !placeName.equals("알 수 없는 여행지")) {
+								%>
+								<div style="margin: 5px; float: right;">
 								<a 	href="index.jsp?main=place/detailPlace.jsp?place_num=<%=currentPlaceNum%>"
 									class="btn btn-sm btn-outline-info ms-2">자세히 보기</a> 
 							
-							</div>	
+								</div>
+								 <%}%>
+								
 						</div>
 					</div>
 					
@@ -588,8 +597,7 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 					%>
 					<div class="col2">
 						<div class='card1 h-100 p-3'>
-							<div
-								class='review-header d-flex justify-content-between align-items-center mb-2'>
+							<div class='review-header d-flex justify-content-between align-items-center mb-2'>
 								<b class="getauthor"><%=a.get("author") != null ? a.get("author") : "익명"%></b>
 								<%
 								if (a.get("read") != null && !a.get("read").equals("DB") && !a.get("read").trim().isEmpty()) {
@@ -610,6 +618,8 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 
 									<div class='dropdown-menu'>
 										<%
+										if(review_id_session!=null)
+										{
 										if (review_id_session.equals(a.get("author")) || loginok.equals("admin")) {
 										%>
 										<button type="button" class="delete-btn2"
@@ -629,6 +639,7 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 										<button type='button' class='report'
 											review_idx='<%=a.get("review_num")%>' loginok='<%=loginok%>'>신고</button>
 										<%
+										}
 										}
 										%>
 									</div>
@@ -699,10 +710,19 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 
 							<hr class="my-3">
 							<div class="text-end">
-								<small class="text-muted"> 여행지: **<%=placeName%>** <%
-								if (currentPlaceNum != null && !currentPlaceNum.trim().isEmpty() && !placeName.equals("알 수 없는 여행지")) {
-								%>
+								<small class="text-muted"> 여행지: **<%=placeName%>** 
 								
+								</small>
+								
+							</div>
+							<%if (currentPlaceNum != null && !currentPlaceNum.trim().isEmpty() && !placeName.equals("알 수 없는 여행지")) {
+								%>
+								<div style="margin: 2px; float: right;">
+								<a 	href="index.jsp?main=place/detailPlace.jsp?place_num=<%=currentPlaceNum%>"
+									class="btn btn-sm btn-outline-info ms-2">자세히 보기</a> 
+							<input type="hidden" class="getreport_content" value="<%=a.get("report_content")%>">
+									<button type="button" class="modalBtn btn btn-sm btn-outline-danger ms-2">신고 리스트</button>
+							</div>	
 									
 									
 									
@@ -710,15 +730,7 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 									<%
  								}
  								%>
-								</small>
-								
-							</div>
-							<div style="margin: 2px; float: right;">
-								<a 	href="index.jsp?main=place/detailPlace.jsp?place_num=<%=currentPlaceNum%>"
-									class="btn btn-sm btn-outline-info ms-2">자세히 보기</a> 
-							<input type="hidden" class="getreport_content" value="<%=a.get("report_content")%>">
-									<button type="button" class="modalBtn btn btn-sm btn-outline-danger ms-2">신고 리스트</button>
-							</div>	
+							
 						</div>
 					</div>
 							
