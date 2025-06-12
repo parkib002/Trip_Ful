@@ -6,7 +6,6 @@
 <%
   	String loginok=(String)session.getAttribute("loginok");	
 	ReviewDao rdao=new ReviewDao();
-	String place_num=rdao.getAllPlaceNum();
 
   %>
 <head>

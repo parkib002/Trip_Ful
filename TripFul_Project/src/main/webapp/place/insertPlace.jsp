@@ -134,6 +134,16 @@
 
       }
     });
+    
+    function cleanSummernoteContent(html) {
+    	  const wrapper = document.createElement('div');
+    	  wrapper.innerHTML = html;
+
+    	  // data-start, data-end 속성 제거
+    	  wrapper.querySelectorAll('[data-start], [data-end]').forEach(el => el.remove());
+
+    	  return wrapper.innerHTML;
+    	}
 
     function sendFile(file) {
       const data = new FormData();
@@ -376,7 +386,8 @@
   document.getElementById("output-address").value = currentPlace.address;
   document.getElementById("output-placeid").value = currentPlace.place_id;
   
-  const content = $('#summernote').summernote('code');
+  const rawcontent = $('#summernote').summernote('code');
+  const content = cleanSummernoteContent(rawcontent); // 👈 정제된 conte
   const tag = $('#place_tag').val();
 
   console.log("저장할 데이터:", {

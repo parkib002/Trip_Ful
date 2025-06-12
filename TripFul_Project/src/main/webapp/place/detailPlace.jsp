@@ -24,7 +24,7 @@
 	if (dto == null) {
 		%>
 			<script>
-				alert("존재하지 않는 관광지입니다.");
+				alert("페이지를 찾을 수 없습니다");
 				location.href = "index.jsp?main=place/selectPlace.jsp";
 			</script>
 		<%
@@ -263,9 +263,15 @@ $(function(){
 	  // 2) 좋아요 클릭 시 토글 호출
 	  $("#likeIcon").click(function () {
 	    if (!loginok) {
-	      alert("로그인 후 좋아요를 눌러주세요");
-	      return;
-	    }
+	      	var a=confirm("로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?");
+	      	
+	      	if(a){
+	      		location.href='index.jsp?main=login/login.jsp';
+	      	}else{
+	      		return;
+	      	}
+	      }
+	    
 
 	    $.ajax({
 	      type: "get",

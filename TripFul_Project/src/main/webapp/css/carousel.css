@@ -80,6 +80,19 @@
 }
 
 /* 카드 본문 내 제목 (장소 이름) */
+.carousel-item .card-body{
+   height: 450px;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+}
+
+.carousel-item .card-body>div:first-child{
+	overflow-y: auto;
+	flex-grow: 1;
+	padding-bottom: 5rem;
+}
+
 .carousel-item .card-body h5 {
     color: #4E54C8;
     font-weight: 700;
