@@ -49,6 +49,15 @@
 </style>
 </head>
 <body>
+<script type="text/javascript">
+				function loginUrl() {
+					const currentUrl = window.location.href;
+					if(confirm('로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?'))
+						{
+							location.href="index.jsp?main=login/login.jsp&redirect="+encodeURIComponent(currentUrl);
+						}
+				}
+			</script>
 <div class="container detailContainer mt-5 mb-5">
     <%-- 이벤트 상세 내용 카드 --%>
     <div class="card shadow-sm">
@@ -88,7 +97,7 @@
                 </div>
             </form>
             <% } else { %>
-            <p class="text-muted">댓글을 작성하려면 <a href="<%= request.getContextPath() %>/index.jsp?main=login/login.jsp">로그인</a>해주세요.</p>
+            <p class="text-muted">댓글을 작성하려면 <a href="javascript:void(0);"	onclick="loginUrl()">로그인</a>해주세요.</p>
             <% } %>
             <hr>
             <div id="commentListInitial"></div>

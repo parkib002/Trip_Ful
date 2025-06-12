@@ -98,6 +98,16 @@ String keywordFromRequest = request.getParameter("keyword");
 
 %>
 <body>
+<script type="text/javascript">
+function loginUrl() {
+	const currentUrl = window.location.href;
+	if(confirm('로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?'))
+		{
+			location.href="index.jsp?main=login/login.jsp&redirect="+encodeURIComponent(currentUrl);
+		}
+}
+
+</script>
 
 <br><br><br>
 <div class="container my-3 board-search-container">
@@ -137,7 +147,7 @@ String keywordFromRequest = request.getParameter("keyword");
             %>
                 <a style="float: right; text-decoration: none; color: black; margin-top: 20px;"
                 href="javascript:void(0);" 
-                onclick="if(confirm('로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?')) { location.href='<%= request.getContextPath() %>/index.jsp?main=login/login.jsp'; } return false;">
+                onclick="loginUrl()">
                     <i class="bi bi-plus-square"></i>&nbsp;문의하기
                 </a>
             <%} else {%>
