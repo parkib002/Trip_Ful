@@ -22,6 +22,18 @@ function chkSignIn() {
 	}
 }
 
+function googleSign() {
+        const clientId = "562446626383-a9laei72kvuogmlo252evitktevt7i81.apps.googleusercontent.com"; // head의 메타 태그에 있는 클라이언트 ID
+        const redirectUri = encodeURIComponent('http://localhost:8080/TripFul_Project/login/googleLoginAction.jsp');
+        
+        // Google OAuth 2.0 엔드포인트. email과 profile 정보 요청
+        const scope = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/user.birthday.read';
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=${scope}&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=${redirectUri}&client_id=${clientId}`;
+
+        // 새 팝업 창으로 구글 로그인 페이지 띄우기
+        window.open(authUrl, "googleLoginPop", "width=500, height=700, top=200, left=700, scrollbars=yes");
+}
+
 function naverSign(apiURL) {
 	window.open(apiURL, "NaverLogin", "width=500, height=800, top=200, left=700, resizable=no, scrollbars=no");
 }

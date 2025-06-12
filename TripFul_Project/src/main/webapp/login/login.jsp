@@ -7,6 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name ="google-signin-client_id" content="562446626383-a9laei72kvuogmlo252evitktevt7i81.apps.googleusercontent.com">
 <link
 	href="https://fonts.googleapis.com/css2?family=Dongle&family=Nanum+Brush+Script&family=Nanum+Myeongjo&family=Nanum+Pen+Script&display=swap"
 	rel="stylesheet">
@@ -94,7 +95,7 @@ if (session.getAttribute("id") != null) {
 								Password?</a>
 						</div>
 						<div class="social_login">
-							<img src="./login/social_img/google.png"> <img
+							<img src="./login/social_img/google.png" onclick="googleSign()"> <img
 								src="./login/social_img/kakao.png" onclick="kakaoSign()"> <img
 								src="./login/social_img/naver.png" onclick="naverSign('<%=apiURL%>')">
 						</div>
@@ -134,7 +135,7 @@ if (session.getAttribute("id") != null) {
 							<input type="submit" class="button" value="Sign Up">
 						</div>
 						<div class="social_signin">
-							<img src="./login/social_img/google.png" id="google-signin-signup" alt="Google로 회원가입"> <img
+							<img src="./login/social_img/google.png" onclick="googleSign()"> <img
 								src="./login/social_img/kakao.png" onclick="kakaoSign()"> <img
 								src="./login/social_img/naver.png" onclick="naverSign('<%=apiURL%>')">
 						</div>
