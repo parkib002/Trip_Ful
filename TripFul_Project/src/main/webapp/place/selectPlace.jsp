@@ -1,10 +1,11 @@
+<%@page import="review.ReviewDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <%
-  	String loginok=(String)session.getAttribute("loginok");
-
+  	String loginok=(String)session.getAttribute("loginok");	
+	ReviewDao rdao=new ReviewDao();
 
   %>
 <head>
@@ -495,22 +496,56 @@ $(document).ready(function () {
         $card.append($imageWrapper);
 
         $('<div class="caption">').text(place.place_name).css({ marginBottom: '1px', paddingBottom: '0' }).appendTo($card);
-
-        const ratingText = (typeof place.avg_rating === 'number' && place.avg_rating >= 0)
-            ? '⭐ ' + place.avg_rating.toFixed(1)
-            : '⭐ 평점없음';
-        $('<div class="rating">').text(ratingText).css({ margin: '0', padding: '0' }).appendTo($card);
-
+        
+        
+        const $ratingDiv= $('<div class="rating">').text('⭐ 평점없음').css({ margin: '0', padding: '0' })
+        $card.append($ratingDiv);
         const viewsText = (typeof place.views === 'number' && place.views >= 0)
-            ? '👁 조회수: ' + place.views
-            : '👁 조회수 정보 없음';
-        const likesText = (typeof place.likes === 'number' && place.likes >= 0)
-            ? '❤️ 좋아요: ' + place.likes
-            : '❤️ 좋아요 정보 없음';
-        $('<div class="text-area">').css({ fontSize: '0.65rem', color: '#555' })
-            .html(viewsText + ' | ' + likesText)
-            .appendTo($card);
-
+        ? '👁 조회수: ' + place.views
+        : '👁 조회수 정보 없음';
+   		 const likesText = (typeof place.likes === 'number' && place.likes >= 0)
+        ? '❤️ 좋아요: ' + place.likes
+        : '❤️ 좋아요 정보 없음';
+  		$('<div class="text-area">').css({ fontSize: '0.65rem', color: '#555' })
+  		.html(viewsText + ' | ' + likesText)
+  		.appendTo($card);
+       
+        let avgRating=0;
+        var place_num=place.place_num;
+        $.ajax({
+        	type:"post",
+        	dataType:"json",
+        	url:"Review/insertApi.jsp",
+        	data:{"place_num":place_num},
+        	success:function(res){
+        		var reviews=res.reviews;
+        		var totCnt=0;
+                var totStar = 0;               
+	            
+	            if (reviews && reviews.length > 0) { // 리뷰 데이터가 있는지 확인
+	            	var totCnt = reviews.length;
+	            
+        		 	reviews.forEach(function(r){
+        		 		
+        		 		// 별점 통계 계산
+	                    totStar += parseFloat(r.rating);
+	                    
+        		 	});
+        		 // ⭐⭐⭐ 여기부터 별점 통계 진행 바 업데이트 로직 ⭐⭐⭐
+                    avgRating = totCnt > 0 ? parseFloat((totStar / totCnt).toFixed(1)) : 0.0;
+        			//console.log(avgRating); 
+                    const ratingText = (avgRating !== null)
+                    ? '⭐ ' + avgRating
+                    : '⭐ 평점없음';
+                    
+                    $ratingDiv.text(ratingText);
+                    
+	            }
+        	}
+        });
+       
+		
+        
         $card.click(() => {
             location.href = 'index.jsp?main=place/detailPlace.jsp&place_num=' + place.place_num;
         });
