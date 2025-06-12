@@ -17,6 +17,7 @@
 // --- 0. 초기 변수 설정 및 에러 메시지 초기화 ---
 String code = request.getParameter("code");
 String state = request.getParameter("state");
+String redirect = request.getParameter("redirect");
 
 String naverLoginErrorMessage = null;
 
@@ -173,7 +174,7 @@ else{
 	%>
 
 	<script>
-		window.opener.document.location.href = "../index.jsp";
+		window.opener.document.location.href = "<%=redirect%>";
 		window.close();
 	</script>
 

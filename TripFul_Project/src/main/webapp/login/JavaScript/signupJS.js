@@ -22,34 +22,39 @@ function chkSignIn() {
 	}
 }
 
-function googleSign() {
-        const clientId = "562446626383-a9laei72kvuogmlo252evitktevt7i81.apps.googleusercontent.com"; // head의 메타 태그에 있는 클라이언트 ID
-        const redirectUri = encodeURIComponent('http://localhost:8080/TripFul_Project/login/googleLoginAction.jsp');
-        
-        // Google OAuth 2.0 엔드포인트. email과 profile 정보 요청
-        const scope = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/user.birthday.read';
-        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=${scope}&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=${redirectUri}&client_id=${clientId}`;
+function googleSign(finalUrl) {
+    const clientId = "562446626383-a9laei72kvuogmlo252evitktevt7i81.apps.googleusercontent.com"; // head의 메타 태그에 있는 클라이언트 ID
+    
+    // ★ 수정: redirect_uri는 구글에 등록된 주소 그대로, 파라미터 없이 깨끗하게 유지합니다.
+    const redirectUri = 'http://localhost:8080/TripFul_Project/login/googleLoginAction.jsp';
+    
+    // Google OAuth 2.0 엔드포인트. email과 profile, birthday 정보 요청
+    const scope = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/user.birthday.read';
+    
+    // ★ 수정: state 파라미터에 최종 목적지(finalUrl)를 담습니다.
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=${scope}&access_type=offline&include_granted_scopes=true&response_type=code&state=${encodeURIComponent(finalUrl)}&redirect_uri=${encodeURIComponent(redirectUri)}&client_id=${clientId}`;
 
-        // 새 팝업 창으로 구글 로그인 페이지 띄우기
-        window.open(authUrl, "googleLoginPop", "width=500, height=700, top=200, left=700, scrollbars=yes");
+    // 새 팝업 창으로 구글 로그인 페이지 띄우기
+    window.open(authUrl, "googleLoginPop", "width=500, height=700, top=200, left=700, scrollbars=yes");
 }
 
 function naverSign(apiURL) {
 	window.open(apiURL, "NaverLogin", "width=500, height=800, top=200, left=700, resizable=no, scrollbars=no");
 }
 
-function kakaoSign() {
+// 최종 목적지 주소를 인자로 받습니다.
+function kakaoSign(finalUrl) {
 	const kakaoRestApiKey = "06960d1e88695098bafe3caf197a0a7e"; // 카카오 REST API 키
-	const redirectUri = encodeURIComponent('http://localhost:8080/TripFul_Project/login/kakaoLoginAction.jsp');
+	
+	// ★★★ 수정: redirect_uri는 카카오에 등록된 주소 그대로, 깨끗하게 유지합니다.
+	const redirectUri = 'http://localhost:8080/TripFul_Project/login/kakaoLoginAction.jsp';
 
-	// 인가 코드 요청 URL을 직접 생성 (올바른 구문으로 수정)
-	const authUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoRestApiKey}&redirect_uri=${redirectUri}`;
+	// 인가 코드 요청 URL을 직접 생성
+	// ★★★ 수정: 최종 목적지(finalUrl)는 state 파라미터에 담아서 보냅니다.
+	const authUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoRestApiKey}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(finalUrl)}`;
 
 	// 새 팝업 창으로 카카오 로그인 페이지 띄우기
 	window.open(authUrl, "kakaoLoginPop", "width=500, height=800, top=200, left=700, scrollbars=yes");
-
-	// 주의: 이 방식은 Kakao.Auth.login의 success/fail 콜백을 사용하지 않습니다.
-	// 따라서 로그인 성공/실패 여부는 kakaoLoginAction.jsp에서 처리해야 합니다.
 }
 
 
