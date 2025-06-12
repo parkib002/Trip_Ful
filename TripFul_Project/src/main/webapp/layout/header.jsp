@@ -79,11 +79,20 @@
 
 		<script>
   		document.getElementById('loginBtn').addEventListener('click', function() {
-    	// 현재 페이지 URL (쿼리 포함)
-    	const currentUrl = window.location.href;
-    	// 로그인 페이지 주소 + redirect 파라미터로 현재 URL 전달
-    	const loginUrl = 'index.jsp?main=login/login.jsp&redirect=' + encodeURIComponent(currentUrl);
-    	location.href = loginUrl;
+  		
+  			 const currentUrl = window.location.href;
+
+  		    // 이미 redirect 파라미터가 있으면 다시 로그인 페이지로 이동하지 않음
+  		    const hasRedirect = currentUrl.includes('redirect=');
+
+  		    if (!hasRedirect) {
+  		        // redirect가 없는 경우에만 현재 페이지 URL을 redirect로 전달
+  		        const loginUrl = 'index.jsp?main=login/login.jsp&redirect=' + encodeURIComponent(currentUrl);
+  		        location.href = loginUrl;
+  		    } else {
+  		        // 이미 redirect가 있는 상태라면 아무 동작 안 함 (또는 원하면 경고창 등 처리)
+  		        console.log('이미 redirect가 설정되어 있음. 중복 이동 방지됨.');
+  		    }
   		});
 		</script>
             <% } else { %>
