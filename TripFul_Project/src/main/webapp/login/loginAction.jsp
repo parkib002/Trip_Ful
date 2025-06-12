@@ -44,7 +44,13 @@
 		if(chk!=null){
 			session.setAttribute("rememberId", "ok");
 		 }
-		response.sendRedirect(redirect);
+		if(!redirect.equals("null")){
+			System.out.println(redirect);
+			response.sendRedirect(redirect);
+		}
+		else{
+			response.sendRedirect(request.getContextPath()+"/index.jsp");
+		}
 		
 		
 	

@@ -43,6 +43,7 @@ if (session.getAttribute("id") != null) {
 	id = (String) session.getAttribute("id");
 }
 
+
 %>
 <script>
 		$(function() {
@@ -55,7 +56,7 @@ if (session.getAttribute("id") != null) {
 			}
 			
 			<%
-			if (id != null) {
+			if (session.getAttribute("rememberId")!=null) {
 			%>
 				$("#check").prop("checked",true);
 				$("#user").val('<%=id%>');
