@@ -604,7 +604,7 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 										<%
 										if (review_id_session.equals(a.get("author")) || loginok.equals("admin")) {
 										%>
-										<button type="" class="delete-btn"
+										<button type="button" class="delete-btn"
 											review_id='<%=a.get("author")%>'
 											review_idx='<%=a.get("review_num")%>'>삭제</button>
 
