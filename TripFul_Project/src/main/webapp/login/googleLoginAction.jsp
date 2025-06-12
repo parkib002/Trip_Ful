@@ -20,6 +20,11 @@
 // --- 0. 초기 변수 설정 ---
 String code = request.getParameter("code");
 String googleLoginErrorMessage = null;
+// ★ 수정: 'redirect' 대신 'state' 파라미터를 받습니다.
+String state = request.getParameter("state");
+
+// ★ 추가: state 값이 없거나 비어있을 경우를 대비한 기본 URL 설정
+String finalRedirectUrl = (state != null && !state.isEmpty()) ? state : "../index.jsp";
 
 // DB에 저장할 member 정보
 String memberEmail = null;
@@ -37,10 +42,10 @@ if (code == null || code.isEmpty()) {
 } else {
 	// --- 2. 구글 클라이언트 정보 설정 ---
 	String clientId = "562446626383-a9laei72kvuogmlo252evitktevt7i81.apps.googleusercontent.com";
-	String clientSecret = "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"; // ★★★ 실제 값으로 변경 ★★★
+	String clientSecret = "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"; // ★★★ 보안에 매우 중요하므로 실제로는 외부 파일에서 관리하는 것이 좋습니다 ★★★
 
 	// 3. 콜백 URL
-	String redirectURI = URLEncoder.encode("http://localhost:8080/TripFul_Project/login/googleLoginAction.jsp", "UTF-8");
+	String redirectURI = "http://localhost:8080/TripFul_Project/login/googleLoginAction.jsp";
 
 	// --- 4. 액세스 토큰 요청 API 호출 ---
 	String tokenApiURL = "https://oauth2.googleapis.com/token";
@@ -52,7 +57,7 @@ if (code == null || code.isEmpty()) {
 		con.setDoOutput(true);
 
 		String postParams = "grant_type=authorization_code" + "&client_id=" + clientId + "&client_secret=" + clientSecret
-				+ "&redirect_uri=" + redirectURI + "&code=" + code;
+				+ "&redirect_uri=" + URLEncoder.encode(redirectURI, "UTF-8") + "&code=" + code;
 
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(con.getOutputStream()));
 		bw.write(postParams);
@@ -110,28 +115,33 @@ if (code == null || code.isEmpty()) {
 
 						JSONObject peopleJson = (JSONObject) parser.parse(new StringReader(people_res.toString()));
 						
-						// 이름(names) 정보 파싱
-						JSONArray names = (JSONArray) peopleJson.get("names");
-						if (names != null && names.size() > 0) {
-							JSONObject nameInfo = (JSONObject) names.get(0);
-							memberName = (String) nameInfo.get("displayName");
+						// 이름(names) 정보 파싱 (Null-safe)
+						if (peopleJson.containsKey("names")) {
+							JSONArray names = (JSONArray) peopleJson.get("names");
+							if (names != null && !names.isEmpty()) {
+								JSONObject nameInfo = (JSONObject) names.get(0);
+								memberName = (String) nameInfo.get("displayName");
+							}
 						}
 
-						// 생년월일(birthdays) 정보 파싱
-						JSONArray birthdays = (JSONArray) peopleJson.get("birthdays");
-						if (birthdays != null && birthdays.size() > 0) {
-							JSONObject birthdayInfo = (JSONObject) birthdays.get(0);
-							JSONObject date = (JSONObject) birthdayInfo.get("date");
-							
-							Number yearNum = (Number) date.get("year");
-							Number monthNum = (Number) date.get("month");
-							Number dayNum = (Number) date.get("day");
+						// 생년월일(birthdays) 정보 파싱 (Null-safe)
+						if(peopleJson.containsKey("birthdays")) {
+							JSONArray birthdays = (JSONArray) peopleJson.get("birthdays");
+							if (birthdays != null && !birthdays.isEmpty()) {
+								JSONObject birthdayInfo = (JSONObject) birthdays.get(0);
+								if(birthdayInfo.containsKey("date")){
+									JSONObject date = (JSONObject) birthdayInfo.get("date");
+									Number yearNum = (Number) date.get("year");
+									Number monthNum = (Number) date.get("month");
+									Number dayNum = (Number) date.get("day");
 
-							if (yearNum != null && monthNum != null && dayNum != null) {
-								String year = String.valueOf(yearNum.intValue()).substring(2);
-								String month = String.format("%02d", monthNum.intValue());
-								String day = String.format("%02d", dayNum.intValue());
-								memberBirthYYMMDD = year + month + day;
+									if (yearNum != null && monthNum != null && dayNum != null) {
+										String year = String.valueOf(yearNum.intValue()).substring(2);
+										String month = String.format("%02d", monthNum.intValue());
+										String day = String.format("%02d", dayNum.intValue());
+										memberBirthYYMMDD = year + month + day;
+									}
+								}
 							}
 						}
 					}
@@ -140,7 +150,7 @@ if (code == null || code.isEmpty()) {
 					// --- DB 연동 로직 ---
 					LoginDao dao = new LoginDao();
 					if (dao.getMemberIdx("google", providerId) == null) {
-						// 신규 회원
+						// 신규 회원 처리
 						SocialDto s_dto = new SocialDto();
 						s_dto.setSocial_provider("google");
 						s_dto.setSocial_provider_key(providerId);
@@ -156,7 +166,7 @@ if (code == null || code.isEmpty()) {
 	<%
 						return;
 					} else {
-						// 기존 회원
+						// 기존 회원 처리
 						LoginDto dto = dao.getOneMember(dao.getIdwithIdx(dao.getMemberIdx("google", providerId)));
 						if (dto.getAdmin() == 1) {
 							session.setAttribute("loginok", "admin");
@@ -167,7 +177,12 @@ if (code == null || code.isEmpty()) {
 						session.setAttribute("id", dto.getId());
 	%>
 	<script>
-		window.opener.document.location.href = "../index.jsp<%=dto.getAdmin() == 1 ? "?main=page/adminMain.jsp" : ""%>";
+        // ★ 수정: 관리자와 일반 사용자를 구분하여 state 값으로 받은 finalRedirectUrl 변수를 사용합니다.
+		if (<%= dto.getAdmin() %> === 1) {
+			window.opener.document.location.href = "../index.jsp?main=page/adminMain.jsp";
+		} else {
+			window.opener.document.location.href = "<%= finalRedirectUrl %>";
+		}
 		window.close();
 	</script>
 	<%

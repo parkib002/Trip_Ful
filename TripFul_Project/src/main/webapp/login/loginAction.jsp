@@ -35,7 +35,7 @@
 	
 	if(flag==0){
 		session.setAttribute("loginok","no");
-		response.sendRedirect("../index.jsp?main=login/login.jsp&login=1");
+		response.sendRedirect("../index.jsp?main=login/login.jsp&login=1&redirect="+redirect);
 	}
 	else if (flag==1){
 		System.out.println("유저");
