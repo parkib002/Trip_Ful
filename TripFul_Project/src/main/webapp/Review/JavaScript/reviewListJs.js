@@ -48,6 +48,51 @@ $(document).on("click", ".delete-btn", function(){
 				        });
 });
 
+
+
+
+//리뷰 삭제
+$(document).on("click", ".delete-btn2", function(){
+	
+	var review_idx=$(this).attr("review_idx");
+	var a=$(".reportListBtn").is(":checked");
+	console.log(a);
+	swal.fire({
+				        title: "리뷰를 삭제하시겠습니까?",		        
+				        type: "warning",
+				        confirmButtonColor: "#d33",
+				        cancelButtonColor: "#3085d6",
+				        confirmButtonText: "삭제",
+				        cancelButtonText: "취소",			        
+				        showCancelButton: true
+				        })
+				          .then((result) => {
+				          if (result.value) {
+							
+				              $.ajax({
+								type:"post",
+								dataType:"html",
+								url:"Review/reviewDelete.jsp",
+								data:{"review_idx":review_idx},
+								success:function(){
+									// 폼 초기화 로직
+									location.reload();	
+									if(a)
+										{										
+											$(".allReviewList").hide();
+											$(".reportList").show();
+											$(".reportListBtn").siblings("i.bi").addClass("bi-check-circle-fill");
+											$(".reportListBtn").siblings("i.bi").removeClass("bi-check-circle");
+										}
+									
+								}
+							  })
+				          }
+				        });
+});
+
+
+
 $(document).on("click",".report",function(){
 	var review_idx=$(this).attr("review_idx");
 	var loginok=$(this).attr("loginok");

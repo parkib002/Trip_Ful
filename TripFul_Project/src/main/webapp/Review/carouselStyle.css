@@ -30,8 +30,8 @@ a.r_author{
 .dropdown-menu {
     position: absolute;
     /* top: calc(100% + 5px); /* category 아이콘 아래에 위치 (아이콘 높이 + 여백) */
-    top: 45px;
-    right: 35px; /* category 아이콘 옆에 위치 */
+    top: 25px;
+	right: 20px;/* category 아이콘 옆에 위치 */
     background-color: #fff;
     border: 1px solid #ddd;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -192,7 +192,8 @@ div.img-con img.photo {
     display: none;
 }
 div.categorydate{
-	display: flex; /* Flex 컨테이너로 설정 */
+	position: relative;
+ 	display: inline-block;
     justify-content: space-between; /* 요소들을 양 끝으로 벌립니다. (예: 날짜와 카테고리 아이콘) */
     align-items: center; /* 요소들을 수직 중앙 정렬합니다. */
     flex-wrap: nowrap; 
