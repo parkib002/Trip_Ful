@@ -8,7 +8,7 @@
 
 <%	
 	String realPath=getServletContext().getRealPath("/save");
-	//System.out.println(realPath);	
+	System.out.println(realPath);	
 	
 	//업로드크기
 	  int uploadSize=1024*1024*10;
