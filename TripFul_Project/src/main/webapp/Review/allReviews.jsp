@@ -434,7 +434,8 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 								</div>
 								<%
 								}
-								
+								if(loginok!=null)
+								{
 								%>
 								<div class="categorydate">
 									<span class='review_writeday'><%=date != null ? date : ""%></span>&nbsp;&nbsp;
@@ -471,6 +472,7 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 										%>
 									</div>
 								</div>
+								<%} %>
 							</div>
 							<div class='star_rating2 mb-2'>
 								<span><%=r.get("rating") != null ? r.get("rating") : "0.0"%></span>&nbsp;&nbsp;
@@ -607,7 +609,8 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 								</div>
 								<%
 								}
-								
+								if(loginok!=null)
+								{
 								%>
 								<div class="categorydate">
 									<span class='review_writeday'><%=date != null ? date : ""%></span>&nbsp;&nbsp;
@@ -644,6 +647,7 @@ List<HashMap<String, String>> reportList=rdao.getReportReview();
 										%>
 									</div>
 								</div>
+								<%} %>
 							</div>
 							<div class='star_rating2 mb-2'>
 								<span><%=a.get("rating") != null ? a.get("rating") : "0.0"%></span>&nbsp;&nbsp;

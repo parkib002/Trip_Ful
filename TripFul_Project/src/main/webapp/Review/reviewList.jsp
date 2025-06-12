@@ -47,11 +47,13 @@ $(function() {
 		   {
 				resetModalForm();
 		   }
+		
+		    
 		if(<%=loginok!=null%>){
 			openModal();
 		}else{
 			 swal.fire({
-			        title: "로그인 후 이용 가능합니다", 
+			        title: "로그인이 필요한 서비스입니다.", 
 			        text: "로그인 페이지로 이동하시겠습니까?", 
 			        type: "warning",
 			        confirmButtonColor: "#3085d6",
@@ -62,7 +64,11 @@ $(function() {
 			        })
 			          .then((result) => {
 			          if (result.value) {
-			              window.location = 'index.jsp?main=login/login.jsp';
+			        	  const currentUrl = window.location.href;
+				      	    // 로그인 페이지 주소 + redirect 파라미터로 현재 URL 전달
+				      	    const loginUrl = 'index.jsp?main=login/login.jsp&redirect=' + encodeURIComponent(currentUrl);
+				      	    location.href = loginUrl;
+				      	    return;
 			          }
 			        })
 		}
