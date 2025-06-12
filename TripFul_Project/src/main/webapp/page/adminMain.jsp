@@ -1,3 +1,4 @@
+<%@page import="review.ReviewDao"%>
 <%@page import="login.LoginDao"%>
 <%@page import="board.BoardSupportDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -6,23 +7,26 @@
     // --- 1. 서버 측 로직 ---
     BoardSupportDao supportDao=new BoardSupportDao();
 	LoginDao ldao = new LoginDao();
-
+	ReviewDao rdao=new ReviewDao();
+	
     // 세션에서 관리자 이름과 로그인 상태를 가져옵니다.
     String adminName = (String) session.getAttribute("name");
     String loginStatus = (String) session.getAttribute("loginok");
-
+	
     // 로그인 상태가 'admin'이 아니면 인덱스 페이지로 리다이렉트합니다.
     if (loginStatus == null || !loginStatus.equals("admin")) {
         response.sendRedirect("index.jsp");
         return;
     }
-
+    
+	
     // 주요 현황 요약 데이터 (실제 DB 연동 필요)
     int newMembersToday = ldao.getTodayNewMembersCount();
     int newMembersThisWeek = ldao.getThisWeekNewMembersCount();
     int newMembersThisMonth = ldao.getThisMonthNewMembersCount();
-    int recentReviewsCount = 45;
+    int recentReviewsCount = rdao.getReviewCnt();
     int unansweredInquiriesCount = supportDao.getUnansweredTotalCount();
+    
 %>
 <!DOCTYPE html>
 <html>

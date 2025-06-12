@@ -37,6 +37,31 @@ public class ReviewDao {
 		}
 		
 	}
+	
+	//리뷰 총 갯수 
+	public int getReviewCnt() {
+		int reviewcnt=0;
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql="SELECT COUNT(*)  FROM tripful_review WHERE WEEK(review_writeday, 1) = WEEK(CURDATE(), 1) AND YEAR(review_writeday) = YEAR(CURDATE())";
+		try {
+			pstmt=conn.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			if(rs.next())
+			{
+				reviewcnt=rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
+		
+		return reviewcnt;
+	}
 	//관광지 이름 가져오기
 	public String getPlaceName(String place_num)
 	{
@@ -63,7 +88,7 @@ public class ReviewDao {
 		return Place_name;
 	}
 	
-	//place_num가져오기
+	//작성된 리뷰의 place_num가져오기
 	public String getPlaceNum(String review_idx) {
 		String place_num="";
 		Connection conn=db.getConnection();
@@ -84,6 +109,30 @@ public class ReviewDao {
 			db.dbClose(rs, pstmt, conn);
 		}
 		
+		
+		return place_num;
+	}
+	
+	//전체 place_num 얻기
+	public String getAllPlaceNum() {
+		String place_num="";
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql="select place_num from tripful_place";
+		try {
+			pstmt=conn.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			while(rs.next())
+			{
+				place_num=rs.getString("place_num");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+		}		
 		
 		return place_num;
 	}
