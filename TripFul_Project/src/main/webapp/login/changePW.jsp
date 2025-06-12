@@ -22,7 +22,7 @@
 	LoginDao dao = new LoginDao();
 	dao.changePW(id, pw);
 	
-	
+	session.removeAttribute("loginok");
 %>
 <script>
 	alert("비밀번호가 변경되었습니다.");
