@@ -339,10 +339,11 @@ function initMap() {
             <div class="info-box">
                 <p class="description"></p>
                 <div id="map" style="width: 100%; height: 500px;"></div>
-                <p class="address" id="preview-address">주소: <%=address %></p>
             </div>
         </div>
-        
+         <div align="center">
+                <h5>주소: <%=address %></h5>
+		</div>
            <hr>
 		<div id="preview-content">
 		<%=contentWithoutImg %>
