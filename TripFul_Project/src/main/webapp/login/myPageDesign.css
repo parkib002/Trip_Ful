@@ -689,3 +689,7 @@ i.review_category:hover {
     font-size: 1.1em;
     color: #333;
 }
+
+table {
+	text-align: center;
+}

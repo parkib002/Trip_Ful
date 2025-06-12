@@ -174,6 +174,7 @@
 	        success: function(res) {
 	            console.log("Q&A 응답 데이터:", res);
 	            allQnaList = res.qna || [];
+	            displayMyList(allQnaList);
 	            },
 	        error: function(xhr, status, error) {
 	            console.error("Q&A 데이터를 불러오는 중 오류 발생:", status, error);
@@ -208,7 +209,11 @@
 		$(".notice-table>tbody").empty();
 		for(var i = 0; i < filteredQna.length; i++){
         	var html = "<tr><td>"+filteredQna[i].qna_idx+"</td><td>"+filteredQna[i].qna_category+"</td>";
-        	html += "<td>"+filteredQna[i].qna_title+"</td>";
+        	html += "<td><a href='<%=request.getContextPath()%>/index.jsp?main=board/supportDetail.jsp?idx="+filteredQna[i].qna_idx+"'>"+filteredQna[i].qna_title;
+        	if(filteredQna[i].qna_private === true){
+        		html+="&nbsp;<i class='bi bi-lock-fill'></i>";
+        	}
+        	html+="</a></td>";
         	html += "<td>"+filteredQna[i].qna_writer+"</td>";
         	html += "<td>"+filteredQna[i].qna_writeday+"</td>";
         	if(filteredQna[i].is_answered === true){
@@ -249,10 +254,9 @@
     }
     
     $(function() {
-    	
-    	loadMyQuestions();
-		displayMyList(allQnaList);
         
+    	loadMyQuestions();
+    	
         $('.side-bar ul ul a').on('click', function(e) {
             // data-target 속성이 있는 링크에만 작동
             var targetSelector = $(this).data('target');

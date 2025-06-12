@@ -99,7 +99,7 @@
 						  icon: "success",
 						  title: "신고를 완료했습니다.",					 
 						  showConfirmButton: false,
-						  timer: 2000
+						  timer: 1000
 						}).then(()=>{
 							location.href="../index.jsp?main=place/detailPlace.jsp?place_num="+<%=place_num%>;
 						});				

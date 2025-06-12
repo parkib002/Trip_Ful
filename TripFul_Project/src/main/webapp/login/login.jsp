@@ -7,6 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name ="google-signin-client_id" content="562446626383-a9laei72kvuogmlo252evitktevt7i81.apps.googleusercontent.com">
 <link
 	href="https://fonts.googleapis.com/css2?family=Dongle&family=Nanum+Brush+Script&family=Nanum+Myeongjo&family=Nanum+Pen+Script&display=swap"
 	rel="stylesheet">
@@ -16,18 +17,21 @@
 <%
 // JavaScript 키를 JSP 변수에 저장 (예시)
 String kakaoJavascriptKey = "7395a37b7d425e6e61d666714ed9c297";
+
 %>
 <script>
   // JSP 변수를 JavaScript 코드에 삽입
   Kakao.init('<%= kakaoJavascriptKey %>');
+  
 </script>
 
 <title>Insert title here</title>
 <%
 String login = request.getParameter("login");
+String redirect = request.getParameter("redirect");
 String id = null;
 String clientId = "IajLk4vELxMTjBeM9JGp";//애플리케이션 클라이언트 아이디값";
-String redirectURI = URLEncoder.encode("http://localhost:8080/TripFul_Project/login/naverLoginAction.jsp", "UTF-8");
+String redirectURI = URLEncoder.encode("http://localhost:8080/TripFul_Project/login/naverLoginAction.jsp?redirect="+redirect, "UTF-8");
 SecureRandom random = new SecureRandom();
 String state = new BigInteger(130, random).toString();
 String apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code"
@@ -38,6 +42,7 @@ session.setAttribute("state", state);
 if (session.getAttribute("id") != null) {
 	id = (String) session.getAttribute("id");
 }
+
 
 %>
 <script>
@@ -51,7 +56,7 @@ if (session.getAttribute("id") != null) {
 			}
 			
 			<%
-			if (id != null) {
+			if (session.getAttribute("rememberId")!=null) {
 			%>
 				$("#check").prop("checked",true);
 				$("#user").val('<%=id%>');
@@ -73,6 +78,7 @@ if (session.getAttribute("id") != null) {
 				<div class="sign-in-htm">
 					<form action="<%=request.getContextPath() %>/login/loginAction.jsp" method="post"
 						onsubmit="return chkSignIn()">
+						<input type="hidden" name="redirect" value="<%=redirect%>">
 						<div class="group">
 							<label for="user" class="label">아이디</label> <input id="user"
 								type="text" class="input" name="user">
@@ -94,8 +100,8 @@ if (session.getAttribute("id") != null) {
 								Password?</a>
 						</div>
 						<div class="social_login">
-							<img src="./login/social_img/google.png"> <img
-								src="./login/social_img/kakao.png" onclick="kakaoSign()"> <img
+							<img src="./login/social_img/google.png" onclick="googleSign('<%=redirect%>')"> <img
+								src="./login/social_img/kakao.png" onclick="kakaoSign('<%=redirect%>')"> <img
 								src="./login/social_img/naver.png" onclick="naverSign('<%=apiURL%>')">
 						</div>
 					</form>
@@ -134,8 +140,8 @@ if (session.getAttribute("id") != null) {
 							<input type="submit" class="button" value="Sign Up">
 						</div>
 						<div class="social_signin">
-							<img src="./login/social_img/google.png" id="google-signin-signup" alt="Google로 회원가입"> <img
-								src="./login/social_img/kakao.png" onclick="kakaoSign()"> <img
+							<img src="./login/social_img/google.png" onclick="googleSign('<%=redirect%>')"> <img
+								src="./login/social_img/kakao.png" onclick="kakaoSign('<%=redirect%>')"> <img
 								src="./login/social_img/naver.png" onclick="naverSign('<%=apiURL%>')">
 						</div>
 					</form>

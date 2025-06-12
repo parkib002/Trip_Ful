@@ -63,3 +63,12 @@ $("#r_pw").keyup(function(){
 		$(this).removeClass("error");
 	}
 })
+
+$("#n_pw").keyup(function(){
+	if($("#pw").val()==$(this).val()){
+		$(this).addClass("error");
+	}
+	else{
+		$(this).removeClass("error");
+	}
+})

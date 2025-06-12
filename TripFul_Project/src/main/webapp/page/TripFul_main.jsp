@@ -127,16 +127,19 @@
                         </div>
                     </div>
                     <div class="col-md-7">
-                        <div class="card-body d-flex flex-column justify-content-between">
+                        <%-- === 수정된 부분 시작 === --%>
+                        <div class="card-body d-flex flex-column h-100">
                             <div>
                                 <h5 class="card-title fw-bold text-dark"><%= i + 1 %>. <%= hotPlace.getPlace_name() %></h5>
                                 <p class="card-text text-primary small"><%= hotPlace.getPlace_tag().replace(",", " #") %></p>
                                 <p class="card-text text-secondary"><%= displayHotPlaceContent %></p>
                             </div>
-                            <div class="text-end">
+                            <%-- mt-auto 클래스를 추가하여 버튼을 포함한 div를 아래로 밀어냄 --%>
+                            <div class="text-end mt-auto">
                                 <a href="index.jsp?main=place/detailPlace.jsp&place_num=<%= hotPlace.getPlace_num() %>" class="btn btn-outline-primary btn-sm">자세히 보기</a>
                             </div>
                         </div>
+                        <%-- === 수정된 부분 끝 === --%>
                     </div>
                 </div>
             </div>

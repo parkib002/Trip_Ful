@@ -17,7 +17,11 @@
         }
     }
 %>
-
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+</head>
 <nav class="navbar navbar-light shadow px-4">
     <div class="container-fluid position-relative d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center flex-grow-1" style="min-width: 0; position: relative;">
@@ -71,7 +75,26 @@
         <div class="d-flex align-items-center gap-2 flex-shrink-0">
             <% if (myid == null) { %>
             <span class="me-2 d-none d-md-inline">로그인을 해주세요</span>
-            <button class="btn btn-sm btn-outline-warning" onclick="location.href='index.jsp?main=login/login.jsp'">Login</button>
+           <button class="btn btn-sm btn-outline-warning" id="loginBtn">Login</button>
+
+		<script>
+  		document.getElementById('loginBtn').addEventListener('click', function() {
+  		
+  			 const currentUrl = window.location.href;
+
+  		    // 이미 redirect 파라미터가 있으면 다시 로그인 페이지로 이동하지 않음
+  		    const hasRedirect = currentUrl.includes('redirect=');
+
+  		    if (!hasRedirect) {
+  		        // redirect가 없는 경우에만 현재 페이지 URL을 redirect로 전달
+  		        const loginUrl = 'index.jsp?main=login/login.jsp&redirect=' + encodeURIComponent(currentUrl);
+  		        location.href = loginUrl;
+  		    } else {
+  		        // 이미 redirect가 있는 상태라면 아무 동작 안 함 (또는 원하면 경고창 등 처리)
+  		        console.log('이미 redirect가 설정되어 있음. 중복 이동 방지됨.');
+  		    }
+  		});
+		</script>
             <% } else { %>
             <span class="me-2 d-none d-md-inline">
                     <a href="index.jsp?main=<%=

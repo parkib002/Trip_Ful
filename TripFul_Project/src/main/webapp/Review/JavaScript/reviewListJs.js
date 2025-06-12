@@ -24,8 +24,7 @@ $(document).on("click", ".delete-btn", function(){
 	
 	var review_idx=$(this).attr("review_idx");
 	swal.fire({
-				        title: "리뷰를 삭제하시겠습니까?",		        
-				        type: "warning",
+				        title: "리뷰를 삭제하시겠습니까?",		 
 				        confirmButtonColor: "#d33",
 				        cancelButtonColor: "#3085d6",
 				        confirmButtonText: "삭제",
@@ -48,15 +47,58 @@ $(document).on("click", ".delete-btn", function(){
 				        });
 });
 
+
+
+
+//리뷰 삭제
+$(document).on("click", ".delete-btn2", function(){
+	
+	var review_idx=$(this).attr("review_idx");
+	var a=$(".reportListBtn").is(":checked");
+	console.log(a);
+	swal.fire({
+				        title: "리뷰를 삭제하시겠습니까?",	
+				        confirmButtonColor: "#d33",
+				        cancelButtonColor: "#3085d6",
+				        confirmButtonText: "삭제",
+				        cancelButtonText: "취소",			        
+				        showCancelButton: true
+				        })
+				          .then((result) => {
+				          if (result.value) {
+							
+				              $.ajax({
+								type:"post",
+								dataType:"html",
+								url:"Review/reviewDelete.jsp",
+								data:{"review_idx":review_idx},
+								success:function(){
+									// 폼 초기화 로직
+									location.reload();	
+									if(a)
+										{										
+											$(".allReviewList").hide();
+											$(".reportList").show();
+											$(".reportListBtn").siblings("i.bi").addClass("bi-check-circle-fill");
+											$(".reportListBtn").siblings("i.bi").removeClass("bi-check-circle");
+										}
+									
+								}
+							  })
+				          }
+				        });
+});
+
+
+
 $(document).on("click",".report",function(){
 	var review_idx=$(this).attr("review_idx");
 	var loginok=$(this).attr("loginok");
 	if(loginok==null || loginok=="null")
 		{
 			swal.fire({
-											        title: "로그인 후 이용 가능합니다", 
-											        text: "로그인 페이지로 이동하시겠습니까?", 
-											        type: "warning",
+											        title: "로그인이 필요한 서비스입니다.", 
+											        text: "로그인 페이지로 이동하시겠습니까?", 											        
 											        confirmButtonColor: "#3085d6",
 											        cancelButtonColor: "#d33",
 											        confirmButtonText: "네, 이동하겠습니다",
@@ -65,7 +107,11 @@ $(document).on("click",".report",function(){
 											        })
 											          .then((result) => {
 											          if (result.value) {
-											              window.location = 'index.jsp?main=login/login.jsp';
+														const currentUrl = window.location.href;
+														// 로그인 페이지 주소 + redirect 파라미터로 현재 URL 전달
+														const loginUrl = 'index.jsp?main=login/login.jsp&redirect=' + encodeURIComponent(currentUrl);
+														location.href = loginUrl;
+														return;
 											          }
 											        })
 		}else{
@@ -82,7 +128,7 @@ $(document).on("click",".likedicon",function(){
 	if(loginok==null || loginok=="null")
 		{
 			swal.fire({
-						 title: "로그인 후 이용 가능합니다", 
+						title: "로그인이 필요한 서비스입니다.", 
 						text: "로그인 페이지로 이동하시겠습니까?", 
 						type: "warning",
 						confirmButtonColor: "#3085d6",
@@ -91,9 +137,13 @@ $(document).on("click",".likedicon",function(){
 						cancelButtonText: "아니요",  
 						showCancelButton: true
 					}).then((result) => {
-										if (result.value) {
-											window.location = 'index.jsp?main=login/login.jsp';
-											}
+						if (result.value) {
+								const currentUrl = window.location.href;
+								// 로그인 페이지 주소 + redirect 파라미터로 현재 URL 전달
+								const loginUrl = 'index.jsp?main=login/login.jsp&redirect=' + encodeURIComponent(currentUrl);
+								location.href = loginUrl;
+								return;
+							}
 						});
 		}else{	
 			

@@ -143,7 +143,7 @@ submitReviewBtn.click(function(e) {
 		     icon: "success",
 		     title: title,
 		     showConfirmButton: false,
-		     timer: 2000
+		     timer: 1000
 		   });
             closeModalAndRefresh(); // 성공 시 모달 닫고 목록 새로고침
 			}else{
@@ -152,7 +152,7 @@ submitReviewBtn.click(function(e) {
 						     icon: "error",
 						     title: "리뷰를 입력해 주세요",
 						     showConfirmButton: false,
-						     timer: 2000
+						     timer: 1000
 						   });
 			}
         },
