@@ -266,7 +266,7 @@ $(function(){
 	      	var a=confirm("로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?");
 	      	
 	      	if(a){
-	      		 const currentUrl = window.location.href;
+	      		const currentUrl = window.location.href;
 	      	    // 로그인 페이지 주소 + redirect 파라미터로 현재 URL 전달
 	      	    const loginUrl = 'index.jsp?main=login/login.jsp&redirect=' + encodeURIComponent(currentUrl);
 	      	    location.href = loginUrl;
