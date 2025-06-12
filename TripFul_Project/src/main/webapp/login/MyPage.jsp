@@ -208,7 +208,7 @@
 		$(".notice-table>tbody").empty();
 		for(var i = 0; i < filteredQna.length; i++){
         	var html = "<tr><td>"+filteredQna[i].qna_idx+"</td><td>"+filteredQna[i].qna_category+"</td>";
-        	html += "<td>"+filteredQna[i].qna_title+"</td>";
+        	html += "<td><a href='<%=request.getContextPath()%>/index.jsp?main=board/supportDetail.jsp?idx="+filteredQna[i].qna_idx+"'>"+filteredQna[i].qna_title+"</a></td>";
         	html += "<td>"+filteredQna[i].qna_writer+"</td>";
         	html += "<td>"+filteredQna[i].qna_writeday+"</td>";
         	if(filteredQna[i].is_answered === true){
