@@ -24,8 +24,7 @@ $(document).on("click", ".delete-btn", function(){
 	
 	var review_idx=$(this).attr("review_idx");
 	swal.fire({
-				        title: "리뷰를 삭제하시겠습니까?",		        
-				        type: "warning",
+				        title: "리뷰를 삭제하시겠습니까?",		 
 				        confirmButtonColor: "#d33",
 				        cancelButtonColor: "#3085d6",
 				        confirmButtonText: "삭제",
@@ -58,8 +57,7 @@ $(document).on("click", ".delete-btn2", function(){
 	var a=$(".reportListBtn").is(":checked");
 	console.log(a);
 	swal.fire({
-				        title: "리뷰를 삭제하시겠습니까?",		        
-				        type: "warning",
+				        title: "리뷰를 삭제하시겠습니까?",	
 				        confirmButtonColor: "#d33",
 				        cancelButtonColor: "#3085d6",
 				        confirmButtonText: "삭제",
@@ -100,8 +98,7 @@ $(document).on("click",".report",function(){
 		{
 			swal.fire({
 											        title: "로그인이 필요한 서비스입니다.", 
-											        text: "로그인 페이지로 이동하시겠습니까?", 
-											        type: "warning",
+											        text: "로그인 페이지로 이동하시겠습니까?", 											        
 											        confirmButtonColor: "#3085d6",
 											        cancelButtonColor: "#d33",
 											        confirmButtonText: "네, 이동하겠습니다",
