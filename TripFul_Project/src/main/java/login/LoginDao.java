@@ -114,8 +114,10 @@ public class LoginDao {
 				String currPw = rs.getString("hash_pw");
 
 				if (currPw.equals(BCrypt.hashpw(pw, salt))) {
+					System.out.println("같음");
 					return 1;
 				} else {
+					System.out.println("다름");
 					return 2;
 				}
 			}

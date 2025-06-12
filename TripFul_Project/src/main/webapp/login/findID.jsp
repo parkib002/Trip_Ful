@@ -38,8 +38,14 @@ String findid = dao.findID(name, email);
 				<% 
 			}
 			%></div>
-			<br><br><button onclick="window.close()">닫기</button>
+			<br><br><button onclick="idClose()">닫기</button>
 		</div>
 	</div>
 </body>
+<script>
+	function idClose(){
+		window.close();
+		opener.location.href = "<%=request.getContextPath()%>/index.jsp?main=login/login.jsp";
+	}
+</script>
 </html>
