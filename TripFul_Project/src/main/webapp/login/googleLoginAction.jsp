@@ -181,6 +181,10 @@ if (code == null || code.isEmpty()) {
 		if (<%= dto.getAdmin() %> === 1) {
 			window.opener.document.location.href = "../index.jsp?main=page/adminMain.jsp";
 		} else {
+			<%if(finalRedirectUrl.equals("null")){
+				finalRedirectUrl = request.getContextPath()+"/index.jsp";
+			
+			}%>
 			window.opener.document.location.href = "<%= finalRedirectUrl %>";
 		}
 		window.close();
