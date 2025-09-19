@@ -3,7 +3,7 @@
 세계 각지의 관광지에 대한 정보와 실제 이용자의 리뷰를 사용자에게 추천하는 리뷰 제공 사이트 Tripful 입니다. \
 <img src="./TripFul_Project/src/main/webapp/image/tripful_logo.png" alt="크기를 조절한 이미지" width="200">
 
-ppt 및 시연 영상:
+ppt 및 시연 영상 링크:
 https://www.canva.com/design/DAGzY75hTCY/NNXYvCIOa1iWsFalD5cSzA/edit?utm_content=DAGzY75hTCY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 
 ## 💡 주요 기능
